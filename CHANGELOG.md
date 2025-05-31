@@ -1,3 +1,10 @@
+## [1.3.0](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/compare/v1.2.0...v1.3.0) (2025-05-31)
+
+
+### Features
+
+* add weather radio ([ba29ee0](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/commit/ba29ee0746625f513ed02d7a295d515f1bb25ea6))
+
 ## [1.2.0](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/compare/v1.1.0...v1.2.0) (2025-05-31)
 
 
