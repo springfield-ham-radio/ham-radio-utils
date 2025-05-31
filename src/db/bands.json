@@ -150,17 +150,51 @@
     "id": "03620a29-e66d-4940-ab67-3ef83558d5e2",
     "name": "GMRS",
     "wavelength": 0.65,
-    "lowerFrequency": 462550000,
+    "lowerFrequency": 467550000,
     "upperFrequency": 467725000,
     "frequencyDisplayBaseMultiplier": 1000000,
     "frequencyDisplayNumberDecimals": 4,
     "privileges": [
       "27659a6b-78b6-47b1-8f91-f238ffd5ebcd"
+    ],
+    "channels": [
+      {
+        "name": "15RP",
+        "frequency": 467550000
+      },
+      {
+        "name": "16RP",
+        "frequency": 467575000
+      },
+      {
+        "name": "17RP",
+        "frequency": 467600000
+      },
+      {
+        "name": "18RP",
+        "frequency": 467625000
+      },
+      {
+        "name": "19RP",
+        "frequency": 467650000
+      },
+      {
+        "name": "20RP",
+        "frequency": 467675000
+      },
+      {
+        "name": "21RP",
+        "frequency": 467700000
+      },
+      {
+        "name": "22RP",
+        "frequency": 467725000
+      }
     ]
   },
   {
     "id": "ad156115-99b4-4d42-a25c-6b27539cfd25",
-    "name": "FRS-1",
+    "name": "FRS/GMRS-1",
     "wavelength": 0.65,
     "lowerFrequency": 462550000,
     "upperFrequency": 462712500,
@@ -168,11 +202,73 @@
     "frequencyDisplayNumberDecimals": 4,
     "privileges": [
       "27659a6b-78b6-47b1-8f91-f238ffd5ebcd"
+    ],
+    "channels": [
+      {
+        "name": "1",
+        "frequency": 462562500
+      },
+      {
+        "name": "2",
+        "frequency": 462587500
+      },
+      {
+        "name": "3",
+        "frequency": 462612500
+      },
+      {
+        "name": "4",
+        "frequency": 462637500
+      },
+      {
+        "name": "5",
+        "frequency": 462662500
+      },
+      {
+        "name": "6",
+        "frequency": 462687500
+      },
+      {
+        "name": "7",
+        "frequency": 462712500
+      },
+      {
+        "name": "15",
+        "frequency": 462550000
+      },
+      {
+        "name": "16",
+        "frequency": 462575000
+      },
+      {
+        "name": "17",
+        "frequency": 462600000
+      },
+      {
+        "name": "18",
+        "frequency": 462625000
+      },
+      {
+        "name": "19",
+        "frequency": 462650000
+      },
+      {
+        "name": "20",
+        "frequency": 462675000
+      },
+      {
+        "name": "21",
+        "frequency": 462700000
+      },
+      {
+        "name": "22",
+        "frequency": 462725000
+      }
     ]
   },
   {
     "id": "8344d3bc-1b82-4980-8f7b-6bccbbbe5c70",
-    "name": "FRS-2",
+    "name": "FRS/GMRS-2",
     "wavelength": 0.65,
     "lowerFrequency": 467562500,
     "upperFrequency": 467712500,
@@ -180,6 +276,36 @@
     "frequencyDisplayNumberDecimals": 4,
     "privileges": [
       "27659a6b-78b6-47b1-8f91-f238ffd5ebcd"
+    ],
+    "channels": [
+      {
+        "name": "8",
+        "frequency": 467562500
+      },
+      {
+        "name": "9",
+        "frequency": 467587500
+      },
+      {
+        "name": "10",
+        "frequency": 467612500
+      },
+      {
+        "name": "11",
+        "frequency": 467637500
+      },
+      {
+        "name": "12",
+        "frequency": 467662500
+      },
+      {
+        "name": "13",
+        "frequency": 467687500
+      },
+      {
+        "name": "14",
+        "frequency": 467712500
+      }
     ]
   }
 ]
