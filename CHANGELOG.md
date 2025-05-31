@@ -1,3 +1,10 @@
+## [1.0.1](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/compare/v1.0.0...v1.0.1) (2025-05-31)
+
+
+### Bug Fixes
+
+* update bands ([c426011](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/commit/c426011a76dfa3a5129ef6cb154156788d92539f))
+
 ## 1.0.0 (2025-05-31)
 
 
