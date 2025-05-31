@@ -1,0 +1,6 @@
+import { sprintf } from 'sprintf-js';
+import { toHexWords } from './to-hex-words.js';
+
+export function formatChannel(channelNumber: number, data: Uint8Array): string {
+  return sprintf('%2d : %s', channelNumber, toHexWords(data));
+}

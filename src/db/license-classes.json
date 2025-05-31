@@ -1,0 +1,22 @@
+[
+  {
+    "id": "b7c9d9e4-5f0a-4f2d-9c2d-1e3b8e7a8b5f",
+    "name": "Technician"
+  },
+  {
+    "id": "f3a6c1d2-8e7f-4a5b-9d3e-2c4a9b6e7f8d",
+    "name": "General"
+  },
+  {
+    "id": "d6e8f7a2-3b4c-5d9e-1f2a-8c3b7e4a9f6d",
+    "name": "Amateur Extra"
+  },
+  {
+    "id": "a2c4b6f8-7e9d-3f5b-1c2a-9e7f8d3b6a4c",
+    "name": "Advanced (Grandfathered)"
+  },
+  {
+    "id": "e7f9d3b6-a2c4-5f1a-8c3b-6f8d2a4b9e7f",
+    "name": "Novice (Grandfathered)"
+  }
+]
