@@ -18,5 +18,13 @@
   {
     "id": "e7f9d3b6-a2c4-5f1a-8c3b-6f8d2a4b9e7f",
     "name": "Novice (Grandfathered)"
+  },
+  {
+    "id": "27659a6b-78b6-47b1-8f91-f238ffd5ebcd",
+    "name": "GMRS"
+  },
+  {
+    "id": "a1a391d0-3708-4a26-94d3-00c07346b69b",
+    "name": "FRS"
   }
 ]

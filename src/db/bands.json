@@ -145,5 +145,41 @@
       "f3a6c1d2-8e7f-4a5b-9d3e-2c4a9b6e7f8d",
       "d6e8f7a2-3b4c-5d9e-1f2a-8c3b7e4a9f6d"
     ]
+  },
+  {
+    "id": "03620a29-e66d-4940-ab67-3ef83558d5e2",
+    "name": "GMRS",
+    "wavelength": 0.65,
+    "lowerFrequency": 462550000,
+    "upperFrequency": 467725000,
+    "frequencyDisplayBaseMultiplier": 1000000,
+    "frequencyDisplayNumberDecimals": 4,
+    "privileges": [
+      "27659a6b-78b6-47b1-8f91-f238ffd5ebcd"
+    ]
+  },
+  {
+    "id": "ad156115-99b4-4d42-a25c-6b27539cfd25",
+    "name": "FRS-1",
+    "wavelength": 0.65,
+    "lowerFrequency": 462550000,
+    "upperFrequency": 462712500,
+    "frequencyDisplayBaseMultiplier": 1000000,
+    "frequencyDisplayNumberDecimals": 4,
+    "privileges": [
+      "27659a6b-78b6-47b1-8f91-f238ffd5ebcd"
+    ]
+  },
+  {
+    "id": "8344d3bc-1b82-4980-8f7b-6bccbbbe5c70",
+    "name": "FRS-2",
+    "wavelength": 0.65,
+    "lowerFrequency": 467562500,
+    "upperFrequency": 467712500,
+    "frequencyDisplayBaseMultiplier": 1000000,
+    "frequencyDisplayNumberDecimals": 4,
+    "privileges": [
+      "27659a6b-78b6-47b1-8f91-f238ffd5ebcd"
+    ]
   }
 ]
