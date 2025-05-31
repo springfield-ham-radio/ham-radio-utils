@@ -124,8 +124,8 @@
     "wavelength": 2,
     "lowerFrequency": 144000000,
     "upperFrequency": 148000000,
-    "frequencyDisplayBaseMultiplier": 1000,
-    "frequencyDisplayNumberDecimals": 0,
+    "frequencyDisplayBaseMultiplier": 1000000,
+    "frequencyDisplayNumberDecimals": 4,
     "privileges": [
       "b7c9d9e4-5f0a-4f2d-9c2d-1e3b8e7a8b5f",
       "f3a6c1d2-8e7f-4a5b-9d3e-2c4a9b6e7f8d",
@@ -138,8 +138,8 @@
     "wavelength": 0.7,
     "lowerFrequency": 420000000,
     "upperFrequency": 450000000,
-    "frequencyDisplayBaseMultiplier": 1000,
-    "frequencyDisplayNumberDecimals": 0,
+    "frequencyDisplayBaseMultiplier": 1000000,
+    "frequencyDisplayNumberDecimals": 4,
     "privileges": [
       "b7c9d9e4-5f0a-4f2d-9c2d-1e3b8e7a8b5f",
       "f3a6c1d2-8e7f-4a5b-9d3e-2c4a9b6e7f8d",
