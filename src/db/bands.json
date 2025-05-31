@@ -201,7 +201,8 @@
     "frequencyDisplayBaseMultiplier": 1000000,
     "frequencyDisplayNumberDecimals": 4,
     "privileges": [
-      "27659a6b-78b6-47b1-8f91-f238ffd5ebcd"
+      "27659a6b-78b6-47b1-8f91-f238ffd5ebcd",
+      "a1a391d0-3708-4a26-94d3-00c07346b69b"
     ],
     "channels": [
       {
@@ -275,7 +276,8 @@
     "frequencyDisplayBaseMultiplier": 1000000,
     "frequencyDisplayNumberDecimals": 4,
     "privileges": [
-      "27659a6b-78b6-47b1-8f91-f238ffd5ebcd"
+      "27659a6b-78b6-47b1-8f91-f238ffd5ebcd",
+      "a1a391d0-3708-4a26-94d3-00c07346b69b"
     ],
     "channels": [
       {
@@ -305,6 +307,48 @@
       {
         "name": "14",
         "frequency": 467712500
+      }
+    ]
+  },
+  {
+    "id": "37240987-0f63-4ed2-bfbd-9c2e13c4bb5b",
+    "name": "Weather Radio",
+    "wavelength": 1.85,
+    "lowerFrequency": 162400000,
+    "upperFrequency": 162550000,
+    "frequencyDisplayBaseMultiplier": 1000000,
+    "frequencyDisplayNumberDecimals": 3,
+    "privileges": [
+      "9689b06f-dfb0-4ae6-8fdc-f9a4e6e1b88e"
+    ],
+    "channels": [
+      {
+        "name": "WX1",
+        "frequency": 162550000
+      },
+      {
+        "name": "WX2",
+        "frequency": 162400000
+      },
+      {
+        "name": "WX3",
+        "frequency": 62475000
+      },
+      {
+        "name": "WX4",
+        "frequency": 162425000
+      },
+      {
+        "name": "WX5",
+        "frequency": 162450000
+      },
+      {
+        "name": "WX6",
+        "frequency": 162500000
+      },
+      {
+        "name": "WX7",
+        "frequency": 162525000
       }
     ]
   }
