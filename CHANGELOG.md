@@ -1,3 +1,10 @@
+## [1.2.0](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/compare/v1.1.0...v1.2.0) (2025-05-31)
+
+
+### Features
+
+* add FRS and GMRS channels ([d1476d4](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/commit/d1476d41a436726c983912bc68304a649338abd9))
+
 ## [1.1.0](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/compare/v1.0.1...v1.1.0) (2025-05-31)
 
 
