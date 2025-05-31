@@ -1,3 +1,10 @@
+## 1.0.0 (2025-05-31)
+
+
+### Features
+
+* move code from ham-radio-driver-utils ([ac3df43](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/commit/ac3df4357db5cdda6bc86c8e1a56a9699e79e658))
+
 ## [7.1.0](https://gitlab.com/springfield-ham-radio/app/ham-radio-driver-utils/compare/v7.0.4...v7.1.0) (2025-05-31)
 
 
