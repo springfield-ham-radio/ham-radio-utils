@@ -2,7 +2,7 @@
   "name": "@springfield/ham-radio-utils",
   "version": "1.3.0",
   "author": "Bryan Hunt",
-  "packageManager": "yarn@4.9.1",
+  "packageManager": "yarn@4.9.2",
   "readme": "README.md",
   "type": "module",
   "main": "dist/index.js",
