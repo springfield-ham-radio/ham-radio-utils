@@ -1,4 +1,4 @@
-export function bcdToNumber(data: Uint8Array, offset?: number, length?: number): number {
+export const bcdToNumber = (data: Uint8Array, offset?: number, length?: number): number => {
   let bcd = 0;
   const size = length ?? data.length;
 
@@ -7,4 +7,4 @@ export function bcdToNumber(data: Uint8Array, offset?: number, length?: number):
   }
 
   return parseInt(bcd.toString(16), 10) * 10;
-}
+};

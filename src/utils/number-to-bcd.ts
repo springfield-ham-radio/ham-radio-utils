@@ -1,6 +1,6 @@
-export function numberToBcd(value: number): Uint8Array {
+export const numberToBcd = (value: number): Uint8Array => {
   const digits = value.toString(10);
-  const numberOfBytes = Math.ceil(digits.length / 2.0);
+  const numberOfBytes = Math.ceil(digits.length / 2);
 
   const data = new Uint8Array(numberOfBytes);
 
@@ -12,4 +12,4 @@ export function numberToBcd(value: number): Uint8Array {
   }
 
   return data;
-}
+};

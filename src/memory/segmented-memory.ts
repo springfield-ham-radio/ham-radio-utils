@@ -1,4 +1,4 @@
-import { RadioMemorySegment } from '@springfield/ham-radio-api';
+import type { RadioMemorySegment } from '@springfield/ham-radio-api';
 
 export class RadioSegmentedMemory {
   private segments: Map<number, RadioMemorySegment>;
@@ -47,6 +47,6 @@ export class RadioSegmentedMemory {
   }
 
   public toArray(): RadioMemorySegment[] {
-    return Array.from(this.segments.values());
+    return [...this.segments.values()];
   }
 }

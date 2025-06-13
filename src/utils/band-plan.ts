@@ -1,4 +1,4 @@
-import { SpectrumBand } from '@springfield/ham-radio-api';
+import type { SpectrumBand } from '@springfield/ham-radio-api';
 import bandsData from '../db/bands.json' with { type: 'json' };
 import licenseClassesData from '../db/license-classes.json' with { type: 'json' };
 
