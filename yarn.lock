@@ -995,12 +995,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@springfield/ham-radio-api@npm:^12.0.1":
-  version: 12.0.1
-  resolution: "@springfield/ham-radio-api@npm:12.0.1"
+"@springfield/ham-radio-api@npm:^13.0.0":
+  version: 13.0.0
+  resolution: "@springfield/ham-radio-api@npm:13.0.0"
   dependencies:
     ts-brand: "npm:^0.2.0"
-  checksum: 10/4b2c61aad8f20cf40888e3440f9641eb38cded8b890b17ac45a4d46346c59a1ab989a0c1f15ca4250e14c46d8e4d7b3badc10cd5efca8d3fb173eb2bcb8027eb
+  checksum: 10/c4c057fbfc4250176d0047ec165bf1d60b02e76bb960b8650cdacf3ea52f9ed197e0fc6e4c85867fcf5f299c159ff978c049f73cd4bc6f45f39901178c8fe24a
   languageName: node
   linkType: hard
 
@@ -1013,7 +1013,7 @@ __metadata:
     "@semantic-release/changelog": "npm:6.0.3"
     "@semantic-release/git": "npm:10.0.1"
     "@semantic-release/gitlab": "npm:13.2.5"
-    "@springfield/ham-radio-api": "npm:^12.0.1"
+    "@springfield/ham-radio-api": "npm:^13.0.0"
     "@types/sprintf-js": "npm:1.1.4"
     fishery: "npm:^2.3.1"
     husky: "npm:9.1.7"

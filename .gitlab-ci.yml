@@ -20,6 +20,13 @@ build:
     - yarn install
     - yarn build
 
+lint:
+  stage: build
+  before_script:
+    - corepack enable
+  script:
+    - yarn lint
+
 release:
   stage: release
   before_script:

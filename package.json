@@ -50,7 +50,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@springfield/ham-radio-api": "^12.0.1",
+    "@springfield/ham-radio-api": "^13.0.0",
     "fishery": "^2.3.1",
     "loglayer": "^6.4.2",
     "sprintf-js": "^1.1.3"
