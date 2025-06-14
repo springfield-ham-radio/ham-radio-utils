@@ -1,3 +1,14 @@
+## [2.0.0](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/compare/v1.3.0...v2.0.0) (2025-06-14)
+
+
+### ⚠ BREAKING CHANGES
+
+* update memory utilities and fix segment address check
+
+### Features
+
+* update memory utilities and fix segment address check ([12228b1](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/commit/12228b1e9c2031cc62ed2e340f729ca0f0d21e13))
+
 ## [1.3.0](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/compare/v1.2.0...v1.3.0) (2025-05-31)
 
 
