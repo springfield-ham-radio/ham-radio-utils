@@ -36,7 +36,7 @@ export class RadioSegmentedMemory {
     while (!result.done) {
       const segment = result.value;
 
-      if (segment.startAddress <= address && segment.startAddress + segment.length > address) {
+      if (segment.startAddress <= address && segment.endAddress > address) {
         return segment;
       }
 

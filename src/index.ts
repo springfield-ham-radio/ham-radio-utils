@@ -7,6 +7,6 @@ export * from './utils/bcd-to-number.js';
 export * from './utils/band-plan.js';
 export * from './utils/frequency-display.js';
 export * from './utils/memory-channel-utils.js';
-export * from './utils/memory-segment-utils.js';
+export * from './utils/memory-data-utils.js';
 export * from './utils/number-to-bcd.js';
 export * from './utils/to-hex-words.js';
