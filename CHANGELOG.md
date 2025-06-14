@@ -1,3 +1,10 @@
+## [2.0.1](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/compare/v2.0.0...v2.0.1) (2025-06-14)
+
+
+### Bug Fixes
+
+* **deps:** upgrade @springfield/ham-radio-api to version 14.0.0 ([6c4dc8b](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/commit/6c4dc8b0a0d4ae875d5a9a32a3954ebc88de4b54))
+
 ## [2.0.0](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/compare/v1.3.0...v2.0.0) (2025-06-14)
 
 
