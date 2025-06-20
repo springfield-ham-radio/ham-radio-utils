@@ -1,3 +1,10 @@
+## [2.0.2](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/compare/v2.0.1...v2.0.2) (2025-06-20)
+
+
+### Bug Fixes
+
+* **deps:** update dependency loglayer to ^6.4.3 ([0e41dfa](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/commit/0e41dfa764d9b3b176efcea00a586c3e2cfef336))
+
 ## [2.0.1](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/compare/v2.0.0...v2.0.1) (2025-06-14)
 
 
