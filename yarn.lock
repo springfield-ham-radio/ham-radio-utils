@@ -858,9 +858,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@semantic-release/gitlab@npm:13.2.5":
-  version: 13.2.5
-  resolution: "@semantic-release/gitlab@npm:13.2.5"
+"@semantic-release/gitlab@npm:13.2.6":
+  version: 13.2.6
+  resolution: "@semantic-release/gitlab@npm:13.2.6"
   dependencies:
     "@semantic-release/error": "npm:^4.0.0"
     aggregate-error: "npm:^5.0.0"
@@ -873,11 +873,11 @@ __metadata:
     got: "npm:^14.0.0"
     hpagent: "npm:^1.0.0"
     lodash-es: "npm:^4.17.21"
-    parse-url: "npm:^9.0.0"
+    parse-url: "npm:^10.0.0"
     url-join: "npm:^4.0.0"
   peerDependencies:
     semantic-release: ">=20.1.0"
-  checksum: 10/d51f548fa4106a8a5e2aed96d808720f7eca6834621b7eb1d343f0b6696ee8d83a1c4cb26ce7ea553b33e55577d3bf8833a012b0110ec597cd5f8547ed161bff
+  checksum: 10/c5609c9d23515b676a18abc34f026a1ed4dd0b0983cdedee93003a911f8187d54412ffd2fb646aef600bdf5bad38403b4ebc06ce9c2937e44930cd6a55d8b622
   languageName: node
   linkType: hard
 
@@ -1027,7 +1027,7 @@ __metadata:
     "@commitlint/config-conventional": "npm:19.8.1"
     "@semantic-release/changelog": "npm:6.0.3"
     "@semantic-release/git": "npm:10.0.1"
-    "@semantic-release/gitlab": "npm:13.2.5"
+    "@semantic-release/gitlab": "npm:13.2.6"
     "@springfield/ham-radio-api": "npm:^14.0.0"
     "@types/sprintf-js": "npm:1.1.4"
     fishery: "npm:^2.3.1"
@@ -1096,13 +1096,6 @@ __metadata:
   version: 2.4.4
   resolution: "@types/normalize-package-data@npm:2.4.4"
   checksum: 10/65dff72b543997b7be8b0265eca7ace0e34b75c3e5fee31de11179d08fa7124a7a5587265d53d0409532ecb7f7fba662c2012807963e1f9b059653ec2c83ee05
-  languageName: node
-  linkType: hard
-
-"@types/parse-path@npm:^7.0.0":
-  version: 7.0.3
-  resolution: "@types/parse-path@npm:7.0.3"
-  checksum: 10/21a12c228d38f5a75659dfd7cb127dc2001ed3f6acbd1b2e0575d1348c735594c0bab06a97fe849c151438384829f20ea5971cb045f7ecd37d53c76a9fcb9de3
   languageName: node
   linkType: hard
 
@@ -4135,22 +4128,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"parse-path@npm:^7.0.0":
-  version: 7.0.0
-  resolution: "parse-path@npm:7.0.0"
+"parse-path@npm:^7.1.0":
+  version: 7.1.0
+  resolution: "parse-path@npm:7.1.0"
   dependencies:
     protocols: "npm:^2.0.0"
-  checksum: 10/2e6eadae5aff97a8b6373c1c08440bfeed814f65452674a139dc606c7c410e8e48b7983fe451aedc59802a2814121b40415ca00675c1546ff75cb73ad0c1df5a
+  checksum: 10/6da6c6803fa73bacfee98e694c6c95fa55caae632c765369e4fd917f1043ef71f35ecaae420ef0e39e933bd1f939c4bc1e01522b62145191cdbe72e58d37a8ab
   languageName: node
   linkType: hard
 
-"parse-url@npm:^9.0.0":
-  version: 9.2.0
-  resolution: "parse-url@npm:9.2.0"
+"parse-url@npm:^10.0.0":
+  version: 10.0.0
+  resolution: "parse-url@npm:10.0.0"
   dependencies:
-    "@types/parse-path": "npm:^7.0.0"
-    parse-path: "npm:^7.0.0"
-  checksum: 10/d2746f0dbcd34d39df966a0726c00ede272aa34d825513baca721ad95480786c664f91ab22cf4e79cdb130468056e41834f6c9cc912b9180539f73aa5bafa982
+    parse-path: "npm:^7.1.0"
+  checksum: 10/a82faca60242e8bba8103c5b8c86194ca3ffa01cec2483f75cbbf39aa7c67fe0d09a45773320138086f52b5b499e78814edbb7cec39f0493366e25effaf5aef2
   languageName: node
   linkType: hard
 
