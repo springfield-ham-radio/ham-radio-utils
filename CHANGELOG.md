@@ -1,3 +1,10 @@
+## [2.1.0](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/compare/v2.0.2...v2.1.0) (2025-06-21)
+
+
+### Features
+
+* add UI logger for command-level logging in UI environments ([c9f7545](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/commit/c9f754580119f4c8bfd1a42ebca089692fd4a62e))
+
 ## [2.0.2](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/compare/v2.0.1...v2.0.2) (2025-06-20)
 
 
