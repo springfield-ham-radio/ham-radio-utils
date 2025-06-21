@@ -12,7 +12,7 @@
     "dist/"
   ],
   "scripts": {
-    "build": "tsc && cp src/db/* dist/db/",
+    "build": "tsc && cp src/db/* dist/db/ && cp src/schemas/* dist/schemas/",
     "commitlint": "commitlint --edit",
     "lint": "oxlint",
     "lint:fix": "oxlint --fix --fix-suggestions",
@@ -51,6 +51,8 @@
   },
   "dependencies": {
     "@springfield/ham-radio-api": "^14.0.0",
+    "ajv": "^8.12.0",
+    "ajv-formats": "^2.1.1",
     "fishery": "^2.3.1",
     "loglayer": "^6.4.3",
     "sprintf-js": "^1.1.3"
@@ -61,7 +63,9 @@
     "@semantic-release/changelog": "6.0.3",
     "@semantic-release/git": "10.0.1",
     "@semantic-release/gitlab": "13.2.6",
+    "@types/chai": "^5.2.2",
     "@types/sprintf-js": "1.1.4",
+    "chai": "^5.2.0",
     "husky": "9.1.7",
     "oxlint": "1.1.0",
     "semantic-release": "23.1.1",
