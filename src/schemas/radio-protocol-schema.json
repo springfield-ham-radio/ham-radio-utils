@@ -5,8 +5,11 @@
   "type": "object",
   "required": [
     "id",
+    "version",
+    "description",
     "serialConfig",
     "memoryConfig",
+    "settingsSchema",
     "readMemory",
     "writeMemory"
   ],
@@ -34,9 +37,23 @@
         }
       }
     },
+    "version": {
+      "type": "string",
+      "description": "Version of the radio configuration",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "description": {
+      "type": "string",
+      "description": "Human-readable description of the radio configuration"
+    },
     "settingsSchema": {
       "type": "object",
       "description": "Schema definitions for radio settings and channels",
+      "required": [
+        "model",
+        "settingsSchema",
+        "channelSchema"
+      ],
       "properties": {
         "model": {
           "type": "string",
@@ -77,12 +94,22 @@
           "default": 8
         },
         "stopBits": {
-          "type": "integer",
-          "description": "Number of stop bits",
-          "enum": [
-            1,
-            2
+          "oneOf": [
+            {
+              "type": "integer",
+              "enum": [
+                1,
+                2
+              ]
+            },
+            {
+              "type": "number",
+              "enum": [
+                1.5
+              ]
+            }
           ],
+          "description": "Number of stop bits",
           "default": 1
         },
         "parity": {
@@ -90,9 +117,7 @@
           "enum": [
             "none",
             "even",
-            "odd",
-            "mark",
-            "space"
+            "odd"
           ],
           "default": "none"
         }
@@ -270,7 +295,8 @@
       "type": "object",
       "description": "Receive data only",
       "required": [
-        "type"
+        "type",
+        "length"
       ],
       "properties": {
         "type": {
