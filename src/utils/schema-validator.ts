@@ -1,6 +1,6 @@
 import Ajv from 'ajv';
 import addFormats from 'ajv-formats';
-import radioProtocolSchema from '../schemas/radio-protocol-schema.json' assert { type: 'json' };
+import radioProtocolSchema from '../schemas/radio-protocol-schema.json' with { type: 'json' };
 
 export interface ValidationResult {
   valid: boolean;
@@ -8,14 +8,14 @@ export interface ValidationResult {
 }
 
 export class SchemaValidator {
-  private ajv: Ajv;
+  private ajv: any;
 
   constructor() {
-    this.ajv = new Ajv({
+    this.ajv = new (Ajv as any)({
       allErrors: true,
       verbose: true,
     });
-    addFormats(this.ajv);
+    (addFormats as any)(this.ajv);
   }
 
   validateRadioProtocol(config: unknown): ValidationResult {
@@ -27,14 +27,14 @@ export class SchemaValidator {
     }
 
     const errors =
-      validate.errors?.map((error) => {
+      validate.errors?.map((error: { instancePath?: string; message?: string }) => {
         const path = error.instancePath || 'root';
         return `${path}: ${error.message}`;
       }) || [];
 
     return {
-      valid: false,
       errors,
+      valid: false,
     };
   }
 }

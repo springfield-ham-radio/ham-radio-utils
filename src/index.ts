@@ -15,4 +15,4 @@ export * from './utils/ui-logger.js';
 export * from './utils/ui-logger-factory.js';
 
 // Export the radio protocol schema
-export { default as radioProtocolSchema } from './schemas/radio-protocol-schema.json' assert { type: 'json' };
+export { default as radioProtocolSchema } from './schemas/radio-protocol-schema.json' with { type: 'json' };

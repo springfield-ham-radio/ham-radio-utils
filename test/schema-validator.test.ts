@@ -1,78 +1,74 @@
 import { describe, it } from 'node:test';
-import { expect } from 'chai';
 import { SchemaValidator } from '../src/utils/schema-validator.js';
+import { expect } from 'chai';
 
 // Baofeng UV-5R configuration from the example
 const baofengConfig = {
   id: {
+    manufacturer: 'Baofeng',
     model: 'baofeng-uv5r',
     name: 'Baofeng UV-5R',
-    manufacturer: 'Baofeng',
-  },
-  settingsSchema: {
-    model: 'baofeng-uv5r',
-    settingsSchema: {},
-    channelSchema: {},
-  },
-  serialConfig: {
-    baudRate: 9600,
-    dataBits: 8,
-    stopBits: 1,
-    parity: 'none',
   },
   memoryConfig: {
     chunkSize: 64,
     segments: {
       channels: {
-        startAddress: 0,
         endAddress: 6143,
+        startAddress: 0,
       },
       settings: {
-        startAddress: 7872,
         endAddress: 8191,
+        startAddress: 7872,
       },
     },
   },
   readMemory: [
     {
       sendReceive: {
-        send: [80, 187, 255, 32, 18, 7, 37],
-        receive: {
-          type: 'exact',
-          value: 6,
-          length: 1,
-        },
         description: 'Send magic number',
-      },
-    },
-    {
-      sendReceive: {
-        send: [2],
         receive: {
-          type: 'variable',
-          length: 8,
-        },
-        description: 'Get radio identifier',
-      },
-    },
-    {
-      sendReceive: {
-        send: [6],
-        receive: {
+          length: 1,
           type: 'exact',
           value: 6,
-          length: 1,
         },
+        send: [80, 187, 255, 32, 18, 7, 37],
+      },
+    },
+    {
+      sendReceive: {
+        description: 'Get radio identifier',
+        receive: {
+          length: 8,
+          type: 'variable',
+        },
+        send: [2],
+      },
+    },
+    {
+      sendReceive: {
         description: 'Begin clone operation',
+        receive: {
+          length: 1,
+          type: 'exact',
+          value: 6,
+        },
+        send: [6],
       },
     },
     {
       readSegment: {
+        description: 'Read all memory segments (single chunk per segment)',
+        endChunk: {
+          receive: {
+            length: 1,
+            type: 'exact',
+            value: 6,
+          },
+          send: [6],
+        },
         segments: ['channels', 'settings'],
         startChunk: {
-          send: ['S', 'address:2', 'segment.chunkSize'],
           receive: {
-            type: 'pattern',
             pattern: [
               'X',
               {
@@ -80,51 +76,55 @@ const baofengConfig = {
                 size: 2,
               },
               {
-                field: 'length',
-                size: 1,
-              },
-              {
                 field: 'data',
                 size: 0,
               },
+              {
+                field: 'length',
+                size: 1,
+              },
             ],
+            type: 'pattern',
           },
+          send: ['S', 'address:2', 'segment.chunkSize'],
         },
-        endChunk: {
-          send: [6],
-          receive: {
-            type: 'exact',
-            value: 6,
-            length: 1,
-          },
-        },
-        description: 'Read all memory segments (single chunk per segment)',
       },
     },
   ],
+  serialConfig: {
+    baudRate: 9600,
+    dataBits: 8,
+    parity: 'none',
+    stopBits: 1,
+  },
+  settingsSchema: {
+    channelSchema: {},
+    model: 'baofeng-uv5r',
+    settingsSchema: {},
+  },
   writeMemory: [
     {
       sendReceive: {
-        send: [80, 187, 255, 32, 18, 7, 37],
+        description: 'Send magic number',
         receive: {
+          length: 1,
           type: 'exact',
           value: 6,
-          length: 1,
         },
-        description: 'Send magic number',
+        send: [80, 187, 255, 32, 18, 7, 37],
       },
     },
     {
       writeSegment: {
-        segments: ['channels', 'settings'],
-        send: ['X', 'segment.startAddress:2', 'segment.chunkSize'],
         data: 'segment.data',
+        description: 'Write all memory segments (single chunk per segment)',
         receive: {
+          length: 1,
           type: 'exact',
           value: 6,
-          length: 1,
         },
-        description: 'Write all memory segments (single chunk per segment)',
+        segments: ['channels', 'settings'],
+        send: ['X', 'segment.startAddress:2', 'segment.chunkSize'],
       },
     },
   ],
@@ -187,12 +187,12 @@ describe('SchemaValidator', () => {
         ...baofengConfig.memoryConfig,
         segments: {
           channels: {
-            startAddress: -1, // Invalid negative address
             endAddress: 6143,
+            startAddress: -1, // Invalid negative address
           },
           settings: {
-            startAddress: 7872,
             endAddress: 8191,
+            startAddress: 7872,
           },
         },
       },
@@ -214,13 +214,13 @@ describe('SchemaValidator', () => {
       readMemory: [
         {
           sendReceive: {
-            send: [80, 187, 255, 32, 18, 7, 37],
+            description: 'Send magic number',
             receive: {
+              length: 1,
               type: 'invalid_type', // Invalid type
               value: 6,
-              length: 1,
             },
-            description: 'Send magic number',
+            send: [80, 187, 255, 32, 18, 7, 37],
           },
         },
       ],

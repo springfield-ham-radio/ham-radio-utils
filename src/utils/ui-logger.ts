@@ -40,6 +40,7 @@ export class UILogger {
     this.logger = logger;
   }
 
+  // eslint-disable-next-line max-params
   startCommand(stepIndex: number, totalSteps: number, operation: string, step: UIProtocolStep): void {
     const commandId = `${operation}-${stepIndex}`;
     const startTime = Date.now();
@@ -53,14 +54,15 @@ export class UILogger {
         commandId,
         commandType,
         description,
-        stepIndex,
-        totalSteps,
         operation,
         startTime,
+        stepIndex,
+        totalSteps,
       })
       .info('Command started');
   }
 
+  // eslint-disable-next-line max-params
   logCommandSuccess(stepIndex: number, totalSteps: number, operation: string, step: UIProtocolStep, context: any): void {
     const commandId = `${operation}-${stepIndex}`;
     const startTime = this.commandStartTimes.get(commandId) || Date.now();
@@ -77,34 +79,35 @@ export class UILogger {
 
     // For readSegment, also extract chunk logs if present
     let dataChunks = undefined;
-    if (commandType === 'readSegment') {
+    if ('readSegment' === commandType) {
       dataChunks = context.variables?.get('lastReadSegmentChunks');
       // For readSegment, we don't need the flattened dataSent/dataReceived since we have dataChunks
     }
 
     // Convert dataSent and dataReceived to byte array format if they exist
-    const dataSentArray = dataSent ? Array.from(dataSent) : undefined;
-    const dataReceivedArray = dataReceived ? Array.from(dataReceived) : undefined;
+    const dataSentArray = dataSent ? [...dataSent] : undefined;
+    const dataReceivedArray = dataReceived ? [...dataReceived] : undefined;
 
     this.logger
       .withMetadata({
         commandType,
-        description,
-        dataSent: dataSentArray,
+        dataChunks,
         dataExpected,
         dataReceived: dataReceivedArray,
-        dataChunks,
-        success: true,
-        startTime,
-        endTime,
+        dataSent: dataSentArray,
+        description,
         duration,
-        stepIndex,
-        totalSteps,
+        endTime,
         operation,
+        startTime,
+        stepIndex,
+        success: true,
+        totalSteps,
       })
       .info('Command completed successfully');
   }
 
+  // eslint-disable-next-line max-params
   logCommandFailure(stepIndex: number, totalSteps: number, operation: string, step: UIProtocolStep, error: Error, context: any): void {
     const commandId = `${operation}-${stepIndex}`;
     const startTime = this.commandStartTimes.get(commandId) || Date.now();
@@ -119,53 +122,79 @@ export class UILogger {
     const dataExpected = this.getExpectedData(step);
 
     // Convert dataSent to byte array format if it exists
-    const dataSentArray = dataSent ? Array.from(dataSent) : undefined;
+    const dataSentArray = dataSent ? [...dataSent] : undefined;
 
     this.logger
       .withMetadata({
         commandType,
-        description,
-        dataSent: dataSentArray,
         dataExpected,
-        error: error.message,
-        success: false,
-        startTime,
-        endTime,
+        dataSent: dataSentArray,
+        description,
         duration,
-        stepIndex,
-        totalSteps,
+        endTime,
+        error: error.message,
         operation,
+        startTime,
+        stepIndex,
+        success: false,
+        totalSteps,
       })
       .info('Command failed');
   }
 
   private getCommandType(step: UIProtocolStep): string {
-    if ('sendReceive' in step) return 'sendReceive';
-    if ('send' in step) return 'send';
-    if ('receive' in step) return 'receive';
-    if ('readSegment' in step) return 'readSegment';
-    if ('writeSegment' in step) return 'writeSegment';
-    if ('setVariable' in step) return 'setVariable';
+    if ('sendReceive' in step) {
+      return 'sendReceive';
+    }
+    if ('send' in step) {
+      return 'send';
+    }
+    if ('receive' in step) {
+      return 'receive';
+    }
+    if ('readSegment' in step) {
+      return 'readSegment';
+    }
+    if ('writeSegment' in step) {
+      return 'writeSegment';
+    }
+    if ('setVariable' in step) {
+      return 'setVariable';
+    }
     return 'unknown';
   }
 
   private getStepDescription(step: UIProtocolStep): string {
-    if ('sendReceive' in step && step.sendReceive.description) return step.sendReceive.description;
-    if ('send' in step && step.send.description) return step.send.description;
-    if ('receive' in step && step.receive.description) return step.receive.description;
-    if ('readSegment' in step && step.readSegment.description) return step.readSegment.description;
-    if ('writeSegment' in step && step.writeSegment.description) return step.writeSegment.description;
+    if ('sendReceive' in step && step.sendReceive.description) {
+      return step.sendReceive.description;
+    }
+    if ('send' in step && step.send.description) {
+      return step.send.description;
+    }
+    if ('receive' in step && step.receive.description) {
+      return step.receive.description;
+    }
+    if ('readSegment' in step && step.readSegment.description) {
+      return step.readSegment.description;
+    }
+    if ('writeSegment' in step && step.writeSegment.description) {
+      return step.writeSegment.description;
+    }
     return 'No description';
   }
 
   private getExpectedData(step: UIProtocolStep): any {
-    if ('sendReceive' in step && step.sendReceive.receive) return step.sendReceive.receive;
-    if ('receive' in step) return step.receive;
+    if ('sendReceive' in step && step.sendReceive.receive) {
+      return step.sendReceive.receive;
+    }
+    if ('receive' in step) {
+      return step.receive;
+    }
     if ('readSegment' in step) {
       // For readSegment, return both start and end chunk receive patterns
       return {
-        startChunk: step.readSegment.startChunk.receive,
         endChunk: step.readSegment.endChunk.receive,
+        startChunk: step.readSegment.startChunk.receive,
         type: 'readSegment',
       };
     }
