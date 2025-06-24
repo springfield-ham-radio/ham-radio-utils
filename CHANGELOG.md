@@ -1,3 +1,12 @@
+## [2.2.0](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/compare/v2.1.0...v2.2.0) (2025-06-24)
+
+
+### Features
+
+* add radio protocol schema and schema validation ([af974f1](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/commit/af974f18fff0ba4bba9d748d1951df4b69bc9310))
+* enhance radio protocol schema with additional fields and validation ([9ad48d7](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/commit/9ad48d748a7b7a9eb9d4640be081a44a9f74cd4d))
+* update CI configuration, package dependencies, and schema import syntax ([2b0855b](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/commit/2b0855b78b2fdc1575e612c4027fb7f017e27c98))
+
 ## [2.1.0](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/compare/v2.0.2...v2.1.0) (2025-06-21)
 
 
