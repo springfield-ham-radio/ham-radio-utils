@@ -1010,13 +1010,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@springfield/ham-radio-api@npm:^16.1.1":
-  version: 16.1.1
-  resolution: "@springfield/ham-radio-api@npm:16.1.1"
+"@springfield/ham-radio-api@npm:^16.1.2":
+  version: 16.1.2
+  resolution: "@springfield/ham-radio-api@npm:16.1.2"
   dependencies:
-    loglayer: "npm:^6.4.3"
+    loglayer: "npm:^6.6.0"
     ts-brand: "npm:^0.2.0"
-  checksum: 10/d11f65be4b849909008dacd1f9d9462ab14533d3fb940d4881ccf4e419c7c28b5b4665696aa8cf736d3b97cef4384b972022718ffee4b9ee4e42fc02cc956a15
+  checksum: 10/229a227bd192e0e6896dbd19f8cefd18071aa3e07215cb2f299afb6227a329b421ee7bd96a8ebf58c540c07e755b2e5678b1e68bf54f739b5fbdcc687f1c4719
   languageName: node
   linkType: hard
 
@@ -1029,7 +1029,7 @@ __metadata:
     "@semantic-release/changelog": "npm:6.0.3"
     "@semantic-release/git": "npm:10.0.1"
     "@semantic-release/gitlab": "npm:13.2.6"
-    "@springfield/ham-radio-api": "npm:^16.1.1"
+    "@springfield/ham-radio-api": "npm:^16.1.2"
     "@types/chai": "npm:5.2.2"
     "@types/sprintf-js": "npm:1.1.4"
     ajv: "npm:^8.17.1"
@@ -3253,18 +3253,6 @@ __metadata:
   version: 4.17.21
   resolution: "lodash@npm:4.17.21"
   checksum: 10/c08619c038846ea6ac754abd6dd29d2568aa705feb69339e836dfa8d8b09abbb2f859371e86863eda41848221f9af43714491467b5b0299122431e202bb0c532
-  languageName: node
-  linkType: hard
-
-"loglayer@npm:^6.4.3":
-  version: 6.4.3
-  resolution: "loglayer@npm:6.4.3"
-  dependencies:
-    "@loglayer/context-manager": "npm:1.1.1"
-    "@loglayer/plugin": "npm:2.1.1"
-    "@loglayer/shared": "npm:2.3.1"
-    "@loglayer/transport": "npm:2.2.1"
-  checksum: 10/49b4134895939a584974424af81dc0797dbe7e95a73520058b965c06e83e539559cc7df57119cad621cdf69d23ceab1d2eb779e09d17eced96bffbe992fa6060
   languageName: node
   linkType: hard
 
