@@ -1,4 +1,4 @@
-import Ajv from 'ajv';
+import { Ajv } from 'ajv';
 import addFormats from 'ajv-formats';
 import radioProtocolSchema from '../schemas/radio-protocol-schema.json' with { type: 'json' };
 
@@ -7,15 +7,20 @@ export interface ValidationResult {
   errors?: string[];
 }
 
+interface AjvError {
+  instancePath?: string;
+  message?: string;
+}
+
 export class SchemaValidator {
-  private ajv: any;
+  private ajv: Ajv;
 
   constructor() {
-    this.ajv = new (Ajv as any)({
+    this.ajv = new Ajv({
       allErrors: true,
       verbose: true,
     });
-    (addFormats as any)(this.ajv);
+    (addFormats as unknown as (ajv: Ajv) => Ajv)(this.ajv);
   }
 
   validateRadioProtocol(config: unknown): ValidationResult {
@@ -26,11 +31,13 @@ export class SchemaValidator {
       return { valid: true };
     }
 
-    const errors =
-      validate.errors?.map((error: { instancePath?: string; message?: string }) => {
+    let errors: string[] = [];
+    if (validate.errors && validate.errors.length > 0) {
+      errors = validate.errors.map((error: AjvError) => {
         const path = error.instancePath || 'root';
         return `${path}: ${error.message}`;
-      }) || [];
+      });
+    }
 
     return {
       errors,

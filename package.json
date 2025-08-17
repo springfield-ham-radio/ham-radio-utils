@@ -15,8 +15,8 @@
   "scripts": {
     "build": "tsc && cp src/db/* dist/db/ && cp src/schemas/* dist/schemas/",
     "commitlint": "commitlint --edit",
-    "lint": "oxlint",
-    "lint:fix": "oxlint --fix --fix-suggestions",
+    "lint": "oxlint --import-plugin --tsconfig tsconfig.json",
+    "lint:fix": "oxlint --import-plugin --tsconfig tsconfig.json --fix --fix-suggestions",
     "release": "semantic-release",
     "prepare": "husky"
   },
@@ -51,7 +51,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@springfield/ham-radio-api": "^16.1.2",
+    "@springfield/ham-radio-api": "^16.1.3",
     "ajv": "^8.17.1",
     "ajv-formats": "^3.0.1",
     "fishery": "^2.3.1",
@@ -68,7 +68,7 @@
     "@types/sprintf-js": "1.1.4",
     "chai": "5.2.1",
     "husky": "9.1.7",
-    "oxlint": "1.3.0",
+    "oxlint": "1.11.2",
     "semantic-release": "23.1.1",
     "semantic-release-yarn": "3.0.2",
     "typescript": "5.9.2"

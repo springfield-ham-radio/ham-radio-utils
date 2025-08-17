@@ -6,7 +6,7 @@ export class RadioSegmentedMemory {
   constructor(segments?: RadioMemorySegment[]) {
     this.segments = new Map();
 
-    if (segments != undefined) {
+    if (segments) {
       for (const segment of segments) {
         this.segments.set(segment.startAddress, segment);
       }
@@ -43,7 +43,7 @@ export class RadioSegmentedMemory {
       result = iterator.next();
     }
 
-    return undefined;
+    return {} as RadioMemorySegment;
   }
 
   public toArray(): RadioMemorySegment[] {
