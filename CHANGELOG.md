@@ -1,3 +1,14 @@
+## [3.0.0](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/compare/v2.2.2...v3.0.0) (2025-08-17)
+
+
+### ⚠ BREAKING CHANGES
+
+* update .oxlintrc.json and package.json for linting improvements and dependency upgrades
+
+### Features
+
+* update .oxlintrc.json and package.json for linting improvements and dependency upgrades ([119f934](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/commit/119f934550846d86d034bce30d735463dcabe4eb))
+
 ## [2.2.2](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/compare/v2.2.1...v2.2.2) (2025-08-08)
 
 
