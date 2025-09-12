@@ -1,3 +1,18 @@
+## <small>3.0.1 (2025-09-12)</small>
+
+* Merge branch 'renovate/chai-5.x' into 'main' ([5e47735](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/commit/5e47735))
+* Merge branch 'renovate/oxlint-1.x' into 'main' ([5c2dcc0](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/commit/5c2dcc0))
+* Merge branch 'renovate/semantic-release-monorepo' into 'main' ([efbd8ed](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/commit/efbd8ed))
+* Merge branch 'renovate/springfield-ham-radio-api-16.x' into 'main' ([9707285](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/commit/9707285))
+* Merge branch 'renovate/yarn-monorepo' into 'main' ([a12a662](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/commit/a12a662))
+* fix(deps): update dependency @springfield/ham-radio-api to ^16.1.4 ([275773f](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/commit/275773f))
+* chore: better oxlint config ([2e3c6c2](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/commit/2e3c6c2))
+* chore(deps): update dependencies in package.json and yarn.lock ([876fcce](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/commit/876fcce))
+* chore(deps): update dependency @semantic-release/gitlab to v13.2.8 ([33d9e2a](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/commit/33d9e2a))
+* chore(deps): update dependency chai to v5.3.3 ([aa14fcb](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/commit/aa14fcb))
+* chore(deps): update dependency oxlint to v1.12.0 ([1bd7a3f](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/commit/1bd7a3f))
+* chore(deps): update yarn to v4.9.4 ([de4403d](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/commit/de4403d))
+
 ## [3.0.0](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/compare/v2.2.2...v3.0.0) (2025-08-17)
 
 
