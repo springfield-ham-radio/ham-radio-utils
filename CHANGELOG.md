@@ -1,3 +1,7 @@
+## 3.1.0 (2025-09-13)
+
+* feat(deps): update @springfield/ham-radio-api to ^16.2.0 and add addressSize to radio protocol schem ([7ebcb7b](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/commit/7ebcb7b))
+
 ## <small>3.0.1 (2025-09-12)</small>
 
 * Merge branch 'renovate/chai-5.x' into 'main' ([5e47735](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/commit/5e47735))
