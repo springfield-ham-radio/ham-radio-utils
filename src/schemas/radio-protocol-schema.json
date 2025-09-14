@@ -129,6 +129,7 @@
       "required": [
         "chunkSize",
         "addressSize",
+        "addressEndianness",
         "segments"
       ],
       "properties": {
@@ -142,6 +143,14 @@
           "description": "Size of addresses in bytes for memory operations",
           "minimum": 1,
           "maximum": 4
+        },
+        "addressEndianness": {
+          "type": "string",
+          "description": "Byte order for address values in memory operations",
+          "enum": [
+            "big",
+            "little"
+          ]
         },
         "segments": {
           "type": "object",
