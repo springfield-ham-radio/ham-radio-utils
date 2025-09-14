@@ -1,3 +1,7 @@
+## 3.2.0 (2025-09-14)
+
+* feat: update @springfield/ham-radio-api to ^16.3.0 and add addressEndianness to radio protocol schem ([6b8d9da](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/commit/6b8d9da))
+
 ## 3.1.0 (2025-09-13)
 
 * feat(deps): update @springfield/ham-radio-api to ^16.2.0 and add addressSize to radio protocol schem ([7ebcb7b](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/commit/7ebcb7b))
