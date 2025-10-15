@@ -1,3 +1,12 @@
+## <small>3.2.1 (2025-10-15)</small>
+
+* Merge branch 'renovate/loglayer-6.x' into 'main' ([146abba](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/commit/146abba))
+* Merge branch 'renovate/semantic-release-monorepo' into 'main' ([15acc48](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/commit/15acc48))
+* Merge branch 'renovate/yarn-monorepo' into 'main' ([594bf44](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/commit/594bf44))
+* fix(deps): update dependency loglayer to ^6.9.1 ([bc734cc](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/commit/bc734cc))
+* chore(deps): update dependency @semantic-release/gitlab to v13.2.9 ([c07f157](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/commit/c07f157))
+* chore(deps): update yarn to v4.10.3 ([1187dba](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/commit/1187dba))
+
 ## 3.2.0 (2025-09-14)
 
 * feat: update @springfield/ham-radio-api to ^16.3.0 and add addressEndianness to radio protocol schem ([6b8d9da](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/commit/6b8d9da))
