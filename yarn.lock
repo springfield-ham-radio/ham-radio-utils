@@ -251,30 +251,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@loglayer/context-manager@npm:1.1.2":
-  version: 1.1.2
-  resolution: "@loglayer/context-manager@npm:1.1.2"
-  dependencies:
-    "@loglayer/shared": "npm:2.4.0"
-  checksum: 10/8d1a1a1e1759d28c4003ea5010a864a652ed76cfc223bde934cfe23619c72dcfa86bfda85832089abd332d78ae71634a335daf69ed6609ad7637aa25c12c1fa7
-  languageName: node
-  linkType: hard
-
 "@loglayer/context-manager@npm:1.1.6":
   version: 1.1.6
   resolution: "@loglayer/context-manager@npm:1.1.6"
   dependencies:
     "@loglayer/shared": "npm:2.5.3"
   checksum: 10/7a12200abcaa039acc41abeb5f42c3cbdba3c0417398c9eb9e36f5f649d3ae1d6ec57756ce8c2595c3157d0f28093284437a9ad2bbe4fb9e460158068c61646e
-  languageName: node
-  linkType: hard
-
-"@loglayer/plugin@npm:2.1.2":
-  version: 2.1.2
-  resolution: "@loglayer/plugin@npm:2.1.2"
-  dependencies:
-    "@loglayer/shared": "npm:2.4.0"
-  checksum: 10/1f417d31f82aadbde51d9846a99ae143e2e0aed1feefbc1845237a167d3be55be2eda48270185101659e3494bd40f6e8c2e12e1d768e2613ac88cc106c46cca9
   languageName: node
   linkType: hard
 
@@ -287,26 +269,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@loglayer/shared@npm:2.4.0":
-  version: 2.4.0
-  resolution: "@loglayer/shared@npm:2.4.0"
-  checksum: 10/4b231a87e05b4990dedd07443fff31fa658d42ac19e650efc5964451fee8219d58e7ea5de86b8db131d3fe4abecbc7bcf7debf1e28a669ab176e48da0d93d491
-  languageName: node
-  linkType: hard
-
 "@loglayer/shared@npm:2.5.3":
   version: 2.5.3
   resolution: "@loglayer/shared@npm:2.5.3"
   checksum: 10/4d6b7d189c77875ee69b4383b22b3fdbdcbd5df5a2a5c4b1f75380ac9e69bcc53c0896627a6e37e87936972c9b3f146fa573862cc092f6ae14c231df802e4b65
-  languageName: node
-  linkType: hard
-
-"@loglayer/transport@npm:2.2.2":
-  version: 2.2.2
-  resolution: "@loglayer/transport@npm:2.2.2"
-  dependencies:
-    "@loglayer/shared": "npm:2.4.0"
-  checksum: 10/28550f7fe099aa9f2bcb5a2233bd975ea62ffc896498dac0bffb1e76317b6b65dd175732b8bb2bd93139915998422d953af1255d0389e03279d9a82241006e85
   languageName: node
   linkType: hard
 
@@ -1082,13 +1048,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@springfield/ham-radio-api@npm:^16.3.0":
-  version: 16.3.0
-  resolution: "@springfield/ham-radio-api@npm:16.3.0"
+"@springfield/ham-radio-api@npm:^16.3.2":
+  version: 16.3.2
+  resolution: "@springfield/ham-radio-api@npm:16.3.2"
   dependencies:
-    loglayer: "npm:^6.7.0"
+    loglayer: "npm:^6.10.0"
     ts-brand: "npm:^0.2.0"
-  checksum: 10/e4ac8a080934b006e82971b15ea0c36c23bf62b658c5ea97294db242ecb17db49c334007a3e046f345631f7ce0f99cb84ae7af0f2b8fadc60402bf05ac3a4558
+  checksum: 10/bdf781a3502b401c2fc3fbb00d4b18558f8481543033e63466200362a3a4850a56904b49d4bae4287dea5f32a286fb8520ae47798c4334e2b21622b9484f1f0b
   languageName: node
   linkType: hard
 
@@ -1101,7 +1067,7 @@ __metadata:
     "@semantic-release/changelog": "npm:6.0.3"
     "@semantic-release/git": "npm:10.0.1"
     "@semantic-release/gitlab": "npm:13.2.9"
-    "@springfield/ham-radio-api": "npm:^16.3.0"
+    "@springfield/ham-radio-api": "npm:^16.3.2"
     "@types/chai": "npm:5.2.3"
     "@types/sprintf-js": "npm:1.1.4"
     ajv: "npm:^8.17.1"
@@ -3355,15 +3321,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"loglayer@npm:^6.7.0":
-  version: 6.7.0
-  resolution: "loglayer@npm:6.7.0"
+"loglayer@npm:^6.10.0":
+  version: 6.10.0
+  resolution: "loglayer@npm:6.10.0"
   dependencies:
-    "@loglayer/context-manager": "npm:1.1.2"
-    "@loglayer/plugin": "npm:2.1.2"
-    "@loglayer/shared": "npm:2.4.0"
-    "@loglayer/transport": "npm:2.2.2"
-  checksum: 10/63a1eab5b8da0ebd09bbb2cf66b88e7afff2bb57985846a34ce4c6220ded2621414db373fb722915910ea286d0edddab2933aeca7b85d6e97ee395b092dacb09
+    "@loglayer/context-manager": "npm:1.1.6"
+    "@loglayer/plugin": "npm:2.1.6"
+    "@loglayer/shared": "npm:2.5.3"
+    "@loglayer/transport": "npm:2.3.4"
+  checksum: 10/6429a4d61e882d3a4b8c77e36a45176ca34a005d7366aa40260a9def3763cd76d0668a88028d119a8d46063ea1a7eab42c598dc49e45686d85a2e7f20cbf21a4
   languageName: node
   linkType: hard
 
