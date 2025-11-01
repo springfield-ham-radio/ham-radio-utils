@@ -1,3 +1,14 @@
+## <small>3.2.2 (2025-11-01)</small>
+
+* Merge branch 'renovate/chai-5.x' into 'main' ([2c843db](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/commit/2c843db))
+* Merge branch 'renovate/chai-6.x' into 'main' ([9546de7](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/commit/9546de7))
+* Merge branch 'renovate/oxlint-1.x' into 'main' ([27fee77](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/commit/27fee77))
+* Merge branch 'renovate/springfield-ham-radio-api-16.x' into 'main' ([c4d2cb3](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/commit/c4d2cb3))
+* chore(deps): update dependency @types/chai to v5.2.3 ([ce690d4](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/commit/ce690d4))
+* chore(deps): update dependency chai to v6.2.0 ([0e36648](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/commit/0e36648))
+* chore(deps): update dependency oxlint to v1.24.0 ([2545952](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/commit/2545952))
+* fix(deps): update dependency @springfield/ham-radio-api to ^16.3.2 ([ab53bbb](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/commit/ab53bbb))
+
 ## <small>3.2.1 (2025-10-15)</small>
 
 * Merge branch 'renovate/loglayer-6.x' into 'main' ([146abba](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/commit/146abba))
