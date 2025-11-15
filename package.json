@@ -3,7 +3,7 @@
   "version": "3.2.2",
   "author": "Bryan Hunt",
   "license": "MIT",
-  "packageManager": "yarn@4.10.3",
+  "packageManager": "yarn@4.11.0",
   "readme": "README.md",
   "type": "module",
   "main": "dist/index.js",
