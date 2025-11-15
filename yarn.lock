@@ -1075,7 +1075,7 @@ __metadata:
     chai: "npm:6.2.0"
     fishery: "npm:^2.3.1"
     husky: "npm:9.1.7"
-    loglayer: "npm:^6.9.1"
+    loglayer: "npm:^6.10.0"
     oxlint: "npm:1.24.0"
     semantic-release: "npm:24.2.8"
     semantic-release-yarn: "npm:3.0.2"
@@ -3330,18 +3330,6 @@ __metadata:
     "@loglayer/shared": "npm:2.5.3"
     "@loglayer/transport": "npm:2.3.4"
   checksum: 10/6429a4d61e882d3a4b8c77e36a45176ca34a005d7366aa40260a9def3763cd76d0668a88028d119a8d46063ea1a7eab42c598dc49e45686d85a2e7f20cbf21a4
-  languageName: node
-  linkType: hard
-
-"loglayer@npm:^6.9.1":
-  version: 6.9.1
-  resolution: "loglayer@npm:6.9.1"
-  dependencies:
-    "@loglayer/context-manager": "npm:1.1.6"
-    "@loglayer/plugin": "npm:2.1.6"
-    "@loglayer/shared": "npm:2.5.3"
-    "@loglayer/transport": "npm:2.3.4"
-  checksum: 10/c40d24a0b047729dd7fd3605b6bf6b10cf36cb94d8d63b505f29834562327fb28027cd158426118ef0ea0c47f3edcdb6d68f005f91d9d47e583ce6e247082c05
   languageName: node
   linkType: hard
 
