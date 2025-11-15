@@ -1,3 +1,10 @@
+## <small>3.2.3 (2025-11-15)</small>
+
+* Merge branch 'renovate/loglayer-6.x' into 'main' ([b6ef5a5](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/commit/b6ef5a5))
+* Merge branch 'renovate/yarn-monorepo' into 'main' ([0ac014d](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/commit/0ac014d))
+* fix(deps): update dependency loglayer to ^6.10.0 ([f497603](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/commit/f497603))
+* chore(deps): update yarn to v4.11.0 ([7994800](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/commit/7994800))
+
 ## <small>3.2.2 (2025-11-01)</small>
 
 * Merge branch 'renovate/chai-5.x' into 'main' ([2c843db](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/commit/2c843db))
