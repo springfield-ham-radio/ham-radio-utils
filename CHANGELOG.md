@@ -1,3 +1,7 @@
+## <small>3.2.4 (2025-12-17)</small>
+
+* fix: update dependencies ([ecec376](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/commit/ecec376))
+
 ## <small>3.2.3 (2025-11-15)</small>
 
 * Merge branch 'renovate/loglayer-6.x' into 'main' ([b6ef5a5](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/commit/b6ef5a5))
