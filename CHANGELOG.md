@@ -1,3 +1,9 @@
+## [3.2.5](https://github.com/springfield-ham-radio/ham-radio-utils/compare/v3.2.4...v3.2.5) (2026-08-22)
+
+### Bug Fixes
+
+* migrate to TypeScript 7 and update dependencies ([0844679](https://github.com/springfield-ham-radio/ham-radio-utils/commit/08446799c28db76bba5215ddb2778ca0c444ca4e))
+
 ## <small>3.2.4 (2025-12-17)</small>
 
 * fix: update dependencies ([ecec376](https://gitlab.com/springfield-ham-radio/app/ham-radio-utils/commit/ecec376))
