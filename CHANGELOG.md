@@ -1,3 +1,9 @@
+## [4.2.0](https://github.com/springfield-ham-radio/ham-radio-utils/compare/v4.1.2...v4.2.0) (2026-08-22)
+
+### Features
+
+* add memory-map decode/encode engine and UI helpers ([15e42cf](https://github.com/springfield-ham-radio/ham-radio-utils/commit/15e42cfd76dfa05b69a8f057fc378b0e687815ff))
+
 ## [4.1.2](https://github.com/springfield-ham-radio/ham-radio-utils/compare/v4.1.1...v4.1.2) (2026-08-22)
 
 ### Bug Fixes
