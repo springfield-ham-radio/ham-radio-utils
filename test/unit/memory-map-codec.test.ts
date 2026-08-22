@@ -273,4 +273,115 @@ describe('decodeMemoryMap / encodeMemoryMap', () => {
     const decoded = decodeMemoryMap(basicMap, contents, uv5rMemoryConfig);
     expect(decoded.settings).to.deep.equal(settings.settings);
   });
+
+  it('decodes and encodes Chirp lbcd frequencies', () => {
+    const map: RadioMemoryMap = {
+      structs: [
+        {
+          id: 'channels',
+          seek: 0,
+          count: 2,
+          stride: 16,
+          fields: [
+            { id: 'rxfreq', type: 'u8', value: { kind: 'lbcd', length: 4, scale: 10 } },
+            { id: 'txfreq', type: 'u8', value: { kind: 'lbcd', length: 4, scale: 10 } },
+          ],
+        },
+      ],
+    };
+
+    const contents = new Uint8Array(8192).fill(0xff);
+    // 146520000 Hz → 14652000 → hex as decimal digits packed LE
+    const hz = 146_520_000;
+    let word = Number.parseInt((hz / 10).toString(10), 16);
+    for (let index = 0; index < 4; index += 1) {
+      contents[index] = word & 0xff;
+      word >>= 8;
+    }
+    for (let index = 0; index < 4; index += 1) {
+      contents[4 + index] = contents[index];
+    }
+
+    const decoded = decodeMemoryMap(map, contents, uv5rMemoryConfig);
+    expect((decoded.channels as { rxfreq: number }[])[0].rxfreq).to.equal(hz);
+
+    encodeMemoryMap(map, { channels: [{ rxfreq: hz, txfreq: hz }, null] }, contents, uv5rMemoryConfig);
+    const again = decodeMemoryMap(map, contents, uv5rMemoryConfig);
+    expect((again.channels as { rxfreq: number; txfreq: number }[])[0]).to.deep.equal({
+      rxfreq: hz,
+      txfreq: hz,
+    });
+  });
+
+  it('decodes Chirp-style tone words (CTCSS and DCS)', () => {
+    const dcsValues = [23, 25, 26, 31];
+    const map: RadioMemoryMap = {
+      structs: [
+        {
+          id: 'channels',
+          seek: 0,
+          count: 2,
+          stride: 16,
+          fields: [
+            {
+              id: 'rxtone',
+              type: 'u16',
+              value: { kind: 'tone', values: dcsValues, ctcssMin: 0x0258, reverseOffset: 0x69 },
+            },
+            {
+              id: 'txtone',
+              type: 'u16',
+              value: { kind: 'tone', values: dcsValues, ctcssMin: 0x0258, reverseOffset: 0x69 },
+            },
+          ],
+        },
+      ],
+    };
+
+    const contents = new Uint8Array(8192).fill(0xff);
+    // CTCSS 88.5 → 885
+    contents[0] = 885 & 0xff;
+    contents[1] = (885 >> 8) & 0xff;
+    // DCS 23 index 0 → raw 1
+    contents[2] = 1;
+    contents[3] = 0;
+
+    const decoded = decodeMemoryMap(map, contents, uv5rMemoryConfig);
+    const channel = (decoded.channels as Record<string, unknown>[])[0];
+    expect(channel.rxtone).to.deep.equal({ mode: 'ctcss', value: 885 });
+    expect(channel.txtone).to.deep.equal({ mode: 'dcs', code: 23, polarity: 'N' });
+  });
+
+  it('skips empty slots via emptyWhen and clears them when clearEmpty is set', () => {
+    const map: RadioMemoryMap = {
+      structs: [
+        {
+          id: 'channels',
+          seek: 0,
+          count: 2,
+          stride: 16,
+          emptyWhen: { equals: 0xff },
+          clearEmpty: true,
+          fields: [{ id: 'rxfreq', type: 'u8', value: { kind: 'lbcd', length: 4, scale: 10 } }],
+        },
+      ],
+    };
+
+    const contents = new Uint8Array(8192).fill(0xff);
+    let word = Number.parseInt((146_520_000 / 10).toString(10), 16);
+    for (let index = 0; index < 4; index += 1) {
+      contents[index] = word & 0xff;
+      word >>= 8;
+    }
+
+    const decoded = decodeMemoryMap(map, contents, uv5rMemoryConfig);
+    expect(decoded.channels).to.deep.equal([
+      { rxfreq: 146_520_000 },
+      null,
+    ]);
+
+    contents[16] = 0x12;
+    encodeMemoryMap(map, { channels: [{ rxfreq: 146_520_000 }, null] }, contents, uv5rMemoryConfig);
+    expect(contents[16]).to.equal(0xff);
+  });
 });

@@ -18,8 +18,21 @@ export interface RadioMemoryMapUiField {
  */
 export function collectMemoryMapUiFields(memoryMap: RadioMemoryMap): RadioMemoryMapUiField[] {
   const fields: RadioMemoryMapUiField[] = [];
+  const channelStructIds = new Set<string>();
+
+  if (memoryMap.channelBindings) {
+    channelStructIds.add(memoryMap.channelBindings.records);
+
+    if (memoryMap.channelBindings.names) {
+      channelStructIds.add(memoryMap.channelBindings.names);
+    }
+  }
 
   for (const struct of memoryMap.structs) {
+    if (channelStructIds.has(struct.id)) {
+      continue;
+    }
+
     const count = struct.count ?? 1;
 
     for (let index = 0; index < count; index += 1) {

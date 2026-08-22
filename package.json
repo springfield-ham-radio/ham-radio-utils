@@ -30,7 +30,7 @@
     "test:unit": "tsx --test test/unit/**/*.test.ts"
   },
   "dependencies": {
-    "@springfield/ham-radio-api": "^17.1.0",
+    "@springfield/ham-radio-api": "^17.2.0",
     "ajv": "^8.20.0",
     "ajv-formats": "^3.0.1",
     "fishery": "^2.4.0",

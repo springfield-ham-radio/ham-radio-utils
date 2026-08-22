@@ -18,6 +18,9 @@
       "items": {
         "$ref": "#/definitions/struct"
       }
+    },
+    "channelBindings": {
+      "$ref": "#/definitions/channelBindings"
     }
   },
   "definitions": {
@@ -26,6 +29,28 @@
         { "type": "integer", "minimum": 0 },
         { "type": "string", "pattern": "^(0[xX][0-9a-fA-F]+|[0-9]+)$" }
       ]
+    },
+    "channelBindings": {
+      "type": "object",
+      "required": ["records", "receiveFrequency", "transmitFrequency", "receiveTone", "transmitTone"],
+      "properties": {
+        "records": { "type": "string", "minLength": 1 },
+        "names": { "type": "string", "minLength": 1 },
+        "nameField": { "type": "string", "minLength": 1 },
+        "receiveFrequency": { "type": "string", "minLength": 1 },
+        "transmitFrequency": { "type": "string", "minLength": 1 },
+        "receiveTone": { "type": "string", "minLength": 1 },
+        "transmitTone": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "emptyWhen": {
+      "type": "object",
+      "required": ["equals"],
+      "properties": {
+        "equals": { "type": "integer", "minimum": 0, "maximum": 255 }
+      },
+      "additionalProperties": false
     },
     "ui": {
       "type": "object",
@@ -112,6 +137,31 @@
             "length": { "type": "integer", "minimum": 1 }
           },
           "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["kind", "length"],
+          "properties": {
+            "kind": { "const": "lbcd" },
+            "length": { "type": "integer", "minimum": 1 },
+            "scale": { "type": "number" }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["kind", "values"],
+          "properties": {
+            "kind": { "const": "tone" },
+            "values": {
+              "type": "array",
+              "items": { "type": "integer" },
+              "minItems": 1
+            },
+            "ctcssMin": { "type": "integer" },
+            "reverseOffset": { "type": "integer" }
+          },
+          "additionalProperties": false
         }
       ]
     },
@@ -143,7 +193,9 @@
           "items": { "$ref": "#/definitions/field" }
         },
         "count": { "type": "integer", "minimum": 1 },
-        "stride": { "type": "integer", "minimum": 1 }
+        "stride": { "type": "integer", "minimum": 1 },
+        "emptyWhen": { "$ref": "#/definitions/emptyWhen" },
+        "clearEmpty": { "type": "boolean" }
       },
       "additionalProperties": false
     }

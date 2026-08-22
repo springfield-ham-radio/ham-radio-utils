@@ -1,5 +1,6 @@
 export * from './memory/segmented-memory.js';
 export * from './memory/memory-map-codec.js';
+export * from './memory/memory-map-channels.js';
 export * from './memory/memory-map-ui.js';
 
 export * from './test-utils/radio-channel-factory.js';

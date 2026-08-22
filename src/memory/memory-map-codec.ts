@@ -143,6 +143,46 @@ function decodeRawValue(kind: RadioMemoryMapValueKind | undefined, raw: number |
 
       return value;
     }
+    case 'lbcd': {
+      const bytes = typeof raw === 'number' ? [raw] : raw;
+      let word = 0;
+
+      for (let index = 0; index < bytes.length; index += 1) {
+        word |= bytes[index] << (8 * index);
+      }
+
+      if (word === 0xff_ff_ff_ff || bytes.every((byte) => byte === 0xff)) {
+        return null;
+      }
+
+      return Number.parseInt(word.toString(16), 10) * (kind.scale ?? 10);
+    }
+    case 'tone': {
+      const rawValue = typeof raw === 'number' ? raw : raw[0] | (raw[1] << 8);
+      const ctcssMin = kind.ctcssMin ?? 0x0258;
+      const reverseOffset = kind.reverseOffset ?? 0x69;
+
+      if (rawValue === 0 || rawValue === 0xffff) {
+        return { mode: 'none' };
+      }
+
+      if (rawValue >= ctcssMin) {
+        return { mode: 'ctcss', value: rawValue };
+      }
+
+      let index = rawValue;
+      let polarity: 'N' | 'R' = 'N';
+
+      if (rawValue > reverseOffset) {
+        index = rawValue - reverseOffset;
+        polarity = 'R';
+      } else {
+        index = rawValue - 1;
+      }
+
+      const code = kind.values[index] ?? 0;
+      return { mode: 'dcs', code, polarity };
+    }
     default: {
       const exhaustive: never = kind;
       return exhaustive;
@@ -225,6 +265,50 @@ function encodeRawValue(kind: RadioMemoryMapValueKind | undefined, value: RadioS
 
       return bytes;
     }
+    case 'lbcd': {
+      if (value === null || value === undefined) {
+        return Array.from({ length: byteLength }, () => 0xff);
+      }
+
+      const scale = kind.scale ?? 10;
+      const hz = typeof value === 'number' ? value : 0;
+      let word = Number.parseInt(Math.round(hz / scale).toString(10), 16);
+
+      for (let index = 0; index < byteLength; index += 1) {
+        bytes[index] = word & 0xff;
+        word >>= 8;
+      }
+
+      return bytes;
+    }
+    case 'tone': {
+      const ctcssMin = kind.ctcssMin ?? 0x0258;
+      const reverseOffset = kind.reverseOffset ?? 0x69;
+      let rawValue = 0;
+
+      if (value && typeof value === 'object' && !Array.isArray(value)) {
+        const tone = value as { mode?: string; value?: number; code?: number; polarity?: string };
+
+        if (tone.mode === 'ctcss' && typeof tone.value === 'number') {
+          rawValue = tone.value;
+        } else if (tone.mode === 'dcs' && typeof tone.code === 'number') {
+          const index = kind.values.indexOf(tone.code);
+          rawValue = index >= 0 ? index + 1 : 0;
+
+          if (tone.polarity === 'R') {
+            rawValue += reverseOffset;
+          }
+        }
+      }
+
+      if (rawValue >= ctcssMin || rawValue === 0) {
+        // CTCSS or none: write LE u16
+      }
+
+      bytes[0] = rawValue & 0xff;
+      bytes[1] = (rawValue >> 8) & 0xff;
+      return bytes;
+    }
     default: {
       const exhaustive: never = kind;
       return exhaustive;
@@ -245,9 +329,14 @@ function fieldByteLength(field: RadioMemoryMapField): number {
     field.value?.kind === 'ascii' ||
     field.value?.kind === 'digits' ||
     field.value?.kind === 'dtmf' ||
-    field.value?.kind === 'bbcd'
+    field.value?.kind === 'bbcd' ||
+    field.value?.kind === 'lbcd'
   ) {
     return field.value.length;
+  }
+
+  if (field.value?.kind === 'tone') {
+    return 2;
   }
 
   return 1;
@@ -377,10 +466,8 @@ function decodeStruct(
     }
 
     if (field.type === 'u16') {
-      const raw = bytes[0] | (bytes[1] << 8);
-
       if (!field.reserved) {
-        result[field.id] = decodeRawValue(field.value ?? { kind: 'integer' }, raw);
+        result[field.id] = decodeRawValue(field.value ?? { kind: 'integer' }, bytes);
       }
     } else if (!field.reserved) {
       result[field.id] = decodeRawValue(field.value, length === 1 ? bytes[0] : bytes);
@@ -439,8 +526,15 @@ function encodeStruct(
     const settingValue = values[field.id];
 
     if (field.type === 'u16') {
-      const encoded = encodeRawValue(field.value ?? { kind: 'integer' }, settingValue ?? 0, 1);
-      const value = encoded[0] & 0xffff;
+      const encoded = encodeRawValue(field.value ?? { kind: 'integer' }, settingValue ?? 0, 2);
+      let value = 0;
+
+      if (field.value?.kind === 'tone') {
+        value = (encoded[0] & 0xff) | ((encoded[1] & 0xff) << 8);
+      } else {
+        value = (encoded[0] ?? 0) & 0xffff;
+      }
+
       writeByte(contents, bufferOffsetFor(radioAddress, memoryConfig, contents), value & 0xff);
       writeByte(contents, bufferOffsetFor(radioAddress + 1, memoryConfig, contents), (value >> 8) & 0xff);
     } else {
@@ -456,6 +550,35 @@ function encodeStruct(
 
   if (bitCursor) {
     bitCursor.nextRadioAddress();
+  }
+}
+
+function isStructInstanceEmpty(
+  struct: RadioMemoryMapStruct,
+  contents: Uint8Array,
+  memoryConfig: RadioMemoryConfig,
+  instanceIndex: number,
+): boolean {
+  if (!struct.emptyWhen) {
+    return false;
+  }
+
+  const base = parseSeekAddress(struct.seek) + instanceIndex * (struct.stride ?? 0);
+  const firstByte = readByte(contents, bufferOffsetFor(base, memoryConfig, contents));
+  return firstByte === struct.emptyWhen.equals;
+}
+
+function clearStructInstance(
+  struct: RadioMemoryMapStruct,
+  contents: Uint8Array,
+  memoryConfig: RadioMemoryConfig,
+  instanceIndex: number,
+): void {
+  const base = parseSeekAddress(struct.seek) + instanceIndex * (struct.stride ?? 0);
+  const length = struct.stride ?? 16;
+
+  for (let index = 0; index < length; index += 1) {
+    writeByte(contents, bufferOffsetFor(base + index, memoryConfig, contents), 0xff);
   }
 }
 
@@ -476,7 +599,11 @@ export function decodeMemoryMap(
       const items: RadioSettingValue[] = [];
 
       for (let index = 0; index < count; index += 1) {
-        items.push(decodeStruct(struct, contents, memoryConfig, index));
+        if (isStructInstanceEmpty(struct, contents, memoryConfig, index)) {
+          items.push(null);
+        } else {
+          items.push(decodeStruct(struct, contents, memoryConfig, index));
+        }
       }
 
       settings[struct.id] = items;
@@ -507,6 +634,15 @@ export function encodeMemoryMap(
 
       for (let index = 0; index < count; index += 1) {
         const item = items[index];
+
+        if (item === null || item === undefined) {
+          if (struct.clearEmpty) {
+            clearStructInstance(struct, contents, memoryConfig, index);
+          }
+
+          continue;
+        }
+
         const record =
           item && typeof item === 'object' && !Array.isArray(item) ? (item as Record<string, RadioSettingValue>) : {};
         encodeStruct(struct, record, contents, memoryConfig, index);
