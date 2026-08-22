@@ -1,4 +1,9 @@
-import type { RadioMemoryMap, RadioMemoryMapFieldUi, RadioMemoryMapValueKind } from '@springfield/ham-radio-api';
+import type {
+  RadioMemoryMap,
+  RadioMemoryMapFieldUi,
+  RadioMemoryMapValueKind,
+  RadioSettingValue,
+} from '@springfield/ham-radio-api';
 
 /**
  * Flattened field descriptor for schema-driven settings UI.
@@ -13,8 +18,32 @@ export interface RadioMemoryMapUiField {
   value?: RadioMemoryMapValueKind;
 }
 
+function channelBoundFieldIds(memoryMap: RadioMemoryMap): Set<string> {
+  const bindings = memoryMap.channelBindings;
+  const ids = new Set<string>();
+
+  if (!bindings) {
+    return ids;
+  }
+
+  for (const key of [
+    bindings.receiveFrequency,
+    bindings.transmitFrequency,
+    bindings.receiveTone,
+    bindings.transmitTone,
+    bindings.nameField,
+  ]) {
+    if (key) {
+      ids.add(key);
+    }
+  }
+
+  return ids;
+}
+
 /**
  * Collect writable UI fields from a memory map, in declaration order.
+ * Channel-bound structs are skipped (use {@link collectChannelMemoryMapUiFields}).
  */
 export function collectMemoryMapUiFields(memoryMap: RadioMemoryMap): RadioMemoryMapUiField[] {
   const fields: RadioMemoryMapUiField[] = [];
@@ -62,6 +91,85 @@ export function collectMemoryMapUiFields(memoryMap: RadioMemoryMap): RadioMemory
   }
 
   return fields;
+}
+
+/**
+ * Collect per-channel UI fields from the `channelBindings.records` struct.
+ * Skips reserved fields, fields without `ui`, and fields bound onto RadioChannel.
+ */
+export function collectChannelMemoryMapUiFields(memoryMap: RadioMemoryMap): RadioMemoryMapUiField[] {
+  const bindings = memoryMap.channelBindings;
+
+  if (!bindings) {
+    return [];
+  }
+
+  const struct = memoryMap.structs.find((entry) => entry.id === bindings.records);
+
+  if (!struct) {
+    return [];
+  }
+
+  const boundIds = channelBoundFieldIds(memoryMap);
+  const fields: RadioMemoryMapUiField[] = [];
+
+  for (const field of struct.fields) {
+    if (field.reserved || !field.ui || boundIds.has(field.id)) {
+      continue;
+    }
+
+    fields.push({
+      path: field.id,
+      structId: struct.id,
+      fieldId: field.id,
+      ui: field.ui,
+      value: field.value,
+    });
+  }
+
+  return fields;
+}
+
+/**
+ * Format a decoded memory-map field value for read-only display (e.g. channel table).
+ */
+export function formatMemoryMapFieldValue(
+  value: RadioSettingValue | undefined,
+  field: Pick<RadioMemoryMapUiField, 'value' | 'fieldId'>,
+): string {
+  if (value === undefined || value === null) {
+    return '';
+  }
+
+  if (field.value?.kind === 'enum' && typeof value === 'string') {
+    return value;
+  }
+
+  if (field.value?.kind === 'boolean' || typeof value === 'boolean') {
+    if (field.fieldId === 'wide') {
+      return value ? 'Wide' : 'Narrow';
+    }
+
+    if (field.fieldId === 'scan') {
+      return value ? 'On' : 'Off';
+    }
+
+    return value ? 'On' : 'Off';
+  }
+
+  if (field.fieldId === 'lowpower' && typeof value === 'number') {
+    return value === 0 ? 'High' : 'Low';
+  }
+
+  if (field.fieldId === 'scode' && typeof value === 'number') {
+    return String(value + 1);
+  }
+
+  if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
+    return String(value);
+  }
+
+  return '';
 }
 
 /**
