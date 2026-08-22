@@ -1,3 +1,9 @@
+## [4.4.0](https://github.com/springfield-ham-radio/ham-radio-utils/compare/v4.3.0...v4.4.0) (2026-08-22)
+
+### Features
+
+* collect and format channel memory-map UI fields ([819d123](https://github.com/springfield-ham-radio/ham-radio-utils/commit/819d123d8cf46c9e6e0153ea5cc2feb595838a55))
+
 ## [4.3.0](https://github.com/springfield-ham-radio/ham-radio-utils/compare/v4.2.0...v4.3.0) (2026-08-22)
 
 ### Features
