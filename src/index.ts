@@ -7,6 +7,7 @@ export * from './utils/band-plan.js';
 export * from './utils/frequency-display.js';
 export * from './utils/memory-channel-utils.js';
 export * from './utils/memory-data-utils.js';
+export * from './utils/operator-class-mapper.js';
 export * from './utils/schema-validator.js';
 export * from './utils/to-hex-words.js';
 export * from './utils/ui-logger.js';

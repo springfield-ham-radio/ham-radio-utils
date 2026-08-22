@@ -33,4 +33,24 @@ export class BandPlan {
   findPrivilegeById(id: string): LicenseClass | undefined {
     return this.licenseClasses.get(id);
   }
+
+  /**
+   * Returns whether the given license class may transmit on the frequency.
+   *
+   * Looks up the band that contains the frequency and checks that band's
+   * privileges list. Frequencies outside every known band return false.
+   *
+   * @param frequencyHz - Frequency in Hz
+   * @param licenseClassId - Springfield license-class ID
+   * @returns true when the class has privilege on that frequency
+   */
+  hasPrivilege(frequencyHz: number, licenseClassId: string): boolean {
+    const band = this.findBandByFrequency(frequencyHz);
+
+    if (!band) {
+      return false;
+    }
+
+    return (band.privileges as string[]).includes(licenseClassId);
+  }
 }
