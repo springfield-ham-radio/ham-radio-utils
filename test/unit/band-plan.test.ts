@@ -49,6 +49,12 @@ describe('BandPlan', () => {
       expect(band?.name).to.equal('2 Meter');
     });
 
+    it('should prefer an exact FRS channel over the overlapping GMRS envelope', () => {
+      expect(bandPlan.findBandByFrequency(462_562_500)?.name).to.equal('FRS/GMRS-1');
+      expect(bandPlan.findBandByFrequency(467_562_500)?.name).to.equal('FRS/GMRS-2');
+      expect(bandPlan.findBandByFrequency(467_550_000)?.name).to.equal('GMRS');
+    });
+
     it('should not treat GHz-scale values as HF amateur bands', () => {
       expect(bandPlan.findBandByFrequency(1_800_000_000)?.name).to.not.equal('160 Meter');
       expect(bandPlan.findBandByFrequency(7_000_000_000)?.name).to.not.equal('40 Meter');
@@ -101,6 +107,19 @@ describe('BandPlan', () => {
 
     it('should allow GMRS license transmit on GMRS frequencies', () => {
       expect(bandPlan.hasPrivilege(467_550_000, idFor('GMRS'))).to.be.true;
+    });
+
+    it('should allow General transmit on license-free FRS channels', () => {
+      const generalId = operatorClassToLicenseClassId('GENERAL')!;
+
+      expect(bandPlan.hasPrivilege(462_562_500, generalId)).to.be.true;
+      expect(bandPlan.hasPrivilege(467_562_500, generalId)).to.be.true;
+    });
+
+    it('should deny General transmit on GMRS repeater inputs', () => {
+      const generalId = operatorClassToLicenseClassId('GENERAL')!;
+
+      expect(bandPlan.hasPrivilege(467_550_000, generalId)).to.be.false;
     });
 
     it('should return false when the frequency is not in any band', () => {
