@@ -2,14 +2,17 @@ import { describe, it } from 'node:test';
 import { SchemaValidator } from '../src/utils/schema-validator.js';
 import { expect } from 'chai';
 
-// Baofeng UV-5R configuration from the example
 const baofengConfig = {
+  description: 'UV-5R and UV-5RE Plus models',
   id: {
     manufacturer: 'Baofeng',
     model: 'baofeng-uv5r',
     name: 'Baofeng UV-5R',
   },
+  version: '1.0.0',
   memoryConfig: {
+    addressEndianness: 'big',
+    addressSize: 2,
     chunkSize: 64,
     segments: {
       channels: {
@@ -24,69 +27,29 @@ const baofengConfig = {
   },
   readMemory: [
     {
-      sendReceive: {
-        description: 'Send magic number',
-        receive: {
-          length: 1,
-          type: 'exact',
-          value: 6,
-        },
-        send: [80, 187, 255, 32, 18, 7, 37],
-      },
+      description: 'Send magic number',
+      send: ['0x50', '0xBB', '0xFF', '0x20', '0x12', '0x07', '0x25'],
+      expect: '0x06',
     },
     {
-      sendReceive: {
-        description: 'Get radio identifier',
-        receive: {
-          length: 8,
-          type: 'variable',
-        },
-        send: [2],
-      },
+      description: 'Get radio identifier',
+      send: ['0x02'],
+      expect: { bytes: 8 },
     },
     {
-      sendReceive: {
-        description: 'Begin clone operation',
-        receive: {
-          length: 1,
-          type: 'exact',
-          value: 6,
-        },
-        send: [6],
-      },
+      description: 'Begin clone operation',
+      send: ['0x06'],
+      expect: '0x06',
     },
     {
-      readSegment: {
-        description: 'Read all memory segments (single chunk per segment)',
-        endChunk: {
-          receive: {
-            length: 1,
-            type: 'exact',
-            value: 6,
-          },
-          send: [6],
-        },
+      description: 'Read memory',
+      read: {
         segments: ['channels', 'settings'],
-        startChunk: {
-          receive: {
-            pattern: [
-              'X',
-              {
-                field: 'address',
-                size: 2,
-              },
-              {
-                field: 'data',
-                size: 0,
-              },
-              {
-                field: 'length',
-                size: 1,
-              },
-            ],
-            type: 'pattern',
-          },
-          send: ['S', 'address:2', 'segment.chunkSize'],
+        send: ['S', '$address', '$chunkSize'],
+        expect: ['X', '$address', '$length', '$data'],
+        ack: {
+          send: ['0x06'],
+          expect: '0x06',
         },
       },
     },
@@ -104,27 +67,16 @@ const baofengConfig = {
   },
   writeMemory: [
     {
-      sendReceive: {
-        description: 'Send magic number',
-        receive: {
-          length: 1,
-          type: 'exact',
-          value: 6,
-        },
-        send: [80, 187, 255, 32, 18, 7, 37],
-      },
+      description: 'Send magic number',
+      send: ['0x50', '0xBB', '0xFF', '0x20', '0x12', '0x07', '0x25'],
+      expect: '0x06',
     },
     {
-      writeSegment: {
-        data: 'segment.data',
-        description: 'Write all memory segments (single chunk per segment)',
-        receive: {
-          length: 1,
-          type: 'exact',
-          value: 6,
-        },
+      description: 'Write memory',
+      write: {
         segments: ['channels', 'settings'],
-        send: ['X', 'segment.startAddress:2', 'segment.chunkSize'],
+        send: ['X', '$address', '$chunkSize', '$data'],
+        expect: '0x06',
       },
     },
   ],
@@ -142,13 +94,10 @@ describe('SchemaValidator', () => {
   it('should reject invalid configurations', () => {
     const validator = new SchemaValidator();
 
-    // Test missing required fields
     const invalidConfig = {
       id: {
         model: 'baofeng-uv5r',
-        // Missing name and manufacturer
       },
-      // Missing other required fields
     };
 
     const result = validator.validateRadioProtocol(invalidConfig);
@@ -161,12 +110,11 @@ describe('SchemaValidator', () => {
   it('should validate serial configuration constraints', () => {
     const validator = new SchemaValidator();
 
-    // Test invalid baud rate
     const invalidBaudRate = {
       ...baofengConfig,
       serialConfig: {
         ...baofengConfig.serialConfig,
-        baudRate: 100, // Too low
+        baudRate: 100,
       },
     };
 
@@ -180,7 +128,6 @@ describe('SchemaValidator', () => {
   it('should validate memory segment constraints', () => {
     const validator = new SchemaValidator();
 
-    // Test invalid memory addresses
     const invalidAddresses = {
       ...baofengConfig,
       memoryConfig: {
@@ -188,7 +135,7 @@ describe('SchemaValidator', () => {
         segments: {
           channels: {
             endAddress: 6143,
-            startAddress: -1, // Invalid negative address
+            startAddress: -1,
           },
           settings: {
             endAddress: 8191,
@@ -205,31 +152,22 @@ describe('SchemaValidator', () => {
     expect(result.errors!.some((error) => error.includes('startAddress'))).to.be.true;
   });
 
-  it('should validate protocol step structures', () => {
+  it('should reject protocol steps that are not an exchange, read, or write', () => {
     const validator = new SchemaValidator();
 
-    // Test invalid receive type
-    const invalidReceiveType = {
+    const invalidStep = {
       ...baofengConfig,
       readMemory: [
         {
-          sendReceive: {
-            description: 'Send magic number',
-            receive: {
-              length: 1,
-              type: 'invalid_type', // Invalid type
-              value: 6,
-            },
-            send: [80, 187, 255, 32, 18, 7, 37],
-          },
+          description: 'Not a valid step',
         },
       ],
     };
 
-    const result = validator.validateRadioProtocol(invalidReceiveType);
+    const result = validator.validateRadioProtocol(invalidStep);
 
     expect(result.valid).to.be.false;
     expect(result.errors).to.be.an('array');
-    expect(result.errors!.some((error) => error.includes('type'))).to.be.true;
+    expect(result.errors!.length).to.be.greaterThan(0);
   });
 });

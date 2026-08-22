@@ -6,20 +6,6 @@ import type { ILogLayer } from 'loglayer';
  * This module provides a specialized logger for capturing command-level information
  * that can be easily parsed and displayed in a UI. It captures details about
  * commands, data sent, data expected, and data received in a structured format.
- *
- * Purpose:
- * - Captures command-level information for UI display
- * - Provides structured JSON logging for easy parsing
- * - Tracks command execution details including timing
- * - Supports protocol debugging in UI environments
- * - Maintains separation from debug logging
- *
- * Design Rationale:
- * - Single log entry per command provides clean UI display
- * - JSON structure enables easy parsing and filtering
- * - Command-level granularity is appropriate for UI debugging
- * - Structured data supports rich UI representations
- * - Separate from debug logging avoids UI noise
  */
 
 interface ProtocolContext {
@@ -31,29 +17,8 @@ interface ProtocolContext {
  */
 export type UIProtocolStep = Record<string, unknown>;
 
-/**
- * Type guards for protocol step properties
- */
 const hasDescription = (obj: unknown): obj is { description: string } =>
   typeof obj === 'object' && obj !== null && 'description' in obj && typeof (obj as Record<string, unknown>).description === 'string';
-
-const hasReceive = (obj: unknown): obj is { receive: unknown } => typeof obj === 'object' && obj !== null && 'receive' in obj;
-
-const hasEndChunk = (obj: unknown): obj is { endChunk: { receive: unknown } } =>
-  typeof obj === 'object' &&
-  obj !== null &&
-  'endChunk' in obj &&
-  typeof (obj as Record<string, unknown>).endChunk === 'object' &&
-  (obj as Record<string, unknown>).endChunk !== null &&
-  'receive' in ((obj as Record<string, unknown>).endChunk as Record<string, unknown>);
-
-const hasStartChunk = (obj: unknown): obj is { startChunk: { receive: unknown } } =>
-  typeof obj === 'object' &&
-  obj !== null &&
-  'startChunk' in obj &&
-  typeof (obj as Record<string, unknown>).startChunk === 'object' &&
-  (obj as Record<string, unknown>).startChunk !== null &&
-  'receive' in ((obj as Record<string, unknown>).startChunk as Record<string, unknown>);
 
 /**
  * UI Logger for capturing command-level information for UI display
@@ -98,15 +63,11 @@ export class UILogger {
     const commandType = this.getCommandType(step);
     const description = this.getStepDescription(step);
 
-    // Extract sent and received data from context
     const dataSent = context.variables && context.variables.get('lastSentData');
     const dataReceived = context.variables && context.variables.get('lastReceivedData');
     const dataExpected = this.getExpectedData(step);
+    const dataChunks = commandType === 'read' && context.variables && context.variables.get('lastReadSegmentChunks');
 
-    // For readSegment, also extract chunk logs if present
-    const dataChunks = commandType === 'readSegment' && context.variables && context.variables.get('lastReadSegmentChunks');
-
-    // Convert dataSent and dataReceived to byte array format if they exist
     // eslint-disable-next-line unicorn/prefer-spread
     const dataSentArray = dataSent && Array.from(dataSent as Uint8Array);
     // eslint-disable-next-line unicorn/prefer-spread
@@ -141,11 +102,9 @@ export class UILogger {
     const commandType = this.getCommandType(step);
     const description = this.getStepDescription(step);
 
-    // Extract sent data from context
     const dataSent = context.variables && context.variables.get('lastSentData');
     const dataExpected = this.getExpectedData(step);
 
-    // Convert dataSent to byte array format if it exists
     // eslint-disable-next-line unicorn/prefer-spread
     const dataSentArray = dataSent && Array.from(dataSent as Uint8Array);
 
@@ -168,63 +127,38 @@ export class UILogger {
   }
 
   private getCommandType(step: UIProtocolStep): string {
-    if ('sendReceive' in step) {
-      return 'sendReceive';
+    if ('read' in step) {
+      return 'read';
     }
-    if ('send' in step) {
-      return 'send';
+    if ('write' in step) {
+      return 'write';
     }
-    if ('receive' in step) {
-      return 'receive';
-    }
-    if ('readSegment' in step) {
-      return 'readSegment';
-    }
-    if ('writeSegment' in step) {
-      return 'writeSegment';
-    }
-    if ('setVariable' in step) {
-      return 'setVariable';
+    if ('send' in step || 'expect' in step) {
+      return 'exchange';
     }
     return 'unknown';
   }
 
   private getStepDescription(step: UIProtocolStep): string {
-    if ('sendReceive' in step && hasDescription(step.sendReceive)) {
-      return step.sendReceive.description;
-    }
-    if ('send' in step && hasDescription(step.send)) {
-      return step.send.description;
-    }
-    if ('receive' in step && hasDescription(step.receive)) {
-      return step.receive.description;
-    }
-    if ('readSegment' in step && hasDescription(step.readSegment)) {
-      return step.readSegment.description;
-    }
-    if ('writeSegment' in step && hasDescription(step.writeSegment)) {
-      return step.writeSegment.description;
+    if (hasDescription(step)) {
+      return step.description;
     }
     return 'No description';
   }
 
   private getExpectedData(step: UIProtocolStep): unknown {
-    if ('sendReceive' in step && hasReceive(step.sendReceive)) {
-      return step.sendReceive.receive;
+    if ('read' in step && typeof step.read === 'object' && step.read !== null && 'expect' in step.read) {
+      const read = step.read as { expect: unknown; ack?: { expect?: unknown } };
+      return {
+        expect: read.expect,
+        ack: read.ack?.expect,
+      };
     }
-    if ('receive' in step) {
-      return step.receive;
+    if ('write' in step && typeof step.write === 'object' && step.write !== null && 'expect' in step.write) {
+      return (step.write as { expect: unknown }).expect;
     }
-    if ('readSegment' in step) {
-      // For readSegment, return both start and end chunk receive patterns
-      const { readSegment } = step;
-      if (hasEndChunk(readSegment) && hasStartChunk(readSegment)) {
-        return {
-          endChunk: readSegment.endChunk.receive,
-          startChunk: readSegment.startChunk.receive,
-          type: 'readSegment',
-        };
-      }
+    if ('expect' in step) {
+      return step.expect;
     }
     return {};
   }

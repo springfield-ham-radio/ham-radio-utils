@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "Radio Protocol DSL Schema",
-  "description": "Schema for defining radio communication protocols in a declarative JSON format",
+  "description": "Schema for defining radio communication protocols as send/expect exchanges",
   "type": "object",
   "required": [
     "id",
@@ -169,7 +169,7 @@
               },
               "endAddress": {
                 "type": "integer",
-                "description": "Ending address (inclusive) of the memory segment",
+                "description": "Inclusive ending address of the memory segment",
                 "minimum": 0
               }
             }
@@ -194,358 +194,192 @@
   },
   "definitions": {
     "protocolStep": {
-      "type": "object",
-      "description": "A single protocol step",
+      "description": "A single protocol step: an exchange, a chunked read, or a chunked write",
       "oneOf": [
         {
-          "type": "object",
-          "required": [
-            "sendReceive"
-          ],
-          "properties": {
-            "sendReceive": {
-              "$ref": "#/definitions/sendReceiveStep"
-            }
-          }
+          "$ref": "#/definitions/readStep"
+        },
+        {
+          "$ref": "#/definitions/writeStep"
+        },
+        {
+          "$ref": "#/definitions/exchangeStep"
+        }
+      ]
+    },
+    "byteToken": {
+      "description": "A send/expect token: a byte, hex string (0x50), ASCII opcode (S), or placeholder ($address)",
+      "oneOf": [
+        {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255
+        },
+        {
+          "type": "string",
+          "minLength": 1
+        }
+      ]
+    },
+    "sendData": {
+      "type": "array",
+      "description": "Bytes and placeholders to send",
+      "items": {
+        "$ref": "#/definitions/byteToken"
+      }
+    },
+    "expect": {
+      "description": "Expected serial reply: exact byte(s), opaque length, or a framed pattern",
+      "oneOf": [
+        {
+          "$ref": "#/definitions/byteToken"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/byteToken"
+          },
+          "minItems": 1
         },
         {
           "type": "object",
           "required": [
-            "send"
+            "bytes"
           ],
+          "additionalProperties": false,
           "properties": {
-            "send": {
-              "$ref": "#/definitions/sendStep"
-            }
-          }
-        },
-        {
-          "type": "object",
-          "required": [
-            "receive"
-          ],
-          "properties": {
-            "receive": {
-              "$ref": "#/definitions/receiveStep"
-            }
-          }
-        },
-        {
-          "type": "object",
-          "required": [
-            "readSegment"
-          ],
-          "properties": {
-            "readSegment": {
-              "$ref": "#/definitions/readSegmentStep"
-            }
-          }
-        },
-        {
-          "type": "object",
-          "required": [
-            "writeSegment"
-          ],
-          "properties": {
-            "writeSegment": {
-              "$ref": "#/definitions/writeSegmentStep"
-            }
-          }
-        },
-        {
-          "type": "object",
-          "required": [
-            "setVariable"
-          ],
-          "properties": {
-            "setVariable": {
-              "$ref": "#/definitions/setVariableStep"
+            "bytes": {
+              "type": "integer",
+              "description": "Accept any content of this many bytes",
+              "minimum": 1
             }
           }
         }
       ]
     },
-    "sendReceiveStep": {
+    "exchangeStep": {
       "type": "object",
-      "description": "Send data and receive response",
-      "required": [
-        "send",
-        "receive"
+      "description": "Send bytes and/or wait for a reply",
+      "anyOf": [
+        {
+          "required": [
+            "send"
+          ]
+        },
+        {
+          "required": [
+            "expect"
+          ]
+        }
       ],
+      "additionalProperties": false,
       "properties": {
+        "description": {
+          "type": "string",
+          "description": "Human-readable description of the step"
+        },
         "send": {
           "$ref": "#/definitions/sendData"
         },
-        "receive": {
-          "$ref": "#/definitions/receiveConfig"
+        "expect": {
+          "$ref": "#/definitions/expect"
         },
         "timeout": {
           "type": "integer",
           "description": "Timeout in milliseconds",
           "minimum": 1,
           "default": 5000
-        },
-        "description": {
-          "type": "string",
-          "description": "Human-readable description of the step"
         }
       }
     },
-    "sendStep": {
+    "readStep": {
       "type": "object",
-      "description": "Send data only",
+      "description": "Chunked memory read",
       "required": [
-        "data"
+        "read"
       ],
+      "additionalProperties": false,
       "properties": {
-        "data": {
-          "$ref": "#/definitions/sendData"
-        },
         "description": {
           "type": "string",
           "description": "Human-readable description of the step"
-        }
-      }
-    },
-    "receiveStep": {
-      "type": "object",
-      "description": "Receive data only",
-      "required": [
-        "type",
-        "length"
-      ],
-      "properties": {
-        "type": {
-          "type": "string",
-          "enum": [
-            "exact",
-            "variable",
-            "pattern",
-            "any"
+        },
+        "read": {
+          "type": "object",
+          "required": [
+            "segments",
+            "send",
+            "expect"
           ],
-          "description": "Type of receive operation"
-        },
-        "value": {
-          "type": "integer",
-          "description": "Expected value for exact match",
-          "minimum": 0,
-          "maximum": 255
-        },
-        "length": {
-          "type": "integer",
-          "description": "Expected length in bytes",
-          "minimum": 1
-        },
-        "pattern": {
-          "type": "array",
-          "description": "Pattern for structured responses",
-          "items": {
-            "oneOf": [
-              {
-                "type": "string",
-                "description": "Literal value (1 byte)"
+          "additionalProperties": false,
+          "properties": {
+            "segments": {
+              "type": "array",
+              "description": "Memory segment names to read",
+              "items": {
+                "type": "string"
               },
-              {
-                "type": "number",
-                "description": "Literal value (1 byte)"
-              },
-              {
-                "type": "object",
-                "required": [
-                  "field",
-                  "size"
-                ],
-                "properties": {
-                  "field": {
-                    "type": "string",
-                    "description": "Field name for extracted data"
-                  },
-                  "size": {
-                    "type": "integer",
-                    "description": "Size in bytes (0 for variable length)",
-                    "minimum": 0
-                  }
-                }
-              }
-            ]
-          }
-        },
-        "description": {
-          "type": "string",
-          "description": "Human-readable description of the step"
-        }
-      }
-    },
-    "readSegmentStep": {
-      "type": "object",
-      "description": "Read memory segments",
-      "required": [
-        "segments",
-        "startChunk",
-        "endChunk"
-      ],
-      "properties": {
-        "segments": {
-          "type": "array",
-          "description": "List of segment names to read",
-          "items": {
-            "type": "string"
-          }
-        },
-        "startChunk": {
-          "$ref": "#/definitions/sendReceiveStep",
-          "description": "Protocol for starting a chunk read"
-        },
-        "endChunk": {
-          "$ref": "#/definitions/sendReceiveStep",
-          "description": "Protocol for ending a chunk read"
-        },
-        "description": {
-          "type": "string",
-          "description": "Human-readable description of the step"
-        }
-      }
-    },
-    "writeSegmentStep": {
-      "type": "object",
-      "description": "Write memory segments",
-      "required": [
-        "segments",
-        "send",
-        "data",
-        "receive"
-      ],
-      "properties": {
-        "segments": {
-          "type": "array",
-          "description": "List of segment names to write",
-          "items": {
-            "type": "string"
-          }
-        },
-        "send": {
-          "$ref": "#/definitions/sendData",
-          "description": "Data to send for write command"
-        },
-        "data": {
-          "type": "string",
-          "description": "Expression for segment data to write"
-        },
-        "receive": {
-          "$ref": "#/definitions/receiveConfig",
-          "description": "Expected response for write command"
-        },
-        "description": {
-          "type": "string",
-          "description": "Human-readable description of the step"
-        }
-      }
-    },
-    "setVariableStep": {
-      "type": "object",
-      "description": "Set a variable value",
-      "required": [
-        "name",
-        "value"
-      ],
-      "properties": {
-        "name": {
-          "type": "string",
-          "description": "Variable name"
-        },
-        "value": {
-          "oneOf": [
-            {
-              "type": "string",
-              "description": "Expression or literal value"
+              "minItems": 1
             },
-            {
-              "type": "number",
-              "description": "Numeric value"
+            "send": {
+              "$ref": "#/definitions/sendData"
+            },
+            "expect": {
+              "$ref": "#/definitions/expect"
+            },
+            "ack": {
+              "$ref": "#/definitions/exchangeStep",
+              "description": "Optional exchange after each chunk"
+            },
+            "timeout": {
+              "type": "integer",
+              "description": "Timeout in milliseconds for each chunk exchange",
+              "minimum": 1
             }
-          ],
-          "description": "Value to assign to the variable"
+          }
         }
       }
     },
-    "sendData": {
-      "type": "array",
-      "description": "Array of data to send",
-      "items": {
-        "oneOf": [
-          {
-            "type": "string",
-            "description": "String literal or expression"
-          },
-          {
-            "type": "number",
-            "description": "Numeric literal or expression",
-            "minimum": 0,
-            "maximum": 255
-          }
-        ]
-      }
-    },
-    "receiveConfig": {
+    "writeStep": {
       "type": "object",
-      "description": "Configuration for receiving data",
+      "description": "Chunked memory write",
       "required": [
-        "type"
+        "write"
       ],
+      "additionalProperties": false,
       "properties": {
-        "type": {
+        "description": {
           "type": "string",
-          "enum": [
-            "exact",
-            "variable",
-            "pattern",
-            "any"
+          "description": "Human-readable description of the step"
+        },
+        "write": {
+          "type": "object",
+          "required": [
+            "segments",
+            "send",
+            "expect"
           ],
-          "description": "Type of receive operation"
-        },
-        "value": {
-          "type": "integer",
-          "description": "Expected value for exact match",
-          "minimum": 0,
-          "maximum": 255
-        },
-        "length": {
-          "type": "integer",
-          "description": "Expected length in bytes",
-          "minimum": 1
-        },
-        "pattern": {
-          "type": "array",
-          "description": "Pattern for structured responses",
-          "items": {
-            "oneOf": [
-              {
-                "type": "string",
-                "description": "Literal value (1 byte)"
+          "additionalProperties": false,
+          "properties": {
+            "segments": {
+              "type": "array",
+              "description": "Memory segment names to write",
+              "items": {
+                "type": "string"
               },
-              {
-                "type": "number",
-                "description": "Literal value (1 byte)"
-              },
-              {
-                "type": "object",
-                "required": [
-                  "field",
-                  "size"
-                ],
-                "properties": {
-                  "field": {
-                    "type": "string",
-                    "description": "Field name for extracted data"
-                  },
-                  "size": {
-                    "type": "integer",
-                    "description": "Size in bytes (0 for variable length)",
-                    "minimum": 0
-                  }
-                }
-              }
-            ]
+              "minItems": 1
+            },
+            "send": {
+              "$ref": "#/definitions/sendData"
+            },
+            "expect": {
+              "$ref": "#/definitions/expect"
+            },
+            "timeout": {
+              "type": "integer",
+              "description": "Timeout in milliseconds for each chunk exchange",
+              "minimum": 1
+            }
           }
         }
       }
