@@ -1,3 +1,9 @@
+## [3.2.6](https://github.com/springfield-ham-radio/ham-radio-utils/compare/v3.2.5...v3.2.6) (2026-08-22)
+
+### Bug Fixes
+
+* update dependencies ([0e2642f](https://github.com/springfield-ham-radio/ham-radio-utils/commit/0e2642f2865d584ceb28a7f8b86c181dbbc2c6d0))
+
 ## [3.2.5](https://github.com/springfield-ham-radio/ham-radio-utils/compare/v3.2.4...v3.2.5) (2026-08-22)
 
 ### Bug Fixes
