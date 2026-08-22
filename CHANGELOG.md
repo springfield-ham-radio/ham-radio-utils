@@ -1,3 +1,15 @@
+## [4.0.0](https://github.com/springfield-ham-radio/ham-radio-utils/compare/v3.2.6...v4.0.0) (2026-08-22)
+
+### ⚠ BREAKING CHANGES
+
+* protocol step shapes changed; configs must use exchange, read, and write steps.
+
+Co-authored-by: Cursor <cursoragent@cursor.com>
+
+### Features
+
+* update radio protocol schema for send/expect DSL ([a4e7bb3](https://github.com/springfield-ham-radio/ham-radio-utils/commit/a4e7bb323f09aff6b9b7442283243df3a87186fe))
+
 ## [3.2.6](https://github.com/springfield-ham-radio/ham-radio-utils/compare/v3.2.5...v3.2.6) (2026-08-22)
 
 ### Bug Fixes
