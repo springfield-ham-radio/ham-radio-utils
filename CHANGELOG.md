@@ -1,3 +1,9 @@
+## [4.1.0](https://github.com/springfield-ham-radio/ham-radio-utils/compare/v4.0.0...v4.1.0) (2026-08-22)
+
+### Features
+
+* map Callook operator class to band privileges ([2923a08](https://github.com/springfield-ham-radio/ham-radio-utils/commit/2923a0809863fdae7d25a013ffbb6e2827bc88a5))
+
 ## [4.0.0](https://github.com/springfield-ham-radio/ham-radio-utils/compare/v3.2.6...v4.0.0) (2026-08-22)
 
 ### ⚠ BREAKING CHANGES
