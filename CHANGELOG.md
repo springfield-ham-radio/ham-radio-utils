@@ -1,3 +1,9 @@
+## [4.1.2](https://github.com/springfield-ham-radio/ham-radio-utils/compare/v4.1.1...v4.1.2) (2026-08-22)
+
+### Bug Fixes
+
+* treat FRS as license-free and match exact channel frequencies ([f8e28ce](https://github.com/springfield-ham-radio/ham-radio-utils/commit/f8e28ce7078409db9010d41cb7fcbe0f0aef1ef9))
+
 ## [4.1.1](https://github.com/springfield-ham-radio/ham-radio-utils/compare/v4.1.0...v4.1.1) (2026-08-22)
 
 ### Bug Fixes
