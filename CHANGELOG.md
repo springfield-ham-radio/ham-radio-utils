@@ -1,3 +1,9 @@
+## [4.1.1](https://github.com/springfield-ham-radio/ham-radio-utils/compare/v4.1.0...v4.1.1) (2026-08-22)
+
+### Bug Fixes
+
+* store amateur band frequencies in Hz ([dc6a42e](https://github.com/springfield-ham-radio/ham-radio-utils/commit/dc6a42e911de3faeff0858af69172fa08b4a71ee))
+
 ## [4.1.0](https://github.com/springfield-ham-radio/ham-radio-utils/compare/v4.0.0...v4.1.0) (2026-08-22)
 
 ### Features
