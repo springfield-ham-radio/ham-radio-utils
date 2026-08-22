@@ -19,10 +19,40 @@ describe('BandPlan', () => {
   const bandPlan = new BandPlan();
 
   describe('findBandByFrequency', () => {
-    it('should find the 2 Meter band for a VHF frequency', () => {
+    it('should find the 160 Meter band for 1.9 MHz', () => {
+      const band = bandPlan.findBandByFrequency(1_900_000);
+
+      expect(band?.name).to.equal('160 Meter');
+    });
+
+    it('should find the 80 Meter band for 3.8 MHz', () => {
+      const band = bandPlan.findBandByFrequency(3_800_000);
+
+      expect(band?.name).to.equal('80 Meter');
+    });
+
+    it('should find the 40 Meter band for 7.2 MHz', () => {
+      const band = bandPlan.findBandByFrequency(7_200_000);
+
+      expect(band?.name).to.equal('40 Meter');
+    });
+
+    it('should find the 20 Meter band for 14.2 MHz', () => {
+      const band = bandPlan.findBandByFrequency(14_200_000);
+
+      expect(band?.name).to.equal('20 Meter');
+    });
+
+    it('should find the 2 Meter band for 146.52 MHz', () => {
       const band = bandPlan.findBandByFrequency(146_520_000);
 
       expect(band?.name).to.equal('2 Meter');
+    });
+
+    it('should not treat GHz-scale values as HF amateur bands', () => {
+      expect(bandPlan.findBandByFrequency(1_800_000_000)?.name).to.not.equal('160 Meter');
+      expect(bandPlan.findBandByFrequency(7_000_000_000)?.name).to.not.equal('40 Meter');
+      expect(bandPlan.findBandByFrequency(14_000_000_000)?.name).to.not.equal('20 Meter');
     });
 
     it('should return undefined for a frequency outside every band', () => {
@@ -39,6 +69,18 @@ describe('BandPlan', () => {
   });
 
   describe('hasPrivilege', () => {
+    it('should deny Technician transmit on 160 Meter', () => {
+      const technicianId = operatorClassToLicenseClassId('TECHNICIAN')!;
+
+      expect(bandPlan.hasPrivilege(1_900_000, technicianId)).to.be.false;
+    });
+
+    it('should allow General transmit on 160 Meter', () => {
+      const generalId = operatorClassToLicenseClassId('GENERAL')!;
+
+      expect(bandPlan.hasPrivilege(1_900_000, generalId)).to.be.true;
+    });
+
     it('should allow Technician transmit on 2 Meter', () => {
       const technicianId = operatorClassToLicenseClassId('TECHNICIAN')!;
 

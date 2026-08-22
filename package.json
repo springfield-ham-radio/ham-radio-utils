@@ -25,7 +25,9 @@
     "lint": "oxlint",
     "lint:fix": "oxlint --fix --fix-suggestions",
     "release": "semantic-release",
-    "prepare": "husky"
+    "prepare": "husky",
+    "test": "yarn test:unit",
+    "test:unit": "tsx --test test/unit/**/*.test.ts"
   },
   "dependencies": {
     "@springfield/ham-radio-api": "^17.0.0",
@@ -50,6 +52,7 @@
     "oxfmt": "^0.64.0",
     "oxlint": "1.79.0",
     "semantic-release": "25.0.9",
+    "tsx": "4.23.12",
     "typescript": "7.0.2"
   },
   "resolutions": {
