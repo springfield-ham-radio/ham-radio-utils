@@ -1,3 +1,9 @@
+## [4.3.0](https://github.com/springfield-ham-radio/ham-radio-utils/compare/v4.2.0...v4.3.0) (2026-08-22)
+
+### Features
+
+* add channel bindings and Chirp lbcd/tone codecs ([0b5cc19](https://github.com/springfield-ham-radio/ham-radio-utils/commit/0b5cc199a3a03ef1086d794dad41f2836553e8c5))
+
 ## [4.2.0](https://github.com/springfield-ham-radio/ham-radio-utils/compare/v4.1.2...v4.2.0) (2026-08-22)
 
 ### Features
