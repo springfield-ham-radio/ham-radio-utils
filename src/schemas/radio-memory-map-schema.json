@@ -1,0 +1,151 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Radio Memory-Map DSL Schema",
+  "description": "Schema for defining radio EEPROM settings layout as JSON (Chirp MEM_FORMAT as data)",
+  "type": "object",
+  "required": ["structs"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "Optional map version"
+    },
+    "description": {
+      "type": "string"
+    },
+    "structs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/definitions/struct"
+      }
+    }
+  },
+  "definitions": {
+    "seek": {
+      "oneOf": [
+        { "type": "integer", "minimum": 0 },
+        { "type": "string", "pattern": "^(0[xX][0-9a-fA-F]+|[0-9]+)$" }
+      ]
+    },
+    "ui": {
+      "type": "object",
+      "required": ["group", "label", "widget"],
+      "properties": {
+        "group": { "type": "string" },
+        "label": { "type": "string" },
+        "widget": {
+          "type": "string",
+          "enum": ["integer", "select", "switch", "text", "number"]
+        },
+        "description": { "type": "string" },
+        "writable": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "value": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["kind"],
+          "properties": {
+            "kind": { "const": "integer" },
+            "min": { "type": "number" },
+            "max": { "type": "number" }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["kind"],
+          "properties": {
+            "kind": { "const": "boolean" }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["kind", "values"],
+          "properties": {
+            "kind": { "const": "enum" },
+            "values": {
+              "type": "array",
+              "items": { "type": "string" },
+              "minItems": 1
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["kind", "length"],
+          "properties": {
+            "kind": { "const": "ascii" },
+            "length": { "type": "integer", "minimum": 1 }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["kind", "length"],
+          "properties": {
+            "kind": { "const": "digits" },
+            "length": { "type": "integer", "minimum": 1 },
+            "scale": { "type": "number" }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["kind", "length"],
+          "properties": {
+            "kind": { "const": "dtmf" },
+            "length": { "type": "integer", "minimum": 1 },
+            "charset": { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": ["kind", "length"],
+          "properties": {
+            "kind": { "const": "bbcd" },
+            "length": { "type": "integer", "minimum": 1 }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "field": {
+      "type": "object",
+      "required": ["id", "type"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "type": {
+          "type": "string",
+          "enum": ["u8", "u16", "bits", "char"]
+        },
+        "width": { "type": "integer", "minimum": 1, "maximum": 8 },
+        "reserved": { "type": "boolean" },
+        "value": { "$ref": "#/definitions/value" },
+        "ui": { "$ref": "#/definitions/ui" }
+      },
+      "additionalProperties": false
+    },
+    "struct": {
+      "type": "object",
+      "required": ["id", "seek", "fields"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "seek": { "$ref": "#/definitions/seek" },
+        "fields": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/definitions/field" }
+        },
+        "count": { "type": "integer", "minimum": 1 },
+        "stride": { "type": "integer", "minimum": 1 }
+      },
+      "additionalProperties": false
+    }
+  }
+}
