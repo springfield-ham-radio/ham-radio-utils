@@ -1,3 +1,9 @@
+## [4.5.1](https://github.com/springfield-ham-radio/ham-radio-utils/compare/v4.5.0...v4.5.1) (2026-08-23)
+
+### Bug Fixes
+
+* update @springfield/ham-radio-api to ^17.3.0 ([1ba33d0](https://github.com/springfield-ham-radio/ham-radio-utils/commit/1ba33d0b18e1e4f9fa02ae23bb918007d871184e))
+
 ## [4.5.0](https://github.com/springfield-ham-radio/ham-radio-utils/compare/v4.4.0...v4.5.0) (2026-08-23)
 
 ### Features
