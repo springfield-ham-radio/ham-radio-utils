@@ -1,3 +1,9 @@
+## [4.6.0](https://github.com/springfield-ham-radio/ham-radio-utils/compare/v4.5.1...v4.6.0) (2026-08-23)
+
+### Features
+
+* add MemoryMapRadioCodec for DSL-only radio modules ([cb057cd](https://github.com/springfield-ham-radio/ham-radio-utils/commit/cb057cd5541d0da803bf813e1bb38df6c5cea7bf))
+
 ## [4.5.1](https://github.com/springfield-ham-radio/ham-radio-utils/compare/v4.5.0...v4.5.1) (2026-08-23)
 
 ### Bug Fixes
