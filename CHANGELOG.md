@@ -1,3 +1,9 @@
+## [4.5.0](https://github.com/springfield-ham-radio/ham-radio-utils/compare/v4.4.0...v4.5.0) (2026-08-23)
+
+### Features
+
+* allow write chunkSize, delay, and skip in the protocol schema ([3f0c8ba](https://github.com/springfield-ham-radio/ham-radio-utils/commit/3f0c8bac34578ba07a4e7a25093a1deee83fc9ff))
+
 ## [4.4.0](https://github.com/springfield-ham-radio/ham-radio-utils/compare/v4.3.0...v4.4.0) (2026-08-22)
 
 ### Features
