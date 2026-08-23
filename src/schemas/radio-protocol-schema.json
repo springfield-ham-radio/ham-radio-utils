@@ -375,6 +375,40 @@
             "expect": {
               "$ref": "#/definitions/expect"
             },
+            "chunkSize": {
+              "type": "integer",
+              "description": "Override memoryConfig.chunkSize for this write (UV-5R clone writes 16-byte blocks)",
+              "minimum": 1
+            },
+            "delay": {
+              "type": "integer",
+              "description": "Milliseconds to wait after each accepted block (UV-5R clone waits 50ms)",
+              "minimum": 0
+            },
+            "skip": {
+              "type": "array",
+              "description": "Inclusive radio-address ranges that must not be uploaded",
+              "items": {
+                "type": "object",
+                "required": [
+                  "startAddress",
+                  "endAddress"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "startAddress": {
+                    "type": "integer",
+                    "description": "Inclusive start address of a skipped range",
+                    "minimum": 0
+                  },
+                  "endAddress": {
+                    "type": "integer",
+                    "description": "Inclusive end address of a skipped range",
+                    "minimum": 0
+                  }
+                }
+              }
+            },
             "timeout": {
               "type": "integer",
               "description": "Timeout in milliseconds for each chunk exchange",

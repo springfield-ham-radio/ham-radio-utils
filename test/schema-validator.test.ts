@@ -170,4 +170,48 @@ describe('SchemaValidator', () => {
     expect(result.errors).to.be.an('array');
     expect(result.errors!.length).to.be.greaterThan(0);
   });
+
+  it('should validate write steps with chunkSize, delay, and skip', () => {
+    const validator = new SchemaValidator();
+
+    const writeConfig = {
+      ...baofengConfig,
+      writeMemory: [
+        {
+          description: 'Send magic number',
+          send: ['0x50', '0xBB', '0xFF', '0x20', '0x12', '0x07', '0x25'],
+          expect: '0x06',
+        },
+        {
+          description: 'Get radio identifier',
+          send: ['0x02'],
+          expect: { bytes: 8 },
+        },
+        {
+          description: 'Begin clone operation',
+          send: ['0x06'],
+          expect: '0x06',
+        },
+        {
+          description: 'Write memory',
+          write: {
+            chunkSize: 16,
+            delay: 50,
+            expect: '0x06',
+            segments: ['channels', 'settings'],
+            send: ['X', '$address', '$length', '$data'],
+            skip: [
+              { endAddress: 3327, startAddress: 3312 },
+              { endAddress: 3583, startAddress: 3568 },
+            ],
+          },
+        },
+      ],
+    };
+
+    const result = validator.validateRadioProtocol(writeConfig);
+
+    expect(result.valid).to.be.true;
+    expect(result.errors).to.be.undefined;
+  });
 });
