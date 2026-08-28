@@ -250,3 +250,76 @@ describe('Kenwood-style offset duplex and tone-mode bits', () => {
     expect(decoded.channels[0].settings?.mode).to.equal('AM');
   });
 });
+
+describe('Kenwood TM-D710 chmap band extras', () => {
+  const map: RadioMemoryMap = {
+    channelBindings: {
+      extras: 'flags',
+      records: 'channels',
+      nameField: 'name',
+      receiveFrequency: 'freq',
+      transmitFrequency: 'offset',
+      receiveTone: 'ctone',
+      transmitTone: 'rtone',
+    },
+    structs: [
+      {
+        id: 'flags',
+        seek: 0,
+        count: 2,
+        stride: 2,
+        emptyWhen: { equals: 255 },
+        clearEmpty: true,
+        fields: [
+          { id: 'band', type: 'u8', value: { kind: 'integer', min: 0, max: 9 } },
+          { id: 'lockout', type: 'u8', value: { kind: 'boolean' } },
+        ],
+      },
+      {
+        id: 'channels',
+        seek: 4,
+        count: 2,
+        stride: 8,
+        emptyWhen: { equals: 255 },
+        clearEmpty: true,
+        fields: [
+          { id: 'freq', type: 'u32', value: { kind: 'integer' } },
+          { id: 'offset', type: 'u32', value: { kind: 'integer' } },
+        ],
+      },
+    ],
+  };
+
+  const memory: RadioMemoryConfig = {
+    chunkSize: 8,
+    addressSize: 2,
+    addressEndianness: 'big',
+    segments: {
+      image: { startAddress: 0, endAddress: 19 },
+    },
+  };
+
+  it('writes 2m memories as chmap band 5', () => {
+    const contents = new Uint8Array(20).fill(0xff);
+    const program: RadioProgram = {
+      channels: [
+        {
+          channelNumber: 0,
+          radioChannel: {
+            name: '',
+            receiveFrequency: Frequency(146_520_000),
+            transmitFrequency: Frequency(146_520_000),
+            receiveTone: { tone: 0, type: RadioToneType.CTCSS },
+            transmitTone: { tone: 0, type: RadioToneType.CTCSS },
+          },
+        },
+      ],
+      settings: {},
+    };
+
+    encodeRadioProgram(map, program, contents, memory);
+
+    expect(contents[0]).to.equal(5);
+    expect(contents[1]).to.equal(0);
+  });
+});

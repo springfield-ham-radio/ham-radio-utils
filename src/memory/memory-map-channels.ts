@@ -125,6 +125,31 @@ function kenwoodUsedFlag(receiveFrequency: number, transmitFrequency: number): n
   return 2;
 }
 
+/** TM-D710 chmap band codes: 0=118 MHz, 5=144, 6=200, 7=300, 8=400, 9=800. */
+function kenwoodChmapBand(receiveFrequency: number): number {
+  if (receiveFrequency < 136_000_000) {
+    return 0;
+  }
+
+  if (receiveFrequency < 200_000_000) {
+    return 5;
+  }
+
+  if (receiveFrequency < 300_000_000) {
+    return 6;
+  }
+
+  if (receiveFrequency < 400_000_000) {
+    return 7;
+  }
+
+  if (receiveFrequency < 800_000_000) {
+    return 8;
+  }
+
+  return 9;
+}
+
 function asRecord(value: RadioSettingValue | undefined): Record<string, RadioSettingValue> | undefined {
   if (!value || typeof value !== 'object' || Array.isArray(value)) {
     return undefined;
@@ -404,11 +429,17 @@ export function programToChannelSettings(memoryMap: RadioMemoryMap, program: Rad
     }
 
     if (extrasStruct) {
-      extras[index] = {
+      const extraRecord: Record<string, RadioSettingValue> = {
         used: kenwoodUsedFlag(receiveFrequency, transmitFrequency),
         lockout: channelSettings.skip === 'S' || channelSettings.lockout === true,
         group: typeof channelSettings.group === 'number' ? channelSettings.group : 0,
       };
+
+      if (structHasField(extrasStruct, 'band')) {
+        extraRecord.band = typeof channelSettings.band === 'number' ? channelSettings.band : kenwoodChmapBand(receiveFrequency);
+      }
+
+      extras[index] = extraRecord;
     }
   }
 
