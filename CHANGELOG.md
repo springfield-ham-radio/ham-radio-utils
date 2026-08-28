@@ -1,3 +1,9 @@
+## [4.7.0](https://github.com/springfield-ham-radio/ham-radio-utils/compare/v4.6.0...v4.7.0) (2026-08-28)
+
+### Features
+
+* encode Kenwood clone layouts and clone protocol schema ([851186c](https://github.com/springfield-ham-radio/ham-radio-utils/commit/851186c915b18e5494fb72e2bcd4d5308c479ed2))
+
 ## [4.6.0](https://github.com/springfield-ham-radio/ham-radio-utils/compare/v4.5.1...v4.6.0) (2026-08-23)
 
 ### Features
