@@ -120,6 +120,10 @@
             "odd"
           ],
           "default": "none"
+        },
+        "rtscts": {
+          "type": "boolean",
+          "description": "Hardware RTS/CTS flow control (Kenwood TH-D74 clone on macOS)"
         }
       }
     },
@@ -270,6 +274,11 @@
           "required": [
             "expect"
           ]
+        },
+        {
+          "required": [
+            "setBaudRate"
+          ]
         }
       ],
       "additionalProperties": false,
@@ -289,6 +298,12 @@
           "description": "Timeout in milliseconds",
           "minimum": 1,
           "default": 5000
+        },
+        "setBaudRate": {
+          "type": "integer",
+          "description": "Switch serial baud rate before send/expect (TH-D74 clone transfers at 57600)",
+          "minimum": 1200,
+          "maximum": 115200
         }
       }
     },

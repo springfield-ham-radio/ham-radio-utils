@@ -167,3 +167,86 @@ describe('decodeRadioProgram / encodeRadioProgram', () => {
     expect(contents[16]).to.equal(0xff);
   });
 });
+
+describe('Kenwood-style offset duplex and tone-mode bits', () => {
+  const kenwoodTones = [670, 693, 719, 744, 770, 797, 825, 854, 885];
+  const kenwoodMap: RadioMemoryMap = {
+    channelBindings: {
+      records: 'channels',
+      nameField: 'name',
+      receiveFrequency: 'freq',
+      transmitFrequency: 'offset',
+      receiveTone: 'ctone',
+      transmitTone: 'rtone',
+    },
+    structs: [
+      {
+        id: 'channels',
+        seek: 0,
+        count: 2,
+        stride: 32,
+        emptyWhen: { equals: 0xff },
+        clearEmpty: true,
+        fields: [
+          { id: 'freq', type: 'u32', value: { kind: 'integer' } },
+          { id: 'offset', type: 'u32', value: { kind: 'integer' } },
+          { id: 'duplex', type: 'u8', value: { kind: 'enum', values: ['', '+', '-'] } },
+          { id: 'tone_mode', type: 'u8', value: { kind: 'boolean' } },
+          { id: 'ctcss_mode', type: 'u8', value: { kind: 'boolean' } },
+          { id: 'dtcs_mode', type: 'u8', value: { kind: 'boolean' } },
+          { id: 'rtone', type: 'u8', value: { kind: 'ctcss-index', values: kenwoodTones } },
+          { id: 'ctone', type: 'u8', value: { kind: 'ctcss-index', values: kenwoodTones } },
+          { id: 'mode', type: 'u8', value: { kind: 'enum', values: ['FM', 'AM'] } },
+          { id: 'name', type: 'u8', value: { kind: 'ascii', length: 8, pad: 0 } },
+        ],
+      },
+    ],
+  };
+
+  const kenwoodMemory: RadioMemoryConfig = {
+    chunkSize: 32,
+    addressSize: 2,
+    addressEndianness: 'big',
+    segments: {
+      image: { startAddress: 0, endAddress: 63 },
+    },
+  };
+
+  it('round-trips simplex TX as RX and encode-tone CTCSS without an extras table', () => {
+    const contents = new Uint8Array(64).fill(0xff);
+    const program: RadioProgram = {
+      channels: [
+        {
+          channelNumber: 0,
+          radioChannel: {
+            name: 'CALL',
+            receiveFrequency: Frequency(146_520_000),
+            transmitFrequency: Frequency(146_520_000),
+            receiveTone: { tone: 0, type: RadioToneType.CTCSS },
+            transmitTone: { tone: 885, type: RadioToneType.CTCSS },
+          },
+          settings: {
+            mode: 'AM',
+            duplex: '',
+          },
+        },
+      ],
+      settings: {},
+    };
+
+    encodeRadioProgram(kenwoodMap, program, contents, kenwoodMemory);
+    const decoded = decodeRadioProgram(kenwoodMap, contents, kenwoodMemory);
+    const channel = decoded.channels[0].radioChannel;
+
+    expect(decoded.channels).to.have.length(1);
+
+    if (typeof channel === 'object') {
+      expect(channel.name).to.equal('CALL');
+      expect(channel.receiveFrequency).to.equal(146_520_000);
+      expect(channel.transmitFrequency).to.equal(146_520_000);
+      expect(channel.transmitTone).to.deep.equal({ tone: 885, type: RadioToneType.CTCSS });
+    }
+
+    expect(decoded.channels[0].settings?.mode).to.equal('AM');
+  });
+});

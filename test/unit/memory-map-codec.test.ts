@@ -385,3 +385,68 @@ describe('decodeMemoryMap / encodeMemoryMap', () => {
     expect(contents[16]).to.equal(0xff);
   });
 });
+
+describe('u32 and grouped stride', () => {
+  const memoryConfig: RadioMemoryConfig = {
+    chunkSize: 256,
+    addressSize: 2,
+    addressEndianness: 'big',
+    segments: {
+      image: { startAddress: 0, endAddress: 1023 },
+    },
+  };
+
+  it('round-trips little-endian u32 frequencies', () => {
+    const map: RadioMemoryMap = {
+      structs: [
+        {
+          id: 'channel',
+          seek: 0,
+          fields: [
+            { id: 'freq', type: 'u32', value: { kind: 'integer' } },
+            { id: 'offset', type: 'u32', value: { kind: 'integer' } },
+          ],
+        },
+      ],
+    };
+
+    const contents = new Uint8Array(1024);
+    const encoded = encodeMemoryMap(map, { channel: { freq: 146_520_000, offset: 600_000 } }, contents, memoryConfig);
+
+    expect(encoded[0]).to.equal(0xc0);
+    expect(encoded[1]).to.equal(0xb7);
+    expect(encoded[2]).to.equal(0xbb);
+    expect(encoded[3]).to.equal(0x08);
+
+    const decoded = decodeMemoryMap(map, encoded, memoryConfig);
+    expect(decoded.channel).to.deep.equal({
+      freq: 146_520_000,
+      offset: 600_000,
+    });
+  });
+
+  it('places grouped records with pad bytes between groups', () => {
+    const map: RadioMemoryMap = {
+      structs: [
+        {
+          id: 'channels',
+          seek: 0,
+          count: 8,
+          stride: 4,
+          groupSize: 6,
+          groupPad: 8,
+          fields: [{ id: 'freq', type: 'u32', value: { kind: 'integer' } }],
+        },
+      ],
+    };
+
+    const contents = new Uint8Array(1024);
+    const items = Array.from({ length: 8 }, (_, index) => ({ freq: index + 1 }));
+    encodeMemoryMap(map, { channels: items }, contents, memoryConfig);
+
+    expect(contents[0]).to.equal(1);
+    expect(contents[4 * 5]).to.equal(6);
+    expect(contents[4 * 6]).to.equal(0);
+    expect(contents[4 * 6 + 8]).to.equal(7);
+  });
+});

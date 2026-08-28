@@ -53,4 +53,48 @@ describe('protocol schema write step', () => {
     expect(result.valid).to.be.true;
     expect(result.errors).to.be.undefined;
   });
+
+  it('accepts Kenwood clone $block, setBaudRate, and rtscts', () => {
+    const validator = new SchemaValidator();
+    const result = validator.validateRadioProtocol({
+      description: 'TH-D74 clone fields',
+      id: {
+        manufacturer: 'Kenwood',
+        model: 'kenwood-th-d74',
+        name: 'Kenwood TH-D74',
+      },
+      version: '1.0.0',
+      memoryConfig: {
+        addressEndianness: 'big',
+        addressSize: 2,
+        chunkSize: 256,
+        segments: {
+          image: { endAddress: 511, startAddress: 0 },
+        },
+      },
+      readMemory: [
+        { send: ['0', 'M', ' ', 'P', 'R', 'O', 'G', 'R', 'A', 'M', '0x0D'], expect: ['0', 'M', '0x0D'] },
+        { description: 'Switch to clone baud', setBaudRate: 57600, expect: { bytes: 1 } },
+        {
+          read: {
+            segments: ['image'],
+            send: ['R', '$block', '0x00', '0x00'],
+            expect: ['W', '$block', '0x00', '0x00', '$data'],
+            ack: { send: ['0x06'], expect: '0x06' },
+          },
+        },
+        { send: ['E'] },
+      ],
+      serialConfig: { baudRate: 9600, rtscts: true },
+      settingsSchema: {
+        channelSchema: {},
+        model: 'kenwood-th-d74',
+        settingsSchema: {},
+      },
+      writeMemory: [{ send: ['E'] }],
+    });
+
+    expect(result.valid).to.be.true;
+    expect(result.errors).to.be.undefined;
+  });
 });

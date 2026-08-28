@@ -41,6 +41,90 @@ function radioToneToMapTone(tone: RadioTone | undefined): RadioMemoryMapToneValu
   return { mode: 'ctcss', value: Number(tone.tone) };
 }
 
+function noneTone(): RadioTone {
+  return { tone: 0, type: RadioToneType.CTCSS };
+}
+
+function isNoneTone(tone: RadioTone | undefined): boolean {
+  return !tone || !tone.tone;
+}
+
+function structHasField(struct: { fields: { id: string }[] } | undefined, fieldId: string): boolean {
+  return Boolean(struct?.fields.some((field) => field.id === fieldId));
+}
+
+function transmitFrequencyFromRecord(record: Record<string, RadioSettingValue>, bindings: NonNullable<RadioMemoryMap['channelBindings']>): number {
+  const receiveFrequency = Number(record[bindings.receiveFrequency] ?? 0);
+  const offsetOrTransmit = Number(record[bindings.transmitFrequency] ?? 0);
+
+  if (record.split === true) {
+    return offsetOrTransmit;
+  }
+
+  if (record.duplex === '+') {
+    return receiveFrequency + offsetOrTransmit;
+  }
+
+  if (record.duplex === '-') {
+    return receiveFrequency - offsetOrTransmit;
+  }
+
+  // Kenwood stores simplex as duplex "" and offset 0. Empty duplex is not an absolute TX frequency.
+  if (record.duplex === '') {
+    return receiveFrequency;
+  }
+
+  if (record.duplex === undefined) {
+    return bindings.transmitFrequency === bindings.receiveFrequency ? receiveFrequency : offsetOrTransmit;
+  }
+
+  return offsetOrTransmit;
+}
+
+function applyKenwoodToneMode(
+  record: Record<string, RadioSettingValue>,
+  bindings: NonNullable<RadioMemoryMap['channelBindings']>,
+): { receiveTone: RadioTone; transmitTone: RadioTone } {
+  const hasToneModeBits = 'tone_mode' in record || 'ctcss_mode' in record || 'dtcs_mode' in record;
+
+  if (!hasToneModeBits) {
+    return {
+      receiveTone: toneToRadioTone(record[bindings.receiveTone]),
+      transmitTone: toneToRadioTone(record[bindings.transmitTone]),
+    };
+  }
+
+  if (record.tone_mode === true) {
+    return { receiveTone: noneTone(), transmitTone: toneToRadioTone(record[bindings.transmitTone]) };
+  }
+
+  if (record.ctcss_mode === true) {
+    const tone = toneToRadioTone(record[bindings.receiveTone]);
+    return { receiveTone: tone, transmitTone: tone };
+  }
+
+  if (record.dtcs_mode === true) {
+    const tone = toneToRadioTone(record.dtcs_code);
+    return { receiveTone: tone, transmitTone: tone };
+  }
+
+  return { receiveTone: noneTone(), transmitTone: noneTone() };
+}
+
+function kenwoodUsedFlag(receiveFrequency: number, transmitFrequency: number): number {
+  const frequency = transmitFrequency || receiveFrequency;
+
+  if (frequency < 150_000_000) {
+    return 0;
+  }
+
+  if (frequency < 400_000_000) {
+    return 1;
+  }
+
+  return 2;
+}
+
 function asRecord(value: RadioSettingValue | undefined): Record<string, RadioSettingValue> | undefined {
   if (!value || typeof value !== 'object' || Array.isArray(value)) {
     return undefined;
@@ -64,31 +148,41 @@ export function bindingsToChannels(
 
   const records = settings[bindings.records];
   const names = bindings.names ? settings[bindings.names] : undefined;
+  const extras = bindings.extras ? settings[bindings.extras] : undefined;
   const recordItems = Array.isArray(records) ? records : [];
   const nameItems = Array.isArray(names) ? names : [];
+  const extraItems = Array.isArray(extras) ? extras : [];
   const nameField = bindings.nameField ?? 'name';
   const boundFieldIds = new Set([
     bindings.receiveFrequency,
     bindings.transmitFrequency,
     bindings.receiveTone,
     bindings.transmitTone,
+    nameField,
   ]);
 
   const channels: RadioProgrammedChannel[] = [];
 
   for (let index = 0; index < recordItems.length; index += 1) {
     const record = asRecord(recordItems[index]);
+    const extraRecord = asRecord(extraItems[index]);
+
+    if (bindings.extras && extraItems.length > 0 && extraRecord === undefined) {
+      continue;
+    }
 
     if (!record) {
       continue;
     }
 
     const nameRecord = asRecord(nameItems[index]);
-    const nameValue = nameRecord?.[nameField];
-    const name = typeof nameValue === 'string' ? nameValue : '';
+    const nameFromTable = typeof nameRecord?.[nameField] === 'string' ? nameRecord[nameField] : '';
+    const nameFromRecord = typeof record[nameField] === 'string' ? record[nameField] : '';
+    const name = nameFromTable || nameFromRecord;
 
     const receiveFrequency = Number(record[bindings.receiveFrequency] ?? 0);
-    const transmitFrequency = Number(record[bindings.transmitFrequency] ?? 0);
+    const transmitFrequency = transmitFrequencyFromRecord(record, bindings);
+    const tones = applyKenwoodToneMode(record, bindings);
 
     const channelSettings: RadioSettings = {};
 
@@ -98,6 +192,20 @@ export function bindingsToChannels(
       }
 
       channelSettings[fieldId] = fieldValue;
+    }
+
+    if (extraRecord) {
+      for (const [fieldId, fieldValue] of Object.entries(extraRecord)) {
+        if (fieldId.startsWith('_') || fieldId === 'used') {
+          continue;
+        }
+
+        channelSettings[fieldId] = fieldValue;
+      }
+
+      if (typeof extraRecord.lockout === 'boolean') {
+        channelSettings.skip = extraRecord.lockout ? 'S' : '';
+      }
     }
 
     // Map Chirp lowpower index onto legacy transmitPower watts for UV-5R UI compatibility.
@@ -113,12 +221,16 @@ export function bindingsToChannels(
       channelSettings.skip = channelSettings.scan ? '' : 'S';
     }
 
+    if (typeof channelSettings.skip === 'boolean') {
+      channelSettings.skip = channelSettings.skip ? 'S' : '';
+    }
+
     const radioChannel: RadioChannel = {
       name,
       receiveFrequency: Frequency(receiveFrequency),
       transmitFrequency: Frequency(transmitFrequency),
-      receiveTone: toneToRadioTone(record[bindings.receiveTone]),
-      transmitTone: toneToRadioTone(record[bindings.transmitTone]),
+      receiveTone: tones.receiveTone,
+      transmitTone: tones.transmitTone,
     };
 
     channels.push({
@@ -149,6 +261,10 @@ export function settingsWithoutChannels(memoryMap: RadioMemoryMap, settings: Rad
     delete next[bindings.names];
   }
 
+  if (bindings.extras) {
+    delete next[bindings.extras];
+  }
+
   return next;
 }
 
@@ -164,11 +280,13 @@ export function programToChannelSettings(memoryMap: RadioMemoryMap, program: Rad
 
   const recordsStruct = memoryMap.structs.find((struct) => struct.id === bindings.records);
   const namesStruct = bindings.names ? memoryMap.structs.find((struct) => struct.id === bindings.names) : undefined;
+  const extrasStruct = bindings.extras ? memoryMap.structs.find((struct) => struct.id === bindings.extras) : undefined;
   const count = recordsStruct?.count ?? 0;
   const nameField = bindings.nameField ?? 'name';
 
   const records: RadioSettingValue[] = Array.from({ length: count }, () => null);
   const names: RadioSettingValue[] = Array.from({ length: count }, () => null);
+  const extras: RadioSettingValue[] = Array.from({ length: count }, () => null);
 
   for (const programmed of program.channels) {
     const index = programmed.channelNumber;
@@ -183,12 +301,66 @@ export function programToChannelSettings(memoryMap: RadioMemoryMap, program: Rad
 
     const channel = programmed.radioChannel;
     const channelSettings = programmed.settings ?? {};
+    const receiveFrequency = Number(channel.receiveFrequency);
+    const transmitFrequency = Number(channel.transmitFrequency);
+    let offset = transmitFrequency;
+    let duplex: RadioSettingValue = '';
+    let split = false;
+
+    if (transmitFrequency === receiveFrequency) {
+      offset = 0;
+      duplex = '';
+    } else if (transmitFrequency > receiveFrequency) {
+      offset = transmitFrequency - receiveFrequency;
+      duplex = '+';
+    } else {
+      offset = receiveFrequency - transmitFrequency;
+      duplex = '-';
+    }
+
+    if (channelSettings.split === true) {
+      split = true;
+      duplex = '';
+      offset = transmitFrequency;
+    }
+
+    const usesOffset =
+      'duplex' in channelSettings || extrasStruct || structHasField(recordsStruct, 'duplex');
+    const usesKenwoodToneBits =
+      'tone_mode' in channelSettings ||
+      'ctcss_mode' in channelSettings ||
+      extrasStruct ||
+      structHasField(recordsStruct, 'tone_mode') ||
+      structHasField(recordsStruct, 'ctcss_mode');
+
     const record: Record<string, RadioSettingValue> = {
-      [bindings.receiveFrequency]: channel.receiveFrequency,
-      [bindings.transmitFrequency]: channel.transmitFrequency,
+      [bindings.receiveFrequency]: receiveFrequency,
+      [bindings.transmitFrequency]: usesOffset ? offset : transmitFrequency,
       [bindings.receiveTone]: radioToneToMapTone(channel.receiveTone),
       [bindings.transmitTone]: radioToneToMapTone(channel.transmitTone),
     };
+
+    if (usesOffset) {
+      record.duplex = typeof channelSettings.duplex === 'string' ? channelSettings.duplex : duplex;
+      record.split = typeof channelSettings.split === 'boolean' ? channelSettings.split : split;
+      record.offset = offset;
+    }
+
+    if (usesKenwoodToneBits) {
+      record.tone_mode = false;
+      record.ctcss_mode = false;
+      record.dtcs_mode = false;
+      record.cross_mode = false;
+
+      if (channel.transmitTone?.type === RadioToneType.DCS || channel.receiveTone?.type === RadioToneType.DCS) {
+        record.dtcs_mode = true;
+        record.dtcs_code = radioToneToMapTone(channel.transmitTone?.type === RadioToneType.DCS ? channel.transmitTone : channel.receiveTone);
+      } else if (!isNoneTone(channel.receiveTone) && !isNoneTone(channel.transmitTone)) {
+        record.ctcss_mode = true;
+      } else if (!isNoneTone(channel.transmitTone)) {
+        record.tone_mode = true;
+      }
+    }
 
     for (const [key, value] of Object.entries(channelSettings)) {
       if (key === 'transmitPower') {
@@ -198,11 +370,13 @@ export function programToChannelSettings(memoryMap: RadioMemoryMap, program: Rad
 
       if (key === 'mode') {
         record.wide = value === 'FM';
+        record.mode = value;
         continue;
       }
 
       if (key === 'skip') {
         record.scan = value !== 'S';
+        record.skip = value === 'S';
         continue;
       }
 
@@ -222,13 +396,30 @@ export function programToChannelSettings(memoryMap: RadioMemoryMap, program: Rad
     }
 
     records[index] = record;
-    names[index] = { [nameField]: channel.name ?? '' };
+
+    if (namesStruct) {
+      names[index] = { [nameField]: channel.name ?? '' };
+    } else {
+      record[nameField] = channel.name ?? '';
+    }
+
+    if (extrasStruct) {
+      extras[index] = {
+        used: kenwoodUsedFlag(receiveFrequency, transmitFrequency),
+        lockout: channelSettings.skip === 'S' || channelSettings.lockout === true,
+        group: typeof channelSettings.group === 'number' ? channelSettings.group : 0,
+      };
+    }
   }
 
   const bag: RadioSettings = { ...program.settings, [bindings.records]: records };
 
   if (bindings.names && namesStruct) {
     bag[bindings.names] = names;
+  }
+
+  if (bindings.extras && extrasStruct) {
+    bag[bindings.extras] = extras;
   }
 
   return bag;

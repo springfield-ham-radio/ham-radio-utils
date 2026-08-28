@@ -55,6 +55,10 @@ export function collectMemoryMapUiFields(memoryMap: RadioMemoryMap): RadioMemory
     if (memoryMap.channelBindings.names) {
       channelStructIds.add(memoryMap.channelBindings.names);
     }
+
+    if (memoryMap.channelBindings.extras) {
+      channelStructIds.add(memoryMap.channelBindings.extras);
+    }
   }
 
   for (const struct of memoryMap.structs) {
@@ -105,6 +109,7 @@ export function collectChannelMemoryMapUiFields(memoryMap: RadioMemoryMap): Radi
   }
 
   const struct = memoryMap.structs.find((entry) => entry.id === bindings.records);
+  const extrasStruct = bindings.extras ? memoryMap.structs.find((entry) => entry.id === bindings.extras) : undefined;
 
   if (!struct) {
     return [];
@@ -113,18 +118,24 @@ export function collectChannelMemoryMapUiFields(memoryMap: RadioMemoryMap): Radi
   const boundIds = channelBoundFieldIds(memoryMap);
   const fields: RadioMemoryMapUiField[] = [];
 
-  for (const field of struct.fields) {
-    if (field.reserved || !field.ui || boundIds.has(field.id)) {
+  for (const source of [struct, extrasStruct]) {
+    if (!source) {
       continue;
     }
 
-    fields.push({
-      path: field.id,
-      structId: struct.id,
-      fieldId: field.id,
-      ui: field.ui,
-      value: field.value,
-    });
+    for (const field of source.fields) {
+      if (field.reserved || !field.ui || boundIds.has(field.id)) {
+        continue;
+      }
+
+      fields.push({
+        path: field.id,
+        structId: source.id,
+        fieldId: field.id,
+        ui: field.ui,
+        value: field.value,
+      });
+    }
   }
 
   return fields;
