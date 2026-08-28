@@ -1,3 +1,9 @@
+## [4.8.0](https://github.com/springfield-ham-radio/ham-radio-utils/compare/v4.7.0...v4.8.0) (2026-08-28)
+
+### Features
+
+* encode Kenwood TM-D710 channel-map band codes ([94a4bf9](https://github.com/springfield-ham-radio/ham-radio-utils/commit/94a4bf9edb906859e3795ea9bd713f9638fa33e0))
+
 ## [4.7.0](https://github.com/springfield-ham-radio/ham-radio-utils/compare/v4.6.0...v4.7.0) (2026-08-28)
 
 ### Features
