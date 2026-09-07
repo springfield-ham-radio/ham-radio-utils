@@ -124,6 +124,14 @@
         "rtscts": {
           "type": "boolean",
           "description": "Hardware RTS/CTS flow control (Kenwood TH-D74 clone on macOS)"
+        },
+        "rts": {
+          "type": "boolean",
+          "description": "RTS line after open. TH-F6 live CAT needs false"
+        },
+        "dtr": {
+          "type": "boolean",
+          "description": "DTR line after open"
         }
       }
     },
@@ -198,13 +206,19 @@
   },
   "definitions": {
     "protocolStep": {
-      "description": "A single protocol step: an exchange, a chunked read, or a chunked write",
+      "description": "A single protocol step: an exchange, a chunked read, a chunked write, or a live CAT memory loop",
       "oneOf": [
         {
           "$ref": "#/definitions/readStep"
         },
         {
           "$ref": "#/definitions/writeStep"
+        },
+        {
+          "$ref": "#/definitions/catReadStep"
+        },
+        {
+          "$ref": "#/definitions/catWriteStep"
         },
         {
           "$ref": "#/definitions/exchangeStep"
@@ -258,8 +272,111 @@
               "minimum": 1
             }
           }
+        },
+        {
+          "type": "object",
+          "required": [
+            "until"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "until": {
+              "$ref": "#/definitions/byteToken",
+              "description": "Read until this delimiter byte; the delimiter is not included (Kenwood CAT CR)"
+            }
+          }
         }
       ]
+    },
+    "catMemory": {
+      "type": "object",
+      "description": "Live CAT memory loop over logical channel records",
+      "required": [
+        "segment",
+        "count",
+        "recordSize",
+        "pack"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "segment": {
+          "type": "string",
+          "description": "Memory segment that receives packed records"
+        },
+        "count": {
+          "type": "integer",
+          "description": "Number of channel indexes to scan",
+          "minimum": 1
+        },
+        "recordSize": {
+          "type": "integer",
+          "description": "Packed logical record size in bytes",
+          "minimum": 1
+        },
+        "pack": {
+          "type": "string",
+          "description": "CAT reply packer",
+          "enum": [
+            "kenwood-th-f6"
+          ]
+        },
+        "indexWidth": {
+          "type": "integer",
+          "description": "Zero-padded decimal width of the memory index (TH-F6 uses 3)",
+          "minimum": 1,
+          "maximum": 6,
+          "default": 3
+        },
+        "emptyByte": {
+          "type": "integer",
+          "description": "Fill byte for empty memories",
+          "minimum": 0,
+          "maximum": 255,
+          "default": 255
+        },
+        "timeout": {
+          "type": "integer",
+          "description": "Timeout in milliseconds for each CAT line",
+          "minimum": 1
+        },
+        "interCommandDelayMs": {
+          "type": "integer",
+          "description": "Milliseconds to wait between CAT commands",
+          "minimum": 0
+        }
+      }
+    },
+    "catReadStep": {
+      "type": "object",
+      "description": "Read memories with live CAT commands",
+      "required": [
+        "catRead"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "catRead": {
+          "$ref": "#/definitions/catMemory"
+        }
+      }
+    },
+    "catWriteStep": {
+      "type": "object",
+      "description": "Write memories with live CAT commands",
+      "required": [
+        "catWrite"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "catWrite": {
+          "$ref": "#/definitions/catMemory"
+        }
+      }
     },
     "exchangeStep": {
       "type": "object",
@@ -298,6 +415,11 @@
           "description": "Timeout in milliseconds",
           "minimum": 1,
           "default": 5000
+        },
+        "delay": {
+          "type": "integer",
+          "description": "Milliseconds to wait after send",
+          "minimum": 0
         },
         "setBaudRate": {
           "type": "integer",
