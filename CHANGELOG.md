@@ -1,3 +1,9 @@
+## [4.9.0](https://github.com/springfield-ham-radio/ham-radio-utils/compare/v4.8.0...v4.9.0) (2026-09-07)
+
+### Features
+
+* validate live CAT protocol steps ([2f7d8c2](https://github.com/springfield-ham-radio/ham-radio-utils/commit/2f7d8c26a2c1204e705305a38dce1bc9471ef6cf))
+
 ## [4.8.0](https://github.com/springfield-ham-radio/ham-radio-utils/compare/v4.7.0...v4.8.0) (2026-08-28)
 
 ### Features
