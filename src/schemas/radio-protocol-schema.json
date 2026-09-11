@@ -78,9 +78,20 @@
       "properties": {
         "baudRate": {
           "type": "integer",
-          "description": "Serial baud rate",
+          "description": "Default serial baud rate used to open the programming port. Must be included in baudRates when that list is present.",
           "minimum": 1200,
           "maximum": 115200
+        },
+        "baudRates": {
+          "type": "array",
+          "description": "Baud rates the radio programming port accepts. Omit when only baudRate is valid. The HamBench import and write dialogs show a selector when more than one value is listed.",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "integer",
+            "minimum": 1200,
+            "maximum": 115200
+          }
         },
         "dataBits": {
           "type": "integer",

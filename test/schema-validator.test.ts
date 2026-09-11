@@ -125,6 +125,57 @@ describe('SchemaValidator', () => {
     expect(result.errors!.some((error) => error.includes('baudRate'))).to.be.true;
   });
 
+  it('should accept serialConfig baudRates that include the default baudRate', () => {
+    const validator = new SchemaValidator();
+
+    const result = validator.validateRadioProtocol({
+      ...baofengConfig,
+      serialConfig: {
+        ...baofengConfig.serialConfig,
+        baudRate: 9600,
+        baudRates: [9600, 19200, 38400, 57600],
+      },
+    });
+
+    expect(result.valid).to.be.true;
+    expect(result.errors).to.be.undefined;
+  });
+
+  it('should reject baudRates when the default baudRate is not in the list', () => {
+    const validator = new SchemaValidator();
+
+    const result = validator.validateRadioProtocol({
+      ...baofengConfig,
+      serialConfig: {
+        ...baofengConfig.serialConfig,
+        baudRate: 9600,
+        baudRates: [19200, 38400],
+      },
+    });
+
+    expect(result.valid).to.be.false;
+    expect(result.errors).to.be.an('array');
+    expect(result.errors!.some((error) => error.includes('baudRate'))).to.be.true;
+    expect(result.errors!.some((error) => error.includes('baudRates'))).to.be.true;
+  });
+
+  it('should reject baudRates values outside the allowed range', () => {
+    const validator = new SchemaValidator();
+
+    const result = validator.validateRadioProtocol({
+      ...baofengConfig,
+      serialConfig: {
+        ...baofengConfig.serialConfig,
+        baudRate: 9600,
+        baudRates: [9600, 100],
+      },
+    });
+
+    expect(result.valid).to.be.false;
+    expect(result.errors).to.be.an('array');
+    expect(result.errors!.some((error) => error.includes('baudRates'))).to.be.true;
+  });
+
   it('should validate memory segment constraints', () => {
     const validator = new SchemaValidator();
 

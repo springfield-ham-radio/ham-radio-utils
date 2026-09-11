@@ -25,7 +25,22 @@ export class SchemaValidator {
   }
 
   validateRadioProtocol(config: unknown): ValidationResult {
-    return this.validateAgainst(radioProtocolSchema, config);
+    const schemaResult = this.validateAgainst(radioProtocolSchema, config);
+
+    if (!schemaResult.valid) {
+      return schemaResult;
+    }
+
+    const baudRateErrors = baudRateMembershipErrors(config);
+
+    if (baudRateErrors.length === 0) {
+      return schemaResult;
+    }
+
+    return {
+      valid: false,
+      errors: baudRateErrors,
+    };
   }
 
   validateMemoryMap(memoryMap: unknown): ValidationResult {
@@ -41,6 +56,7 @@ export class SchemaValidator {
     }
 
     let errors: string[] = [];
+
     if (validate.errors && validate.errors.length > 0) {
       errors = validate.errors.map((error: AjvError) => {
         const path = error.instancePath || 'root';
@@ -53,4 +69,32 @@ export class SchemaValidator {
       valid: false,
     };
   }
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return value !== null && typeof value === 'object' && !Array.isArray(value);
+}
+
+/**
+ * `baudRate` is the default open speed. When a radio lists `baudRates`, that
+ * default must be one of the accepted values so the UI can preselect it.
+ */
+function baudRateMembershipErrors(config: unknown): string[] {
+  if (!isRecord(config) || !isRecord(config.serialConfig)) {
+    return [];
+  }
+
+  const serialConfig = config.serialConfig;
+  const baudRate = serialConfig.baudRate;
+  const baudRates = serialConfig.baudRates;
+
+  if (!Array.isArray(baudRates) || typeof baudRate !== 'number') {
+    return [];
+  }
+
+  if (baudRates.includes(baudRate)) {
+    return [];
+  }
+
+  return ['/serialConfig/baudRate: must be included in baudRates'];
 }
