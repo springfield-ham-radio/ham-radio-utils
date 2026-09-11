@@ -1,3 +1,9 @@
+## [4.10.0](https://github.com/springfield-ham-radio/ham-radio-utils/compare/v4.9.0...v4.10.0) (2026-09-11)
+
+### Features
+
+* allow serialConfig baudRates lists in radio protocol schemas ([142a20a](https://github.com/springfield-ham-radio/ham-radio-utils/commit/142a20a8ddb7c8adb8557ea47d3efe7ee7c522e2))
+
 ## [4.9.0](https://github.com/springfield-ham-radio/ham-radio-utils/compare/v4.8.0...v4.9.0) (2026-09-07)
 
 ### Features
