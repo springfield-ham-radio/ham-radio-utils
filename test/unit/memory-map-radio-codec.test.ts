@@ -112,6 +112,7 @@ describe('MemoryMapRadioCodec', () => {
     });
     const decoded = codec.decode(encoded);
 
+    expect(encoded.contents.length).to.equal(memoryImageSize(memoryConfig));
     expect(decoded.channels).to.have.length(1);
     expect(decoded.channels[0].channelNumber).to.equal(0);
 
@@ -121,5 +122,89 @@ describe('MemoryMapRadioCodec', () => {
       expect(channel.name).to.equal('TEST');
       expect(channel.receiveFrequency).to.equal(146_520_000);
     }
+  });
+
+  it('keeps a packed driver image the same length when adding a channel', () => {
+    const holedConfig: RadioMemoryConfig = {
+      chunkSize: 256,
+      addressSize: 2,
+      addressEndianness: 'big',
+      segments: {
+        image_lo: { startAddress: 0, endAddress: 255 },
+        image_hi: { startAddress: 512, endAddress: 767 },
+        tail: { startAddress: 2048, endAddress: 2063 },
+      },
+    };
+    const packedSize = Object.values(holedConfig.segments).reduce(
+      (sum, segment) => sum + (segment.endAddress - segment.startAddress + 1),
+      0,
+    );
+    const packedChannelMap: RadioMemoryMap = {
+      ...channelMap,
+      structs: [
+        { ...channelMap.structs[0]!, count: 4 },
+        {
+          id: 'names',
+          seek: 0x40,
+          count: 4,
+          stride: 8,
+          fields: [{ id: 'name', type: 'u8', value: { kind: 'ascii', length: 7 } }],
+        },
+      ],
+    };
+    const codec = createMemoryMapCodec({
+      radioModel: 'test-radio' as never,
+      memoryMap: packedChannelMap,
+      memoryConfig: holedConfig,
+      logger: new MockLogLayer(),
+    });
+    const packed = createEmptyMemoryImage(packedSize);
+    packed[256] = 0xa5;
+
+    const original: RadioProgram = {
+      channels: [
+        {
+          channelNumber: 0,
+          radioChannel: {
+            name: 'OLD',
+            receiveFrequency: Frequency(146_520_000),
+            transmitFrequency: Frequency(146_520_000),
+            receiveTone: { tone: 0, type: RadioToneType.CTCSS },
+            transmitTone: { tone: 0, type: RadioToneType.CTCSS },
+          },
+          settings: {},
+        },
+      ],
+      settings: {},
+    };
+    const seeded = codec.encode(original, { contents: packed, radioModel: 'test-radio' as never });
+
+    expect(seeded.contents.length).to.equal(packedSize);
+    expect(seeded.contents[256]).to.equal(0xa5);
+
+    const withAddedChannel: RadioProgram = {
+      ...original,
+      channels: [
+        ...original.channels,
+        {
+          channelNumber: 1,
+          radioChannel: {
+            name: 'NEW',
+            receiveFrequency: Frequency(146_940_000),
+            transmitFrequency: Frequency(146_340_000),
+            receiveTone: { tone: 0, type: RadioToneType.CTCSS },
+            transmitTone: { tone: 0, type: RadioToneType.CTCSS },
+          },
+          settings: {},
+        },
+      ],
+    };
+    const encoded = codec.encode(withAddedChannel, seeded);
+    const decoded = codec.decode(encoded);
+
+    expect(encoded.contents.length).to.equal(packedSize);
+    expect(encoded.contents.length).to.equal(seeded.contents.length);
+    expect(encoded.contents[256]).to.equal(0xa5);
+    expect(decoded.channels.map((channel) => channel.channelNumber)).to.deep.equal([0, 1]);
   });
 });

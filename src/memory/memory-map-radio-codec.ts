@@ -59,23 +59,13 @@ export class MemoryMapRadioCodec implements RadioCodec {
     }
   }
 
+  /**
+   * Patch `program` into a copy of `memory`. Existing image length is preserved
+   * (packed driver reads stay packed; sparse images stay sparse).
+   */
   encode(program: RadioProgram, memory: RadioMemory): RadioMemory {
-    const totalSize = memoryImageSize(this.memoryConfig);
     const contents =
-      memory.contents.length > 0 ? new Uint8Array(memory.contents) : createEmptyMemoryImage(totalSize);
-
-    if (contents.length < totalSize) {
-      const expanded = createEmptyMemoryImage(totalSize);
-      expanded.set(contents);
-      try {
-        encodeRadioProgram(this.memoryMap, program, expanded, this.memoryConfig);
-      } catch (error) {
-        this.logger?.withError(error).warn('Failed to encode radio program into memory map');
-      }
-
-      this.logger?.debug(`Memory size: ${expanded.length} bytes`);
-      return { contents: expanded, radioModel: this.radioModel };
-    }
+      memory.contents.length > 0 ? new Uint8Array(memory.contents) : createEmptyMemoryImage(memoryImageSize(this.memoryConfig));
 
     try {
       encodeRadioProgram(this.memoryMap, program, contents, this.memoryConfig);
