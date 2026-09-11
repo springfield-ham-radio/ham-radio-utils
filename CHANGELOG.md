@@ -1,3 +1,9 @@
+## [4.10.1](https://github.com/springfield-ham-radio/ham-radio-utils/compare/v4.10.0...v4.10.1) (2026-09-11)
+
+### Bug Fixes
+
+* keep encode from resizing packed memory images ([5d12f36](https://github.com/springfield-ham-radio/ham-radio-utils/commit/5d12f36a02c1f25e8bc51bb95060c5c7116ce215))
+
 ## [4.10.0](https://github.com/springfield-ham-radio/ham-radio-utils/compare/v4.9.0...v4.10.0) (2026-09-11)
 
 ### Features
