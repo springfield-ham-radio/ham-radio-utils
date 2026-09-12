@@ -55,6 +55,14 @@ describe('BandPlan', () => {
       expect(bandPlan.findBandByFrequency(467_550_000)?.name).to.equal('GMRS');
     });
 
+    it('should find Weather Radio for NOAA WX1–WX7 and Environment Canada WX8–WX10', () => {
+      expect(bandPlan.findBandByFrequency(162_550_000)?.name).to.equal('Weather Radio');
+      expect(bandPlan.findBandByFrequency(162_400_000)?.name).to.equal('Weather Radio');
+      expect(bandPlan.findBandByFrequency(161_650_000)?.name).to.equal('Weather Radio-8');
+      expect(bandPlan.findBandByFrequency(161_775_000)?.name).to.equal('Weather Radio-9');
+      expect(bandPlan.findBandByFrequency(163_275_000)?.name).to.equal('Weather Radio-10');
+    });
+
     it('should not treat GHz-scale values as HF amateur bands', () => {
       expect(bandPlan.findBandByFrequency(1_800_000_000)?.name).to.not.equal('160 Meter');
       expect(bandPlan.findBandByFrequency(7_000_000_000)?.name).to.not.equal('40 Meter');

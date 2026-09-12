@@ -74,6 +74,25 @@ describe('bands.json', () => {
 
       expect(weatherChannel?.frequency).to.equal(162_475_000);
     });
+
+    it('should include NOAA WX1–WX7 and Environment Canada WX8–WX10', () => {
+      const expected: [string, number][] = [
+        ['WX1', 162_550_000],
+        ['WX2', 162_400_000],
+        ['WX3', 162_475_000],
+        ['WX4', 162_425_000],
+        ['WX5', 162_450_000],
+        ['WX6', 162_500_000],
+        ['WX7', 162_525_000],
+        ['WX8', 161_650_000],
+        ['WX9', 161_775_000],
+        ['WX10', 163_275_000],
+      ];
+      const weatherBands = bands.filter((entry) => entry.name.replace(/-\d+$/, '') === 'Weather Radio');
+      const channels = new Map(weatherBands.flatMap((band) => (band.channels ?? []).map((channel) => [channel.name, channel.frequency])));
+
+      expect([...channels.entries()]).to.deep.equal(expected);
+    });
   });
 
   describe('frequency display settings', () => {

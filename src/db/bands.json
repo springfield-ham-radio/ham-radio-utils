@@ -306,5 +306,53 @@
         "frequency": 162525000
       }
     ]
+  },
+  {
+    "id": "8edabffb-dbaf-4302-b7eb-c6d467bc67d8",
+    "name": "Weather Radio-8",
+    "wavelength": 1.85,
+    "lowerFrequency": 161650000,
+    "upperFrequency": 161650000,
+    "frequencyDisplayBaseMultiplier": 1000000,
+    "frequencyDisplayNumberDecimals": 3,
+    "privileges": ["9689b06f-dfb0-4ae6-8fdc-f9a4e6e1b88e"],
+    "channels": [
+      {
+        "name": "WX8",
+        "frequency": 161650000
+      }
+    ]
+  },
+  {
+    "id": "c0217f5d-54b8-42c3-b6ad-63d63972b19f",
+    "name": "Weather Radio-9",
+    "wavelength": 1.85,
+    "lowerFrequency": 161775000,
+    "upperFrequency": 161775000,
+    "frequencyDisplayBaseMultiplier": 1000000,
+    "frequencyDisplayNumberDecimals": 3,
+    "privileges": ["9689b06f-dfb0-4ae6-8fdc-f9a4e6e1b88e"],
+    "channels": [
+      {
+        "name": "WX9",
+        "frequency": 161775000
+      }
+    ]
+  },
+  {
+    "id": "8e2ccfe6-5be5-43c2-bbec-f80be8939464",
+    "name": "Weather Radio-10",
+    "wavelength": 1.85,
+    "lowerFrequency": 163275000,
+    "upperFrequency": 163275000,
+    "frequencyDisplayBaseMultiplier": 1000000,
+    "frequencyDisplayNumberDecimals": 3,
+    "privileges": ["9689b06f-dfb0-4ae6-8fdc-f9a4e6e1b88e"],
+    "channels": [
+      {
+        "name": "WX10",
+        "frequency": 163275000
+      }
+    ]
   }
 ]
