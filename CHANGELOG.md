@@ -1,3 +1,9 @@
+## [4.10.2](https://github.com/springfield-ham-radio/ham-radio-utils/compare/v4.10.1...v4.10.2) (2026-09-12)
+
+### Bug Fixes
+
+* classify Environment Canada WX8–WX10 as weather radio ([0f19384](https://github.com/springfield-ham-radio/ham-radio-utils/commit/0f19384e700af16eaa07cfad4a07d9edf94d6965))
+
 ## [4.10.1](https://github.com/springfield-ham-radio/ham-radio-utils/compare/v4.10.0...v4.10.1) (2026-09-11)
 
 ### Bug Fixes
