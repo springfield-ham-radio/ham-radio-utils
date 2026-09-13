@@ -1,3 +1,14 @@
+## [4.11.0](https://github.com/springfield-ham-radio/ham-radio-utils/compare/v4.10.2...v4.11.0) (2026-09-13)
+
+### Features
+
+* collect settings UI groups from memory-map metadata ([9d9270f](https://github.com/springfield-ham-radio/ham-radio-utils/commit/9d9270fe203ab4faf3d360530181077599736d91))
+* sort settings fields by memory-map ui.order ([559a95e](https://github.com/springfield-ham-radio/ham-radio-utils/commit/559a95ee9678aa79b40480c6c7768e8ca1cc21d9))
+
+### Bug Fixes
+
+* update @springfield/ham-radio-api to 17.8.0 ([1fb368f](https://github.com/springfield-ham-radio/ham-radio-utils/commit/1fb368ff3944d95d7c99c660f76db1d02df03e56))
+
 ## [4.10.2](https://github.com/springfield-ham-radio/ham-radio-utils/compare/v4.10.1...v4.10.2) (2026-09-12)
 
 ### Bug Fixes
