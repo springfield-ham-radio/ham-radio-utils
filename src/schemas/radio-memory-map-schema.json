@@ -105,7 +105,8 @@
           "enum": ["integer", "select", "switch", "text", "number"]
         },
         "description": { "type": "string" },
-        "writable": { "type": "boolean" }
+        "writable": { "type": "boolean" },
+        "order": { "type": "integer" }
       },
       "additionalProperties": false
     },

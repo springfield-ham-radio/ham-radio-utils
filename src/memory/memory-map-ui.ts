@@ -236,6 +236,27 @@ function fallbackGroupLabel(id: string): string {
     .join(' ');
 }
 
+function fieldUiOrder(field: RadioMemoryMapUiField): number | undefined {
+  const extra = field.ui as RadioMemoryMapUiField['ui'] & { order?: number };
+  return typeof extra.order === 'number' && Number.isFinite(extra.order) ? extra.order : undefined;
+}
+
+function sortUiFields(fields: RadioMemoryMapUiField[]): RadioMemoryMapUiField[] {
+  return fields
+    .map((field, index) => ({ field, index }))
+    .sort((left, right) => {
+      const leftOrder = fieldUiOrder(left.field) ?? Number.POSITIVE_INFINITY;
+      const rightOrder = fieldUiOrder(right.field) ?? Number.POSITIVE_INFINITY;
+
+      if (leftOrder !== rightOrder) {
+        return leftOrder - rightOrder;
+      }
+
+      return left.index - right.index;
+    })
+    .map((entry) => entry.field);
+}
+
 function collectUiSubgroups(
   declared: RadioMemoryMapGroup | undefined,
   fields: RadioMemoryMapUiField[],
@@ -277,7 +298,7 @@ function collectUiSubgroups(
       id: subgroup.id,
       label: subgroup.label,
       description: subgroup.description,
-      fields: subgroupFields,
+      fields: sortUiFields(subgroupFields),
     });
   }
 
@@ -289,7 +310,7 @@ function collectUiSubgroups(
     result.push({
       id,
       label: fallbackGroupLabel(id),
-      fields: subgroupFields,
+      fields: sortUiFields(subgroupFields),
     });
   }
 
@@ -308,7 +329,7 @@ function toUiGroup(
     description: declared?.description,
     icon: declared?.icon,
     warning: declared?.warning,
-    fields,
+    fields: sortUiFields(fields),
     groups: collectUiSubgroups(declared, fields),
   };
 }
@@ -317,6 +338,7 @@ function toUiGroup(
  * Collect radio-wide UI fields grouped for display.
  * Declared `memoryMap.groups` set label, icon, warning, and order for the left nav.
  * Nested `groups` plus field `ui.subgroup` become panel sections.
+ * `ui.order` sorts fields within a group or section; EEPROM layout stays declaration order.
  * Groups with no fields are omitted. Fields whose `ui.group` is not declared
  * still appear, in first-seen order, after declared groups.
  */
