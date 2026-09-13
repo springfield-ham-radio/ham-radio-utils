@@ -1,6 +1,8 @@
 import type {
   RadioMemoryMap,
   RadioMemoryMapFieldUi,
+  RadioMemoryMapGroup,
+  RadioMemoryMapGroupWarning,
   RadioMemoryMapValueKind,
   RadioSettingValue,
 } from '@springfield/ham-radio-api';
@@ -200,4 +202,147 @@ export function groupMemoryMapUiFields(fields: RadioMemoryMapUiField[]): Map<str
   }
 
   return groups;
+}
+
+/**
+ * Flattened settings group for schema-driven forms (left navigation).
+ */
+export interface RadioMemoryMapUiGroup {
+  id: string;
+  label: string;
+  description?: string;
+  icon?: string;
+  warning?: RadioMemoryMapGroupWarning;
+  fields: RadioMemoryMapUiField[];
+  /** Panel sections. Empty when the group has no sub-groups in use. */
+  groups: RadioMemoryMapUiSubgroup[];
+}
+
+/**
+ * Flattened panel section inside a settings group.
+ */
+export interface RadioMemoryMapUiSubgroup {
+  id: string;
+  label: string;
+  description?: string;
+  fields: RadioMemoryMapUiField[];
+}
+
+function fallbackGroupLabel(id: string): string {
+  return id
+    .split(/[-_\s]+/)
+    .filter((part) => part.length > 0)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(' ');
+}
+
+function collectUiSubgroups(
+  declared: RadioMemoryMapGroup | undefined,
+  fields: RadioMemoryMapUiField[],
+): RadioMemoryMapUiSubgroup[] {
+  const grouped = new Map<string, RadioMemoryMapUiField[]>();
+
+  for (const field of fields) {
+    const subgroupId = field.ui.subgroup;
+
+    if (!subgroupId) {
+      continue;
+    }
+
+    const existing = grouped.get(subgroupId);
+
+    if (existing) {
+      existing.push(field);
+    } else {
+      grouped.set(subgroupId, [field]);
+    }
+  }
+
+  if (grouped.size === 0) {
+    return [];
+  }
+
+  const result: RadioMemoryMapUiSubgroup[] = [];
+  const seen = new Set<string>();
+
+  for (const subgroup of declared?.groups ?? []) {
+    const subgroupFields = grouped.get(subgroup.id);
+
+    if (!subgroupFields || subgroupFields.length === 0) {
+      continue;
+    }
+
+    seen.add(subgroup.id);
+    result.push({
+      id: subgroup.id,
+      label: subgroup.label,
+      description: subgroup.description,
+      fields: subgroupFields,
+    });
+  }
+
+  for (const [id, subgroupFields] of grouped) {
+    if (seen.has(id)) {
+      continue;
+    }
+
+    result.push({
+      id,
+      label: fallbackGroupLabel(id),
+      fields: subgroupFields,
+    });
+  }
+
+  return result;
+}
+
+function toUiGroup(
+  id: string,
+  label: string,
+  fields: RadioMemoryMapUiField[],
+  declared?: RadioMemoryMapGroup,
+): RadioMemoryMapUiGroup {
+  return {
+    id,
+    label,
+    description: declared?.description,
+    icon: declared?.icon,
+    warning: declared?.warning,
+    fields,
+    groups: collectUiSubgroups(declared, fields),
+  };
+}
+
+/**
+ * Collect radio-wide UI fields grouped for display.
+ * Declared `memoryMap.groups` set label, icon, warning, and order for the left nav.
+ * Nested `groups` plus field `ui.subgroup` become panel sections.
+ * Groups with no fields are omitted. Fields whose `ui.group` is not declared
+ * still appear, in first-seen order, after declared groups.
+ */
+export function collectMemoryMapUiGroups(memoryMap: RadioMemoryMap): RadioMemoryMapUiGroup[] {
+  const grouped = groupMemoryMapUiFields(collectMemoryMapUiFields(memoryMap));
+  const result: RadioMemoryMapUiGroup[] = [];
+  const seen = new Set<string>();
+
+  for (const group of memoryMap.groups ?? []) {
+    const fields = grouped.get(group.id);
+
+    if (!fields || fields.length === 0) {
+      continue;
+    }
+
+    seen.add(group.id);
+    result.push(toUiGroup(group.id, group.label, fields, group));
+  }
+
+  for (const [id, fields] of grouped) {
+    if (seen.has(id)) {
+      continue;
+    }
+
+    result.push(toUiGroup(id, fallbackGroupLabel(id), fields));
+  }
+
+  return result;
 }

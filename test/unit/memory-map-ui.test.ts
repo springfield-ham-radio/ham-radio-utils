@@ -4,6 +4,7 @@ import type { RadioMemoryMap } from '@springfield/ham-radio-api';
 import {
   collectChannelMemoryMapUiFields,
   collectMemoryMapUiFields,
+  collectMemoryMapUiGroups,
   formatMemoryMapFieldValue,
 } from '../../src/memory/memory-map-ui.js';
 
@@ -68,7 +69,19 @@ const sampleMap: RadioMemoryMap = {
           id: 'squelch',
           type: 'u8',
           value: { kind: 'integer', min: 0, max: 9 },
-          ui: { group: 'basic', label: 'Squelch', widget: 'integer' },
+          ui: { group: 'basic', label: 'Squelch', widget: 'integer', subgroup: 'receive' },
+        },
+        {
+          id: 'timeout',
+          type: 'u8',
+          value: { kind: 'integer', min: 0, max: 10 },
+          ui: { group: 'basic', label: 'Timeout', widget: 'integer', subgroup: 'timer' },
+        },
+        {
+          id: 'calibration',
+          type: 'u8',
+          value: { kind: 'integer', min: 0, max: 255 },
+          ui: { group: 'service', label: 'Calibration', widget: 'integer' },
         },
       ],
     },
@@ -78,7 +91,7 @@ const sampleMap: RadioMemoryMap = {
 describe('collectMemoryMapUiFields', () => {
   it('skips channel-bound structs', () => {
     const fields = collectMemoryMapUiFields(sampleMap);
-    expect(fields.map((field) => field.fieldId)).to.deep.equal(['squelch']);
+    expect(fields.map((field) => field.fieldId)).to.deep.equal(['squelch', 'timeout', 'calibration']);
   });
 });
 
@@ -100,5 +113,64 @@ describe('formatMemoryMapFieldValue', () => {
     expect(formatMemoryMapFieldValue(false, mode!)).to.equal('Narrow');
     expect(formatMemoryMapFieldValue(0, scode!)).to.equal('1');
     expect(formatMemoryMapFieldValue(15, scode!)).to.equal('16');
+  });
+});
+
+describe('collectMemoryMapUiGroups', () => {
+  it('uses declared group metadata and order, skipping empty groups', () => {
+    const grouped = collectMemoryMapUiGroups({
+      ...sampleMap,
+      groups: [
+        {
+          id: 'service',
+          label: 'Service Settings',
+          icon: 'i-lucide-wrench',
+          warning: {
+            title: 'Service calibration values',
+            description: 'Change only with appropriate test equipment.',
+          },
+        },
+        { id: 'basic', label: 'Basic Settings', icon: 'i-lucide-sliders-horizontal' },
+        { id: 'empty', label: 'Unused' },
+      ],
+    });
+
+    expect(grouped.map((group) => group.id)).to.deep.equal(['service', 'basic']);
+    expect(grouped[0]?.label).to.equal('Service Settings');
+    expect(grouped[0]?.icon).to.equal('i-lucide-wrench');
+    expect(grouped[0]?.warning?.title).to.equal('Service calibration values');
+    expect(grouped[0]?.fields.map((field) => field.fieldId)).to.deep.equal(['calibration']);
+    expect(grouped[0]?.groups).to.deep.equal([]);
+    expect(grouped[1]?.fields.map((field) => field.fieldId)).to.deep.equal(['squelch', 'timeout']);
+    expect(grouped[1]?.groups.map((subgroup) => subgroup.id)).to.deep.equal(['receive', 'timer']);
+  });
+
+  it('title-cases undeclared group ids when no groups are declared', () => {
+    const grouped = collectMemoryMapUiGroups(sampleMap);
+    expect(grouped.map((group) => ({ id: group.id, label: group.label }))).to.deep.equal([
+      { id: 'basic', label: 'Basic' },
+      { id: 'service', label: 'Service' },
+    ]);
+  });
+
+  it('uses declared sub-groups as panel sections and title-cases undeclared ones', () => {
+    const grouped = collectMemoryMapUiGroups({
+      ...sampleMap,
+      groups: [
+        {
+          id: 'basic',
+          label: 'Basic Settings',
+          groups: [{ id: 'timer', label: 'Timers' }],
+        },
+      ],
+    });
+
+    expect(grouped).to.have.length(2);
+    expect(grouped[0]?.groups.map((subgroup) => ({ id: subgroup.id, label: subgroup.label }))).to.deep.equal([
+      { id: 'timer', label: 'Timers' },
+      { id: 'receive', label: 'Receive' },
+    ]);
+    expect(grouped[0]?.groups[0]?.fields.map((field) => field.fieldId)).to.deep.equal(['timeout']);
+    expect(grouped[0]?.groups[1]?.fields.map((field) => field.fieldId)).to.deep.equal(['squelch']);
   });
 });

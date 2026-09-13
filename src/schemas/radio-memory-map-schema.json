@@ -21,6 +21,12 @@
     },
     "channelBindings": {
       "$ref": "#/definitions/channelBindings"
+    },
+    "groups": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/group"
+      }
     }
   },
   "definitions": {
@@ -53,11 +59,46 @@
       },
       "additionalProperties": false
     },
+    "group": {
+      "type": "object",
+      "required": ["id", "label"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "label": { "type": "string", "minLength": 1 },
+        "description": { "type": "string" },
+        "icon": { "type": "string", "minLength": 1 },
+        "warning": {
+          "type": "object",
+          "required": ["title", "description"],
+          "properties": {
+            "title": { "type": "string", "minLength": 1 },
+            "description": { "type": "string", "minLength": 1 }
+          },
+          "additionalProperties": false
+        },
+        "groups": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/subgroup" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "subgroup": {
+      "type": "object",
+      "required": ["id", "label"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "label": { "type": "string", "minLength": 1 },
+        "description": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
     "ui": {
       "type": "object",
       "required": ["group", "label", "widget"],
       "properties": {
         "group": { "type": "string" },
+        "subgroup": { "type": "string", "minLength": 1 },
         "label": { "type": "string" },
         "widget": {
           "type": "string",
