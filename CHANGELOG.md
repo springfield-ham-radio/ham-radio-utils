@@ -1,3 +1,13 @@
+## [4.12.0](https://github.com/springfield-ham-radio/ham-radio-utils/compare/v4.11.0...v4.12.0) (2026-09-14)
+
+### Features
+
+* add 30, 17, 12, and 6 meter amateur bands ([95dc309](https://github.com/springfield-ham-radio/ham-radio-utils/commit/95dc309d079f74de11f48bd367bc5f592cc9516c))
+
+### Bug Fixes
+
+* update @springfield/ham-radio-api to 17.9.0 ([c8778a7](https://github.com/springfield-ham-radio/ham-radio-utils/commit/c8778a75509ea645a83911cc86cbb1f9b0aa3f05))
+
 ## [4.11.0](https://github.com/springfield-ham-radio/ham-radio-utils/compare/v4.10.2...v4.11.0) (2026-09-13)
 
 ### Features
