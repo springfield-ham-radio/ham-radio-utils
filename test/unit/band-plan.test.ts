@@ -43,6 +43,30 @@ describe('BandPlan', () => {
       expect(band?.name).to.equal('20 Meter');
     });
 
+    it('should find the 30 Meter band for 10.12 MHz', () => {
+      const band = bandPlan.findBandByFrequency(10_120_000);
+
+      expect(band?.name).to.equal('30 Meter');
+    });
+
+    it('should find the 17 Meter band for 18.11 MHz', () => {
+      const band = bandPlan.findBandByFrequency(18_110_000);
+
+      expect(band?.name).to.equal('17 Meter');
+    });
+
+    it('should find the 12 Meter band for 24.93 MHz', () => {
+      const band = bandPlan.findBandByFrequency(24_930_000);
+
+      expect(band?.name).to.equal('12 Meter');
+    });
+
+    it('should find the 6 Meter band for 50.125 MHz', () => {
+      const band = bandPlan.findBandByFrequency(50_125_000);
+
+      expect(band?.name).to.equal('6 Meter');
+    });
+
     it('should find the 2 Meter band for 146.52 MHz', () => {
       const band = bandPlan.findBandByFrequency(146_520_000);
 
@@ -93,6 +117,24 @@ describe('BandPlan', () => {
       const generalId = operatorClassToLicenseClassId('GENERAL')!;
 
       expect(bandPlan.hasPrivilege(1_900_000, generalId)).to.be.true;
+    });
+
+    it('should deny Technician transmit on 30 Meter', () => {
+      const technicianId = operatorClassToLicenseClassId('TECHNICIAN')!;
+
+      expect(bandPlan.hasPrivilege(10_120_000, technicianId)).to.be.false;
+    });
+
+    it('should allow General transmit on 30 Meter', () => {
+      const generalId = operatorClassToLicenseClassId('GENERAL')!;
+
+      expect(bandPlan.hasPrivilege(10_120_000, generalId)).to.be.true;
+    });
+
+    it('should allow Technician transmit on 6 Meter', () => {
+      const technicianId = operatorClassToLicenseClassId('TECHNICIAN')!;
+
+      expect(bandPlan.hasPrivilege(50_125_000, technicianId)).to.be.true;
     });
 
     it('should allow Technician transmit on 2 Meter', () => {

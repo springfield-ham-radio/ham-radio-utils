@@ -25,6 +25,18 @@ describe('frequencyDisplay', () => {
     expect(frequencyDisplay(Frequency(21_300_000), band!)).to.equal('21.300');
   });
 
+  it('should format 17 Meter frequencies in MHz with 3 decimals', () => {
+    const band = bandPlan.findBandByFrequency(18_110_000);
+
+    expect(frequencyDisplay(Frequency(18_110_000), band!)).to.equal('18.110');
+  });
+
+  it('should format 6 Meter frequencies in MHz with 4 decimals', () => {
+    const band = bandPlan.findBandByFrequency(50_125_000);
+
+    expect(frequencyDisplay(Frequency(50_125_000), band!)).to.equal('50.1250');
+  });
+
   it('should format 60 Meter channel 3 without rounding to 5.359', () => {
     const band = bandPlan.findBandByFrequency(5_358_500);
 
