@@ -1,3 +1,9 @@
+## [4.14.0](https://github.com/springfield-ham-radio/ham-radio-utils/compare/v4.13.0...v4.14.0) (2026-09-24)
+
+### Features
+
+* add 1.25 meter, 33 centimeter, and 23 centimeter bands ([9835e6f](https://github.com/springfield-ham-radio/ham-radio-utils/commit/9835e6fed3c1e2bf0429b5e34b228b7eb1010ac9))
+
 ## [4.13.0](https://github.com/springfield-ham-radio/ham-radio-utils/compare/v4.12.4...v4.13.0) (2026-09-24)
 
 ### Features
