@@ -1,6 +1,5 @@
-import { describe, it } from 'node:test';
+import { describe, expect, it } from 'vitest';
 import { SchemaValidator } from '../src/utils/schema-validator.js';
-import { expect } from 'chai';
 
 const baofengConfig = {
   description: 'UV-5R and UV-5RE Plus models',
@@ -87,8 +86,8 @@ describe('SchemaValidator', () => {
     const validator = new SchemaValidator();
     const result = validator.validateRadioProtocol(baofengConfig);
 
-    expect(result.valid).to.be.true;
-    expect(result.errors).to.be.undefined;
+    expect(result.valid).toBe(true);
+    expect(result.errors).toBeUndefined();
   });
 
   it('should reject invalid configurations', () => {
@@ -102,9 +101,9 @@ describe('SchemaValidator', () => {
 
     const result = validator.validateRadioProtocol(invalidConfig);
 
-    expect(result.valid).to.be.false;
-    expect(result.errors).to.be.an('array');
-    expect(result.errors!.length).to.be.greaterThan(0);
+    expect(result.valid).toBe(false);
+    expect(result.errors).toBeInstanceOf(Array);
+    expect(result.errors!.length).toBeGreaterThan(0);
   });
 
   it('should validate serial configuration constraints', () => {
@@ -120,9 +119,9 @@ describe('SchemaValidator', () => {
 
     const result = validator.validateRadioProtocol(invalidBaudRate);
 
-    expect(result.valid).to.be.false;
-    expect(result.errors).to.be.an('array');
-    expect(result.errors!.some((error) => error.includes('baudRate'))).to.be.true;
+    expect(result.valid).toBe(false);
+    expect(result.errors).toBeInstanceOf(Array);
+    expect(result.errors!.some((error) => error.includes('baudRate'))).toBe(true);
   });
 
   it('should accept serialConfig baudRates that include the default baudRate', () => {
@@ -137,8 +136,8 @@ describe('SchemaValidator', () => {
       },
     });
 
-    expect(result.valid).to.be.true;
-    expect(result.errors).to.be.undefined;
+    expect(result.valid).toBe(true);
+    expect(result.errors).toBeUndefined();
   });
 
   it('should reject baudRates when the default baudRate is not in the list', () => {
@@ -153,10 +152,10 @@ describe('SchemaValidator', () => {
       },
     });
 
-    expect(result.valid).to.be.false;
-    expect(result.errors).to.be.an('array');
-    expect(result.errors!.some((error) => error.includes('baudRate'))).to.be.true;
-    expect(result.errors!.some((error) => error.includes('baudRates'))).to.be.true;
+    expect(result.valid).toBe(false);
+    expect(result.errors).toBeInstanceOf(Array);
+    expect(result.errors!.some((error) => error.includes('baudRate'))).toBe(true);
+    expect(result.errors!.some((error) => error.includes('baudRates'))).toBe(true);
   });
 
   it('should reject baudRates values outside the allowed range', () => {
@@ -171,9 +170,9 @@ describe('SchemaValidator', () => {
       },
     });
 
-    expect(result.valid).to.be.false;
-    expect(result.errors).to.be.an('array');
-    expect(result.errors!.some((error) => error.includes('baudRates'))).to.be.true;
+    expect(result.valid).toBe(false);
+    expect(result.errors).toBeInstanceOf(Array);
+    expect(result.errors!.some((error) => error.includes('baudRates'))).toBe(true);
   });
 
   it('should validate memory segment constraints', () => {
@@ -198,9 +197,9 @@ describe('SchemaValidator', () => {
 
     const result = validator.validateRadioProtocol(invalidAddresses);
 
-    expect(result.valid).to.be.false;
-    expect(result.errors).to.be.an('array');
-    expect(result.errors!.some((error) => error.includes('startAddress'))).to.be.true;
+    expect(result.valid).toBe(false);
+    expect(result.errors).toBeInstanceOf(Array);
+    expect(result.errors!.some((error) => error.includes('startAddress'))).toBe(true);
   });
 
   it('should reject protocol steps that are not an exchange, read, or write', () => {
@@ -217,9 +216,9 @@ describe('SchemaValidator', () => {
 
     const result = validator.validateRadioProtocol(invalidStep);
 
-    expect(result.valid).to.be.false;
-    expect(result.errors).to.be.an('array');
-    expect(result.errors!.length).to.be.greaterThan(0);
+    expect(result.valid).toBe(false);
+    expect(result.errors).toBeInstanceOf(Array);
+    expect(result.errors!.length).toBeGreaterThan(0);
   });
 
   it('should validate write steps with chunkSize, delay, and skip', () => {
@@ -262,7 +261,7 @@ describe('SchemaValidator', () => {
 
     const result = validator.validateRadioProtocol(writeConfig);
 
-    expect(result.valid).to.be.true;
-    expect(result.errors).to.be.undefined;
+    expect(result.valid).toBe(true);
+    expect(result.errors).toBeUndefined();
   });
 });

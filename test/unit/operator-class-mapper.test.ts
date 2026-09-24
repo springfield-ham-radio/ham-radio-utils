@@ -1,5 +1,4 @@
-import { describe, it } from 'node:test';
-import { expect } from 'chai';
+import { describe, expect, it } from 'vitest';
 import { operatorClassToLicenseClassId } from '../../src/utils/operator-class-mapper.js';
 import licenseClassesData from '../../src/db/license-classes.json' with { type: 'json' };
 
@@ -16,39 +15,39 @@ function idFor(name: string): string {
 
 describe('operatorClassToLicenseClassId', () => {
   it('should map TECHNICIAN to the Technician license class', () => {
-    expect(operatorClassToLicenseClassId('TECHNICIAN')).to.equal(idFor('Technician'));
+    expect(operatorClassToLicenseClassId('TECHNICIAN')).toBe(idFor('Technician'));
   });
 
   it('should map TECHNICIAN PLUS to the Technician license class', () => {
-    expect(operatorClassToLicenseClassId('TECHNICIAN PLUS')).to.equal(idFor('Technician'));
+    expect(operatorClassToLicenseClassId('TECHNICIAN PLUS')).toBe(idFor('Technician'));
   });
 
   it('should map GENERAL to the General license class', () => {
-    expect(operatorClassToLicenseClassId('GENERAL')).to.equal(idFor('General'));
+    expect(operatorClassToLicenseClassId('GENERAL')).toBe(idFor('General'));
   });
 
   it('should map EXTRA to the Amateur Extra license class', () => {
-    expect(operatorClassToLicenseClassId('EXTRA')).to.equal(idFor('Amateur Extra'));
+    expect(operatorClassToLicenseClassId('EXTRA')).toBe(idFor('Amateur Extra'));
   });
 
   it('should map ADVANCED to the Advanced (Grandfathered) license class', () => {
-    expect(operatorClassToLicenseClassId('ADVANCED')).to.equal(idFor('Advanced (Grandfathered)'));
+    expect(operatorClassToLicenseClassId('ADVANCED')).toBe(idFor('Advanced (Grandfathered)'));
   });
 
   it('should map NOVICE to the Novice (Grandfathered) license class', () => {
-    expect(operatorClassToLicenseClassId('NOVICE')).to.equal(idFor('Novice (Grandfathered)'));
+    expect(operatorClassToLicenseClassId('NOVICE')).toBe(idFor('Novice (Grandfathered)'));
   });
 
   it('should normalize lowercase and surrounding whitespace', () => {
-    expect(operatorClassToLicenseClassId('  technician  ')).to.equal(idFor('Technician'));
+    expect(operatorClassToLicenseClassId('  technician  ')).toBe(idFor('Technician'));
   });
 
   it('should return undefined for an empty operator class', () => {
-    expect(operatorClassToLicenseClassId('')).to.be.undefined;
-    expect(operatorClassToLicenseClassId('   ')).to.be.undefined;
+    expect(operatorClassToLicenseClassId('')).toBeUndefined();
+    expect(operatorClassToLicenseClassId('   ')).toBeUndefined();
   });
 
   it('should return undefined for an unknown operator class', () => {
-    expect(operatorClassToLicenseClassId('CLUB')).to.be.undefined;
+    expect(operatorClassToLicenseClassId('CLUB')).toBeUndefined();
   });
 });

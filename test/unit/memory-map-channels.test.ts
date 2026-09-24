@@ -1,5 +1,4 @@
-import { describe, it } from 'node:test';
-import { expect } from 'chai';
+import { describe, expect, it } from 'vitest';
 import {
   Frequency,
   type RadioMemoryConfig,
@@ -127,26 +126,26 @@ describe('decodeRadioProgram / encodeRadioProgram', () => {
     encodeRadioProgram(channelMap, program, contents, memoryConfig);
     const decoded = decodeRadioProgram(channelMap, contents, memoryConfig);
 
-    expect(decoded.channels).to.have.length(1);
-    expect(decoded.channels[0].channelNumber).to.equal(0);
+    expect(decoded.channels).toHaveLength(1);
+    expect(decoded.channels[0].channelNumber).toBe(0);
 
     const channel = decoded.channels[0].radioChannel;
-    expect(typeof channel).to.equal('object');
+    expect(typeof channel).toBe('object');
 
     if (typeof channel === 'object') {
-      expect(channel.name).to.equal('TEST');
-      expect(channel.receiveFrequency).to.equal(146_520_000);
-      expect(channel.transmitFrequency).to.equal(146_520_000);
-      expect(channel.receiveTone).to.deep.equal({ tone: 885, type: RadioToneType.CTCSS });
-      expect(channel.transmitTone).to.deep.equal({ tone: 23, type: RadioToneType.DCS });
+      expect(channel.name).toBe('TEST');
+      expect(channel.receiveFrequency).toBe(146_520_000);
+      expect(channel.transmitFrequency).toBe(146_520_000);
+      expect(channel.receiveTone).toEqual({ tone: 885, type: RadioToneType.CTCSS });
+      expect(channel.transmitTone).toEqual({ tone: 23, type: RadioToneType.DCS });
     }
 
-    expect(decoded.channels[0].settings?.transmitPower).to.equal(5);
-    expect(decoded.channels[0].settings?.mode).to.equal('FM');
-    expect(decoded.channels[0].settings?.skip).to.equal('');
-    expect(decoded.channels[0].settings?.bcl).to.equal(true);
-    expect((decoded.settings.settings as { squelch: number }).squelch).to.equal(4);
-    expect(decoded.settings.channels).to.equal(undefined);
+    expect(decoded.channels[0].settings?.transmitPower).toBe(5);
+    expect(decoded.channels[0].settings?.mode).toBe('FM');
+    expect(decoded.channels[0].settings?.skip).toBe('');
+    expect(decoded.channels[0].settings?.bcl).toBe(true);
+    expect((decoded.settings.settings as { squelch: number }).squelch).toBe(4);
+    expect(decoded.settings.channels).toBe(undefined);
   });
 
   it('clears slots missing from the program when clearEmpty is set', () => {
@@ -164,7 +163,7 @@ describe('decodeRadioProgram / encodeRadioProgram', () => {
       memoryConfig,
     );
 
-    expect(contents[16]).to.equal(0xff);
+    expect(contents[16]).toBe(0xff);
   });
 });
 
@@ -238,16 +237,16 @@ describe('Kenwood-style offset duplex and tone-mode bits', () => {
     const decoded = decodeRadioProgram(kenwoodMap, contents, kenwoodMemory);
     const channel = decoded.channels[0].radioChannel;
 
-    expect(decoded.channels).to.have.length(1);
+    expect(decoded.channels).toHaveLength(1);
 
     if (typeof channel === 'object') {
-      expect(channel.name).to.equal('CALL');
-      expect(channel.receiveFrequency).to.equal(146_520_000);
-      expect(channel.transmitFrequency).to.equal(146_520_000);
-      expect(channel.transmitTone).to.deep.equal({ tone: 885, type: RadioToneType.CTCSS });
+      expect(channel.name).toBe('CALL');
+      expect(channel.receiveFrequency).toBe(146_520_000);
+      expect(channel.transmitFrequency).toBe(146_520_000);
+      expect(channel.transmitTone).toEqual({ tone: 885, type: RadioToneType.CTCSS });
     }
 
-    expect(decoded.channels[0].settings?.mode).to.equal('AM');
+    expect(decoded.channels[0].settings?.mode).toBe('AM');
   });
 });
 
@@ -319,7 +318,7 @@ describe('Kenwood TM-D710 chmap band extras', () => {
 
     encodeRadioProgram(map, program, contents, memory);
 
-    expect(contents[0]).to.equal(5);
-    expect(contents[1]).to.equal(0);
+    expect(contents[0]).toBe(5);
+    expect(contents[1]).toBe(0);
   });
 });

@@ -1,5 +1,4 @@
-import { describe, it } from 'node:test';
-import { expect } from 'chai';
+import { describe, expect, it } from 'vitest';
 import type { RadioMemoryConfig, RadioMemoryMap } from '@springfield/ham-radio-api';
 import {
   decodeMemoryMap,
@@ -20,26 +19,26 @@ const uv5rMemoryConfig: RadioMemoryConfig = {
 
 describe('parseSeekAddress', () => {
   it('parses hex strings and numbers', () => {
-    expect(parseSeekAddress('0x0E20')).to.equal(0x0e20);
-    expect(parseSeekAddress(0x0e20)).to.equal(0x0e20);
-    expect(parseSeekAddress('3616')).to.equal(3616);
+    expect(parseSeekAddress('0x0E20')).toBe(0x0e20);
+    expect(parseSeekAddress(0x0e20)).toBe(0x0e20);
+    expect(parseSeekAddress('3616')).toBe(3616);
   });
 });
 
 describe('radioAddressToBufferOffset', () => {
   it('maps main-block addresses 1:1 in a packed buffer', () => {
     const packedSize = 6144 + 320;
-    expect(radioAddressToBufferOffset(0x0e20, uv5rMemoryConfig, packedSize)).to.equal(0x0e20);
+    expect(radioAddressToBufferOffset(0x0e20, uv5rMemoryConfig, packedSize)).toBe(0x0e20);
   });
 
   it('maps aux addresses into the packed tail', () => {
     const packedSize = 6144 + 320;
     // radio 0x1EE0 → segment settings starts 0x1EC0 → packed offset 6144 + 0x20
-    expect(radioAddressToBufferOffset(0x1ee0, uv5rMemoryConfig, packedSize)).to.equal(6144 + 0x20);
+    expect(radioAddressToBufferOffset(0x1ee0, uv5rMemoryConfig, packedSize)).toBe(6144 + 0x20);
   });
 
   it('uses absolute addressing for a sparse full-size image', () => {
-    expect(radioAddressToBufferOffset(0x1ee0, uv5rMemoryConfig, 8192)).to.equal(0x1ee0);
+    expect(radioAddressToBufferOffset(0x1ee0, uv5rMemoryConfig, 8192)).toBe(0x1ee0);
   });
 });
 
@@ -83,7 +82,7 @@ describe('decodeMemoryMap / encodeMemoryMap', () => {
 
     const settings = decodeMemoryMap(basicMap, contents, uv5rMemoryConfig);
 
-    expect(settings.settings).to.deep.equal({
+    expect(settings.settings).toEqual({
       squelch: 3,
       save: '1:2',
       tdr: true,
@@ -105,11 +104,11 @@ describe('decodeMemoryMap / encodeMemoryMap', () => {
       uv5rMemoryConfig,
     );
 
-    expect(contents[0x0e20]).to.equal(5);
-    expect(contents[0x0e21]).to.equal(0xaa);
-    expect(contents[0x0e22]).to.equal(4);
-    expect(contents[0x0e23]).to.equal(1);
-    expect(contents[0x1000]).to.equal(0x42);
+    expect(contents[0x0e20]).toBe(5);
+    expect(contents[0x0e21]).toBe(0xaa);
+    expect(contents[0x0e22]).toBe(4);
+    expect(contents[0x0e23]).toBe(1);
+    expect(contents[0x1000]).toBe(0x42);
   });
 
   it('decodes MSB-first bitfields within a byte (Chirp style)', () => {
@@ -147,7 +146,7 @@ describe('decodeMemoryMap / encodeMemoryMap', () => {
     contents[0x0e77] = 0x07;
 
     const settings = decodeMemoryMap(map, contents, uv5rMemoryConfig);
-    expect(settings.wmchannel).to.deep.equal({ mrcha: 42, mrchb: 7 });
+    expect(settings.wmchannel).toEqual({ mrcha: 42, mrchb: 7 });
   });
 
   it('decodes ASCII and digit arrays', () => {
@@ -193,8 +192,8 @@ describe('decodeMemoryMap / encodeMemoryMap', () => {
     }
 
     const settings = decodeMemoryMap(map, contents, uv5rMemoryConfig);
-    expect((settings.poweron_msg as { line1: string }).line1).to.equal('BAOFENG');
-    expect((settings.vfoa as { freq: number }).freq).to.equal(14_652_000);
+    expect((settings.poweron_msg as { line1: string }).line1).toBe('BAOFENG');
+    expect((settings.vfoa as { freq: number }).freq).toBe(14_652_000);
   });
 
   it('decodes repeated structs with stride (PTT-ID codes)', () => {
@@ -226,7 +225,7 @@ describe('decodeMemoryMap / encodeMemoryMap', () => {
     contents[0x0b11] = 0xff;
 
     const settings = decodeMemoryMap(map, contents, uv5rMemoryConfig);
-    expect(settings.pttid).to.deep.equal([{ code: '12' }, { code: '3' }]);
+    expect(settings.pttid).toEqual([{ code: '12' }, { code: '3' }]);
   });
 
   it('decodes from a packed driver buffer for aux addresses', () => {
@@ -260,7 +259,7 @@ describe('decodeMemoryMap / encodeMemoryMap', () => {
     }
 
     const settings = decodeMemoryMap(map, packed, uv5rMemoryConfig);
-    expect((settings.firmware_msg as { line1: string }).line1).to.equal('BFB291');
+    expect((settings.firmware_msg as { line1: string }).line1).toBe('BFB291');
   });
 
   it('round-trips encode then decode for mixed field types', () => {
@@ -271,7 +270,7 @@ describe('decodeMemoryMap / encodeMemoryMap', () => {
 
     encodeMemoryMap(basicMap, settings, contents, uv5rMemoryConfig);
     const decoded = decodeMemoryMap(basicMap, contents, uv5rMemoryConfig);
-    expect(decoded.settings).to.deep.equal(settings.settings);
+    expect(decoded.settings).toEqual(settings.settings);
   });
 
   it('decodes and encodes Chirp lbcd frequencies', () => {
@@ -303,11 +302,11 @@ describe('decodeMemoryMap / encodeMemoryMap', () => {
     }
 
     const decoded = decodeMemoryMap(map, contents, uv5rMemoryConfig);
-    expect((decoded.channels as { rxfreq: number }[])[0].rxfreq).to.equal(hz);
+    expect((decoded.channels as { rxfreq: number }[])[0].rxfreq).toBe(hz);
 
     encodeMemoryMap(map, { channels: [{ rxfreq: hz, txfreq: hz }, null] }, contents, uv5rMemoryConfig);
     const again = decodeMemoryMap(map, contents, uv5rMemoryConfig);
-    expect((again.channels as { rxfreq: number; txfreq: number }[])[0]).to.deep.equal({
+    expect((again.channels as { rxfreq: number; txfreq: number }[])[0]).toEqual({
       rxfreq: hz,
       txfreq: hz,
     });
@@ -348,8 +347,8 @@ describe('decodeMemoryMap / encodeMemoryMap', () => {
 
     const decoded = decodeMemoryMap(map, contents, uv5rMemoryConfig);
     const channel = (decoded.channels as Record<string, unknown>[])[0];
-    expect(channel.rxtone).to.deep.equal({ mode: 'ctcss', value: 885 });
-    expect(channel.txtone).to.deep.equal({ mode: 'dcs', code: 23, polarity: 'N' });
+    expect(channel.rxtone).toEqual({ mode: 'ctcss', value: 885 });
+    expect(channel.txtone).toEqual({ mode: 'dcs', code: 23, polarity: 'N' });
   });
 
   it('skips empty slots via emptyWhen and clears them when clearEmpty is set', () => {
@@ -375,14 +374,14 @@ describe('decodeMemoryMap / encodeMemoryMap', () => {
     }
 
     const decoded = decodeMemoryMap(map, contents, uv5rMemoryConfig);
-    expect(decoded.channels).to.deep.equal([
+    expect(decoded.channels).toEqual([
       { rxfreq: 146_520_000 },
       null,
     ]);
 
     contents[16] = 0x12;
     encodeMemoryMap(map, { channels: [{ rxfreq: 146_520_000 }, null] }, contents, uv5rMemoryConfig);
-    expect(contents[16]).to.equal(0xff);
+    expect(contents[16]).toBe(0xff);
   });
 });
 
@@ -413,13 +412,13 @@ describe('u32 and grouped stride', () => {
     const contents = new Uint8Array(1024);
     const encoded = encodeMemoryMap(map, { channel: { freq: 146_520_000, offset: 600_000 } }, contents, memoryConfig);
 
-    expect(encoded[0]).to.equal(0xc0);
-    expect(encoded[1]).to.equal(0xb7);
-    expect(encoded[2]).to.equal(0xbb);
-    expect(encoded[3]).to.equal(0x08);
+    expect(encoded[0]).toBe(0xc0);
+    expect(encoded[1]).toBe(0xb7);
+    expect(encoded[2]).toBe(0xbb);
+    expect(encoded[3]).toBe(0x08);
 
     const decoded = decodeMemoryMap(map, encoded, memoryConfig);
-    expect(decoded.channel).to.deep.equal({
+    expect(decoded.channel).toEqual({
       freq: 146_520_000,
       offset: 600_000,
     });
@@ -444,9 +443,9 @@ describe('u32 and grouped stride', () => {
     const items = Array.from({ length: 8 }, (_, index) => ({ freq: index + 1 }));
     encodeMemoryMap(map, { channels: items }, contents, memoryConfig);
 
-    expect(contents[0]).to.equal(1);
-    expect(contents[4 * 5]).to.equal(6);
-    expect(contents[4 * 6]).to.equal(0);
-    expect(contents[4 * 6 + 8]).to.equal(7);
+    expect(contents[0]).toBe(1);
+    expect(contents[4 * 5]).toBe(6);
+    expect(contents[4 * 6]).toBe(0);
+    expect(contents[4 * 6 + 8]).toBe(7);
   });
 });

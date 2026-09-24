@@ -1,5 +1,4 @@
-import { describe, it } from 'node:test';
-import { expect } from 'chai';
+import { describe, expect, it } from 'vitest';
 import {
   Frequency,
   type RadioMemoryConfig,
@@ -77,8 +76,8 @@ const channelMap: RadioMemoryMap = {
 
 describe('MemoryMapRadioCodec', () => {
   it('reports sparse image size from memoryConfig segments', () => {
-    expect(memoryImageSize(memoryConfig)).to.equal(8192);
-    expect(createEmptyMemoryImage(4)).to.deep.equal(new Uint8Array([0xff, 0xff, 0xff, 0xff]));
+    expect(memoryImageSize(memoryConfig)).toBe(8192);
+    expect(createEmptyMemoryImage(4)).toEqual(new Uint8Array([0xff, 0xff, 0xff, 0xff]));
   });
 
   it('round-trips a program through RadioCodec encode/decode', () => {
@@ -112,15 +111,15 @@ describe('MemoryMapRadioCodec', () => {
     });
     const decoded = codec.decode(encoded);
 
-    expect(encoded.contents.length).to.equal(memoryImageSize(memoryConfig));
-    expect(decoded.channels).to.have.length(1);
-    expect(decoded.channels[0].channelNumber).to.equal(0);
+    expect(encoded.contents.length).toBe(memoryImageSize(memoryConfig));
+    expect(decoded.channels).toHaveLength(1);
+    expect(decoded.channels[0].channelNumber).toBe(0);
 
     const channel = decoded.channels[0].radioChannel;
 
     if (typeof channel === 'object') {
-      expect(channel.name).to.equal('TEST');
-      expect(channel.receiveFrequency).to.equal(146_520_000);
+      expect(channel.name).toBe('TEST');
+      expect(channel.receiveFrequency).toBe(146_520_000);
     }
   });
 
@@ -179,8 +178,8 @@ describe('MemoryMapRadioCodec', () => {
     };
     const seeded = codec.encode(original, { contents: packed, radioModel: 'test-radio' as never });
 
-    expect(seeded.contents.length).to.equal(packedSize);
-    expect(seeded.contents[256]).to.equal(0xa5);
+    expect(seeded.contents.length).toBe(packedSize);
+    expect(seeded.contents[256]).toBe(0xa5);
 
     const withAddedChannel: RadioProgram = {
       ...original,
@@ -202,9 +201,9 @@ describe('MemoryMapRadioCodec', () => {
     const encoded = codec.encode(withAddedChannel, seeded);
     const decoded = codec.decode(encoded);
 
-    expect(encoded.contents.length).to.equal(packedSize);
-    expect(encoded.contents.length).to.equal(seeded.contents.length);
-    expect(encoded.contents[256]).to.equal(0xa5);
-    expect(decoded.channels.map((channel) => channel.channelNumber)).to.deep.equal([0, 1]);
+    expect(encoded.contents.length).toBe(packedSize);
+    expect(encoded.contents.length).toBe(seeded.contents.length);
+    expect(encoded.contents[256]).toBe(0xa5);
+    expect(decoded.channels.map((channel) => channel.channelNumber)).toEqual([0, 1]);
   });
 });

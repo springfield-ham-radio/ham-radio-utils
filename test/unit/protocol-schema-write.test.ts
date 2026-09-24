@@ -1,5 +1,4 @@
-import { describe, it } from 'node:test';
-import { expect } from 'chai';
+import { describe, expect, it } from 'vitest';
 import { SchemaValidator } from '../../src/utils/schema-validator.js';
 
 describe('protocol schema write step', () => {
@@ -50,8 +49,8 @@ describe('protocol schema write step', () => {
       ],
     });
 
-    expect(result.valid).to.be.true;
-    expect(result.errors).to.be.undefined;
+    expect(result.valid).toBe(true);
+    expect(result.errors).toBeUndefined();
   });
 
   it('accepts Kenwood clone $block, setBaudRate, and rtscts', () => {
@@ -94,7 +93,7 @@ describe('protocol schema write step', () => {
       writeMemory: [{ send: ['E'] }],
     });
 
-    expect(result.valid).to.be.true;
-    expect(result.errors).to.be.undefined;
+    expect(result.valid).toBe(true);
+    expect(result.errors).toBeUndefined();
   });
 });

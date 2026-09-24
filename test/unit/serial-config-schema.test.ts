@@ -1,5 +1,4 @@
-import { describe, it } from 'node:test';
-import { expect } from 'chai';
+import { describe, expect, it } from 'vitest';
 import { SchemaValidator } from '../../src/utils/schema-validator.js';
 
 const radioConfig = {
@@ -46,8 +45,8 @@ describe('serialConfig baudRates', () => {
       },
     });
 
-    expect(result.valid).to.be.true;
-    expect(result.errors).to.be.undefined;
+    expect(result.valid).toBe(true);
+    expect(result.errors).toBeUndefined();
   });
 
   it('should reject baudRates when the default baudRate is not in the list', () => {
@@ -61,10 +60,10 @@ describe('serialConfig baudRates', () => {
       },
     });
 
-    expect(result.valid).to.be.false;
-    expect(result.errors).to.be.an('array');
-    expect(result.errors!.some((error) => error.includes('baudRate'))).to.be.true;
-    expect(result.errors!.some((error) => error.includes('baudRates'))).to.be.true;
+    expect(result.valid).toBe(false);
+    expect(result.errors).toBeInstanceOf(Array);
+    expect(result.errors!.some((error) => error.includes('baudRate'))).toBe(true);
+    expect(result.errors!.some((error) => error.includes('baudRates'))).toBe(true);
   });
 
   it('should reject baudRates values outside the allowed range', () => {
@@ -78,8 +77,8 @@ describe('serialConfig baudRates', () => {
       },
     });
 
-    expect(result.valid).to.be.false;
-    expect(result.errors).to.be.an('array');
-    expect(result.errors!.some((error) => error.includes('baudRates'))).to.be.true;
+    expect(result.valid).toBe(false);
+    expect(result.errors).toBeInstanceOf(Array);
+    expect(result.errors!.some((error) => error.includes('baudRates'))).toBe(true);
   });
 });

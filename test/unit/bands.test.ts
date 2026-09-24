@@ -1,5 +1,4 @@
-import { describe, it } from 'node:test';
-import { expect } from 'chai';
+import { describe, expect, it } from 'vitest';
 import bandsData from '../../src/db/bands.json' with { type: 'json' };
 
 interface BandChannel {
@@ -22,7 +21,7 @@ const bands = bandsData as Band[];
 function bandNamed(name: string): Band {
   const band = bands.find((entry) => entry.name === name);
 
-  expect(band, `expected band ${name} to exist`).to.not.be.undefined;
+  expect(band, `expected band ${name} to exist`).not.toBeUndefined();
 
   return band!;
 }
@@ -49,9 +48,9 @@ describe('bands.json', () => {
       it(`should use FCC Part 97 edges in Hz for ${name}`, () => {
         const band = bandNamed(name);
 
-        expect(band.lowerFrequency).to.equal(lowerFrequency);
-        expect(band.upperFrequency).to.equal(upperFrequency);
-        expect(band.wavelength).to.equal(wavelength);
+        expect(band.lowerFrequency).toBe(lowerFrequency);
+        expect(band.upperFrequency).toBe(upperFrequency);
+        expect(band.wavelength).toBe(wavelength);
       });
     }
   });
@@ -60,8 +59,8 @@ describe('bands.json', () => {
     it('should keep every channel frequency within its band edges', () => {
       for (const band of bands) {
         for (const channel of band.channels ?? []) {
-          expect(channel.frequency, `${band.name} ${channel.name}`).to.be.at.least(band.lowerFrequency);
-          expect(channel.frequency, `${band.name} ${channel.name}`).to.be.at.most(band.upperFrequency);
+          expect(channel.frequency, `${band.name} ${channel.name}`).toBeGreaterThanOrEqual(band.lowerFrequency);
+          expect(channel.frequency, `${band.name} ${channel.name}`).toBeLessThanOrEqual(band.upperFrequency);
         }
       }
     });
@@ -70,14 +69,14 @@ describe('bands.json', () => {
       const band = bandNamed('60 Meter');
       const frequencies = (band.channels ?? []).map((channel) => channel.frequency);
 
-      expect(frequencies).to.deep.equal([5_332_000, 5_348_000, 5_358_500, 5_373_000, 5_405_000]);
+      expect(frequencies).toEqual([5_332_000, 5_348_000, 5_358_500, 5_373_000, 5_405_000]);
     });
 
     it('should store Weather Radio WX3 at 162.475 MHz', () => {
       const band = bandNamed('Weather Radio');
       const weatherChannel = band.channels?.find((channel) => channel.name === 'WX3');
 
-      expect(weatherChannel?.frequency).to.equal(162_475_000);
+      expect(weatherChannel?.frequency).toBe(162_475_000);
     });
 
     it('should include NOAA WX1–WX7 and Environment Canada WX8–WX10', () => {
@@ -96,7 +95,7 @@ describe('bands.json', () => {
       const weatherBands = bands.filter((entry) => entry.name.replace(/-\d+$/, '') === 'Weather Radio');
       const channels = new Map(weatherBands.flatMap((band) => (band.channels ?? []).map((channel) => [channel.name, channel.frequency])));
 
-      expect([...channels.entries()]).to.deep.equal(expected);
+      expect([...channels.entries()]).toEqual(expected);
     });
   });
 
@@ -107,23 +106,23 @@ describe('bands.json', () => {
       for (const name of hfNames) {
         const band = bandNamed(name);
 
-        expect(band.frequencyDisplayBaseMultiplier, name).to.equal(1_000_000);
-        expect(band.frequencyDisplayNumberDecimals, name).to.equal(3);
+        expect(band.frequencyDisplayBaseMultiplier, name).toBe(1_000_000);
+        expect(band.frequencyDisplayNumberDecimals, name).toBe(3);
       }
     });
 
     it('should display 60 Meter in MHz with 4 decimals so 5.3585 MHz is exact', () => {
       const band = bandNamed('60 Meter');
 
-      expect(band.frequencyDisplayBaseMultiplier).to.equal(1_000_000);
-      expect(band.frequencyDisplayNumberDecimals).to.equal(4);
+      expect(band.frequencyDisplayBaseMultiplier).toBe(1_000_000);
+      expect(band.frequencyDisplayNumberDecimals).toBe(4);
     });
 
     it('should display 6 Meter in MHz with 4 decimals like 2 Meter', () => {
       const band = bandNamed('6 Meter');
 
-      expect(band.frequencyDisplayBaseMultiplier).to.equal(1_000_000);
-      expect(band.frequencyDisplayNumberDecimals).to.equal(4);
+      expect(band.frequencyDisplayBaseMultiplier).toBe(1_000_000);
+      expect(band.frequencyDisplayNumberDecimals).toBe(4);
     });
   });
 });

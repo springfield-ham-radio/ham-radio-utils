@@ -1,5 +1,4 @@
-import { describe, it } from 'node:test';
-import { expect } from 'chai';
+import { describe, expect, it } from 'vitest';
 import { SchemaValidator } from '../../src/utils/schema-validator.js';
 
 describe('memory-map schema groups', () => {
@@ -41,8 +40,8 @@ describe('memory-map schema groups', () => {
       ],
     });
 
-    expect(result.valid).to.be.true;
-    expect(result.errors).to.be.undefined;
+    expect(result.valid).toBe(true);
+    expect(result.errors).toBeUndefined();
   });
 
   it('rejects a settings group that is missing a label', () => {
@@ -59,8 +58,8 @@ describe('memory-map schema groups', () => {
       groups: [{ id: 'basic' }],
     });
 
-    expect(result.valid).to.be.false;
-    expect(result.errors).to.be.an('array');
-    expect(result.errors!.some((error) => error.includes('label'))).to.be.true;
+    expect(result.valid).toBe(false);
+    expect(result.errors).toBeInstanceOf(Array);
+    expect(result.errors!.some((error) => error.includes('label'))).toBe(true);
   });
 });

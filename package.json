@@ -27,7 +27,7 @@
     "release": "semantic-release",
     "prepare": "husky && yarn build",
     "test": "yarn test:unit",
-    "test:unit": "tsx --test test/unit/**/*.test.ts"
+    "test:unit": "vitest run test/unit"
   },
   "dependencies": {
     "@springfield/ham-radio-api": "^17.10.0",
@@ -44,16 +44,15 @@
     "@semantic-release/git": "11.0.1",
     "@semantic-release/github": "12.0.9",
     "@semantic-release/npm": "13.1.5",
-    "@types/chai": "5.2.3",
     "@types/node": "26.5.1",
     "@types/sprintf-js": "1.1.4",
-    "chai": "6.2.2",
     "husky": "9.1.7",
     "oxfmt": "^0.67.0",
     "oxlint": "1.82.0",
     "semantic-release": "25.0.9",
-    "tsx": "4.23.13",
-    "typescript": "7.0.2"
+    "typescript": "7.0.2",
+    "vite": "^8.3.0",
+    "vitest": "^5.0.1"
   },
   "resolutions": {
     "conventional-changelog-conventionalcommits": "9.3.1"

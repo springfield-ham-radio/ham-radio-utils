@@ -1,5 +1,4 @@
-import { describe, it } from 'node:test';
-import { expect } from 'chai';
+import { describe, expect, it } from 'vitest';
 import type { RadioMemoryMap } from '@springfield/ham-radio-api';
 import {
   collectChannelMemoryMapUiFields,
@@ -91,15 +90,15 @@ const sampleMap: RadioMemoryMap = {
 describe('collectMemoryMapUiFields', () => {
   it('skips channel-bound structs', () => {
     const fields = collectMemoryMapUiFields(sampleMap);
-    expect(fields.map((field) => field.fieldId)).to.deep.equal(['squelch', 'timeout', 'calibration']);
+    expect(fields.map((field) => field.fieldId)).toEqual(['squelch', 'timeout', 'calibration']);
   });
 });
 
 describe('collectChannelMemoryMapUiFields', () => {
   it('returns channel settings fields with ui, not RadioChannel-bound fields', () => {
     const fields = collectChannelMemoryMapUiFields(sampleMap);
-    expect(fields.map((field) => field.fieldId)).to.deep.equal(['lowpower', 'wide', 'scode']);
-    expect(fields[0]?.ui.label).to.equal('Power');
+    expect(fields.map((field) => field.fieldId)).toEqual(['lowpower', 'wide', 'scode']);
+    expect(fields[0]?.ui.label).toBe('Power');
   });
 });
 
@@ -107,12 +106,12 @@ describe('formatMemoryMapFieldValue', () => {
   it('formats power, mode, and scode for display', () => {
     const [power, mode, scode] = collectChannelMemoryMapUiFields(sampleMap);
 
-    expect(formatMemoryMapFieldValue(0, power!)).to.equal('High');
-    expect(formatMemoryMapFieldValue(1, power!)).to.equal('Low');
-    expect(formatMemoryMapFieldValue(true, mode!)).to.equal('Wide');
-    expect(formatMemoryMapFieldValue(false, mode!)).to.equal('Narrow');
-    expect(formatMemoryMapFieldValue(0, scode!)).to.equal('1');
-    expect(formatMemoryMapFieldValue(15, scode!)).to.equal('16');
+    expect(formatMemoryMapFieldValue(0, power!)).toBe('High');
+    expect(formatMemoryMapFieldValue(1, power!)).toBe('Low');
+    expect(formatMemoryMapFieldValue(true, mode!)).toBe('Wide');
+    expect(formatMemoryMapFieldValue(false, mode!)).toBe('Narrow');
+    expect(formatMemoryMapFieldValue(0, scode!)).toBe('1');
+    expect(formatMemoryMapFieldValue(15, scode!)).toBe('16');
   });
 });
 
@@ -135,19 +134,19 @@ describe('collectMemoryMapUiGroups', () => {
       ],
     });
 
-    expect(grouped.map((group) => group.id)).to.deep.equal(['service', 'basic']);
-    expect(grouped[0]?.label).to.equal('Service Settings');
-    expect(grouped[0]?.icon).to.equal('i-lucide-wrench');
-    expect(grouped[0]?.warning?.title).to.equal('Service calibration values');
-    expect(grouped[0]?.fields.map((field) => field.fieldId)).to.deep.equal(['calibration']);
-    expect(grouped[0]?.groups).to.deep.equal([]);
-    expect(grouped[1]?.fields.map((field) => field.fieldId)).to.deep.equal(['squelch', 'timeout']);
-    expect(grouped[1]?.groups.map((subgroup) => subgroup.id)).to.deep.equal(['receive', 'timer']);
+    expect(grouped.map((group) => group.id)).toEqual(['service', 'basic']);
+    expect(grouped[0]?.label).toBe('Service Settings');
+    expect(grouped[0]?.icon).toBe('i-lucide-wrench');
+    expect(grouped[0]?.warning?.title).toBe('Service calibration values');
+    expect(grouped[0]?.fields.map((field) => field.fieldId)).toEqual(['calibration']);
+    expect(grouped[0]?.groups).toEqual([]);
+    expect(grouped[1]?.fields.map((field) => field.fieldId)).toEqual(['squelch', 'timeout']);
+    expect(grouped[1]?.groups.map((subgroup) => subgroup.id)).toEqual(['receive', 'timer']);
   });
 
   it('title-cases undeclared group ids when no groups are declared', () => {
     const grouped = collectMemoryMapUiGroups(sampleMap);
-    expect(grouped.map((group) => ({ id: group.id, label: group.label }))).to.deep.equal([
+    expect(grouped.map((group) => ({ id: group.id, label: group.label }))).toEqual([
       { id: 'basic', label: 'Basic' },
       { id: 'service', label: 'Service' },
     ]);
@@ -165,13 +164,13 @@ describe('collectMemoryMapUiGroups', () => {
       ],
     });
 
-    expect(grouped).to.have.length(2);
-    expect(grouped[0]?.groups.map((subgroup) => ({ id: subgroup.id, label: subgroup.label }))).to.deep.equal([
+    expect(grouped).toHaveLength(2);
+    expect(grouped[0]?.groups.map((subgroup) => ({ id: subgroup.id, label: subgroup.label }))).toEqual([
       { id: 'timer', label: 'Timers' },
       { id: 'receive', label: 'Receive' },
     ]);
-    expect(grouped[0]?.groups[0]?.fields.map((field) => field.fieldId)).to.deep.equal(['timeout']);
-    expect(grouped[0]?.groups[1]?.fields.map((field) => field.fieldId)).to.deep.equal(['squelch']);
+    expect(grouped[0]?.groups[0]?.fields.map((field) => field.fieldId)).toEqual(['timeout']);
+    expect(grouped[0]?.groups[1]?.fields.map((field) => field.fieldId)).toEqual(['squelch']);
   });
 
   it('sorts section fields by ui.order without changing declaration order as the default', () => {
@@ -206,7 +205,7 @@ describe('collectMemoryMapUiGroups', () => {
       groups: [{ id: 'other', label: 'Other Settings', groups: [{ id: 'limits', label: 'Band Limits' }] }],
     } as RadioMemoryMap);
 
-    expect(grouped[0]?.groups[0]?.fields.map((field) => field.fieldId)).to.deep.equal([
+    expect(grouped[0]?.groups[0]?.fields.map((field) => field.fieldId)).toEqual([
       'vhf_enable',
       'uhf_enable',
       'vhf_lower',

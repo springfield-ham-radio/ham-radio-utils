@@ -1,5 +1,4 @@
-import { describe, it } from 'node:test';
-import { expect } from 'chai';
+import { describe, expect, it } from 'vitest';
 import { SchemaValidator } from '../../src/utils/schema-validator.js';
 
 describe('protocol schema CAT memory steps', () => {
@@ -57,7 +56,7 @@ describe('protocol schema CAT memory steps', () => {
       ],
     });
 
-    expect(result.valid).to.be.true;
-    expect(result.errors).to.be.undefined;
+    expect(result.valid).toBe(true);
+    expect(result.errors).toBeUndefined();
   });
 });
