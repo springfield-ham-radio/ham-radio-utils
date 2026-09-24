@@ -1,3 +1,9 @@
+## [4.13.0](https://github.com/springfield-ham-radio/ham-radio-utils/compare/v4.12.4...v4.13.0) (2026-09-24)
+
+### Features
+
+* accept menu metadata on memory-map field UI ([7a3714f](https://github.com/springfield-ham-radio/ham-radio-utils/commit/7a3714f98667cbf08126a9507d4587d1804cb6cc))
+
 ## [4.12.4](https://github.com/springfield-ham-radio/ham-radio-utils/compare/v4.12.3...v4.12.4) (2026-09-15)
 
 ### Bug Fixes
