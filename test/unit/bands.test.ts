@@ -41,7 +41,10 @@ describe('bands.json', () => {
       ['10 Meter', 28_000_000, 29_700_000, 10],
       ['6 Meter', 50_000_000, 54_000_000, 6],
       ['2 Meter', 144_000_000, 148_000_000, 2],
+      ['1.25 Meter', 222_000_000, 225_000_000, 1.25],
       ['70 Centimeter', 420_000_000, 450_000_000, 0.7],
+      ['33 Centimeter', 902_000_000, 928_000_000, 0.33],
+      ['23 Centimeter', 1_240_000_000, 1_300_000_000, 0.23],
     ];
 
     for (const [name, lowerFrequency, upperFrequency, wavelength] of amateurBandEdges) {

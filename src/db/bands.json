@@ -142,11 +142,41 @@
     "privileges": ["b7c9d9e4-5f0a-4f2d-9c2d-1e3b8e7a8b5f", "f3a6c1d2-8e7f-4a5b-9d3e-2c4a9b6e7f8d", "d6e8f7a2-3b4c-5d9e-1f2a-8c3b7e4a9f6d"]
   },
   {
+    "id": "546229c6-eb61-4f7e-9885-32cbaa9ac5a5",
+    "name": "1.25 Meter",
+    "wavelength": 1.25,
+    "lowerFrequency": 222000000,
+    "upperFrequency": 225000000,
+    "frequencyDisplayBaseMultiplier": 1000000,
+    "frequencyDisplayNumberDecimals": 4,
+    "privileges": ["b7c9d9e4-5f0a-4f2d-9c2d-1e3b8e7a8b5f", "f3a6c1d2-8e7f-4a5b-9d3e-2c4a9b6e7f8d", "d6e8f7a2-3b4c-5d9e-1f2a-8c3b7e4a9f6d"]
+  },
+  {
     "id": "k6l5m4n3-o2p1-q0r9-s8t7-u6v5-w4x3y2z1",
     "name": "70 Centimeter",
     "wavelength": 0.7,
     "lowerFrequency": 420000000,
     "upperFrequency": 450000000,
+    "frequencyDisplayBaseMultiplier": 1000000,
+    "frequencyDisplayNumberDecimals": 4,
+    "privileges": ["b7c9d9e4-5f0a-4f2d-9c2d-1e3b8e7a8b5f", "f3a6c1d2-8e7f-4a5b-9d3e-2c4a9b6e7f8d", "d6e8f7a2-3b4c-5d9e-1f2a-8c3b7e4a9f6d"]
+  },
+  {
+    "id": "11b31bb7-3d43-4c49-8c17-45b32b6ce75c",
+    "name": "33 Centimeter",
+    "wavelength": 0.33,
+    "lowerFrequency": 902000000,
+    "upperFrequency": 928000000,
+    "frequencyDisplayBaseMultiplier": 1000000,
+    "frequencyDisplayNumberDecimals": 4,
+    "privileges": ["b7c9d9e4-5f0a-4f2d-9c2d-1e3b8e7a8b5f", "f3a6c1d2-8e7f-4a5b-9d3e-2c4a9b6e7f8d", "d6e8f7a2-3b4c-5d9e-1f2a-8c3b7e4a9f6d"]
+  },
+  {
+    "id": "45325b42-d698-4fe5-bcf4-d882f5bb2a2b",
+    "name": "23 Centimeter",
+    "wavelength": 0.23,
+    "lowerFrequency": 1240000000,
+    "upperFrequency": 1300000000,
     "frequencyDisplayBaseMultiplier": 1000000,
     "frequencyDisplayNumberDecimals": 4,
     "privileges": ["b7c9d9e4-5f0a-4f2d-9c2d-1e3b8e7a8b5f", "f3a6c1d2-8e7f-4a5b-9d3e-2c4a9b6e7f8d", "d6e8f7a2-3b4c-5d9e-1f2a-8c3b7e4a9f6d"]

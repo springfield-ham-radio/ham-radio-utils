@@ -72,6 +72,23 @@ describe('BandPlan', () => {
       expect(band?.name).toBe('2 Meter');
     });
 
+    it('should find the 1.25 Meter band for 222–225 MHz', () => {
+      expect(bandPlan.findBandByFrequency(222_240_000)?.name).toBe('1.25 Meter');
+      expect(bandPlan.findBandByFrequency(222_500_000)?.name).toBe('1.25 Meter');
+      expect(bandPlan.findBandByFrequency(223_200_000)?.name).toBe('1.25 Meter');
+      expect(bandPlan.findBandByFrequency(223_340_000)?.name).toBe('1.25 Meter');
+    });
+
+    it('should find the 33 Centimeter band for 902 MHz', () => {
+      expect(bandPlan.findBandByFrequency(902_012_500)?.name).toBe('33 Centimeter');
+      expect(bandPlan.findBandByFrequency(902_187_500)?.name).toBe('33 Centimeter');
+    });
+
+    it('should find the 23 Centimeter band for 1272–1273 MHz', () => {
+      expect(bandPlan.findBandByFrequency(1_272_400_000)?.name).toBe('23 Centimeter');
+      expect(bandPlan.findBandByFrequency(1_273_100_000)?.name).toBe('23 Centimeter');
+    });
+
     it('should prefer an exact FRS channel over the overlapping GMRS envelope', () => {
       expect(bandPlan.findBandByFrequency(462_562_500)?.name).toBe('FRS/GMRS-1');
       expect(bandPlan.findBandByFrequency(467_562_500)?.name).toBe('FRS/GMRS-2');
@@ -146,6 +163,14 @@ describe('BandPlan', () => {
       const technicianId = operatorClassToLicenseClassId('TECHNICIAN')!;
 
       expect(bandPlan.hasPrivilege(446_000_000, technicianId)).toBe(true);
+    });
+
+    it('should allow Technician transmit on 1.25 Meter, 33 Centimeter, and 23 Centimeter', () => {
+      const technicianId = operatorClassToLicenseClassId('TECHNICIAN')!;
+
+      expect(bandPlan.hasPrivilege(223_200_000, technicianId)).toBe(true);
+      expect(bandPlan.hasPrivilege(902_075_000, technicianId)).toBe(true);
+      expect(bandPlan.hasPrivilege(1_272_400_000, technicianId)).toBe(true);
     });
 
     it('should deny Technician transmit on GMRS frequencies', () => {
