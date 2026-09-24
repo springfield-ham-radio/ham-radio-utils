@@ -105,6 +105,15 @@
           "enum": ["integer", "select", "switch", "text", "number"]
         },
         "description": { "type": "string" },
+        "menu": {
+          "type": "object",
+          "required": ["number"],
+          "properties": {
+            "number": { "type": "integer", "minimum": 0 },
+            "code": { "type": "string", "minLength": 1 }
+          },
+          "additionalProperties": false
+        },
         "writable": { "type": "boolean" },
         "order": { "type": "integer" }
       },
