@@ -30,7 +30,7 @@
     "test:unit": "vitest run test/unit"
   },
   "dependencies": {
-    "@springfield/ham-radio-api": "^17.10.0",
+    "@springfield/ham-radio-api": "^17.12.0",
     "ajv": "^8.20.0",
     "ajv-formats": "^3.0.1",
     "fishery": "^2.4.0",
