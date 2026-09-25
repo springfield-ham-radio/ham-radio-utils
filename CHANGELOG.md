@@ -1,3 +1,14 @@
+## [4.15.0](https://github.com/springfield-ham-radio/ham-radio-utils/compare/v4.14.0...v4.15.0) (2026-09-25)
+
+### Features
+
+* accept a ready byte on chunked memory reads ([714088a](https://github.com/springfield-ham-radio/ham-radio-utils/commit/714088a77cbe1efd4b15d7647283ff305ff8d810))
+
+### Bug Fixes
+
+* sync the lockfile range for ham-radio-api 17.12.0 ([f40a8c3](https://github.com/springfield-ham-radio/ham-radio-utils/commit/f40a8c30e300e8800ae4663e067f80401ac976b4))
+* update @springfield/ham-radio-api to 17.12.0 ([6394586](https://github.com/springfield-ham-radio/ham-radio-utils/commit/639458683c447ec5eea40aeaa6da89d21212d148))
+
 ## [4.14.0](https://github.com/springfield-ham-radio/ham-radio-utils/compare/v4.13.0...v4.14.0) (2026-09-24)
 
 ### Features
