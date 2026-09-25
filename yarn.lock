@@ -1497,7 +1497,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@springfield/ham-radio-api@npm:17.12.0":
+"@springfield/ham-radio-api@npm:^17.12.0":
   version: 17.12.0
   resolution: "@springfield/ham-radio-api@npm:17.12.0"
   dependencies:
@@ -1517,7 +1517,7 @@ __metadata:
     "@semantic-release/git": "npm:11.0.1"
     "@semantic-release/github": "npm:12.0.9"
     "@semantic-release/npm": "npm:13.1.5"
-    "@springfield/ham-radio-api": "npm:17.12.0"
+    "@springfield/ham-radio-api": "npm:^17.12.0"
     "@types/node": "npm:26.5.1"
     "@types/sprintf-js": "npm:1.1.4"
     ajv: "npm:^8.20.0"
