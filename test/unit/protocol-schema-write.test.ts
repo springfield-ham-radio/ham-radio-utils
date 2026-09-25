@@ -53,6 +53,51 @@ describe('protocol schema write step', () => {
     expect(result.errors).toBeUndefined();
   });
 
+  it('accepts a UV-5R read that prefixes the next block when the ack times out', () => {
+    const validator = new SchemaValidator();
+    const result = validator.validateRadioProtocol({
+      description: 'UV-5R read ready byte',
+      id: {
+        manufacturer: 'Baofeng',
+        model: 'baofeng-uv5r',
+        name: 'Baofeng UV-5R',
+      },
+      version: '1.0.0',
+      memoryConfig: {
+        addressEndianness: 'big',
+        addressSize: 2,
+        chunkSize: 64,
+        segments: {
+          channels: { endAddress: 6143, startAddress: 0 },
+          settings: { endAddress: 8191, startAddress: 7872 },
+        },
+      },
+      readMemory: [
+        {
+          description: 'Read memory',
+          read: {
+            ack: { expect: '0x06', send: ['0x06'], timeout: 50 },
+            delay: 50,
+            expect: ['X', '$address', '$length', '$data'],
+            ready: '0x06',
+            segments: ['channels', 'settings'],
+            send: ['S', '$address', '$chunkSize'],
+          },
+        },
+      ],
+      serialConfig: { baudRate: 9600 },
+      settingsSchema: {
+        channelSchema: {},
+        model: 'baofeng-uv5r',
+        settingsSchema: {},
+      },
+      writeMemory: [{ expect: '0x06', send: ['0x06'] }],
+    });
+
+    expect(result.valid).toBe(true);
+    expect(result.errors).toBeUndefined();
+  });
+
   it('accepts Kenwood clone $block, setBaudRate, and rtscts', () => {
     const validator = new SchemaValidator();
     const result = validator.validateRadioProtocol({

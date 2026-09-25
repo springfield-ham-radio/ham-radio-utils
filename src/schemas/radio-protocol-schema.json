@@ -483,6 +483,15 @@
               "type": "integer",
               "description": "Timeout in milliseconds for each chunk exchange",
               "minimum": 1
+            },
+            "delay": {
+              "type": "integer",
+              "description": "Milliseconds to wait after each accepted chunk, including after ack",
+              "minimum": 0
+            },
+            "ready": {
+              "$ref": "#/definitions/byteToken",
+              "description": "Byte prefixed to the next chunk when ack.expect times out. UV-5R clone uses 0x06 with ack.timeout 50 so a silent radio is not held until it answers 0xFE."
             }
           }
         }
