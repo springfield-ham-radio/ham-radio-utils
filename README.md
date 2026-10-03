@@ -4,6 +4,10 @@ Shared utilities for HamBench: memory-map codec, band plan, Callook license-clas
 
 Docs: [HamBench developer docs](https://springfield-ham-radio.github.io/ham-radio-docs/developer/) · [License lookup](https://springfield-ham-radio.github.io/ham-radio-docs/developer/license-lookup.html)
 
+## License
+
+MIT / Bryan Hunt. See [LICENSE](LICENSE).
+
 ```bash
 corepack enable
 yarn install
