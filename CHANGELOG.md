@@ -1,3 +1,9 @@
+## [4.15.3](https://github.com/springfield-ham-radio/ham-radio-utils/compare/v4.15.2...v4.15.3) (2026-10-12)
+
+### Bug Fixes
+
+* **deps:** bump brace-expansion from 2.1.4 to 2.1.7 ([#15](https://github.com/springfield-ham-radio/ham-radio-utils/issues/15)) ([182777e](https://github.com/springfield-ham-radio/ham-radio-utils/commit/182777e01ac27fb6513f4d6f57f95735ab167501))
+
 ## [4.15.2](https://github.com/springfield-ham-radio/ham-radio-utils/compare/v4.15.1...v4.15.2) (2026-10-12)
 
 ### Bug Fixes
