@@ -1,3 +1,9 @@
+## [4.15.2](https://github.com/springfield-ham-radio/ham-radio-utils/compare/v4.15.1...v4.15.2) (2026-10-12)
+
+### Bug Fixes
+
+* **deps:** bump fast-uri from 3.1.7 to 3.1.8 ([#16](https://github.com/springfield-ham-radio/ham-radio-utils/issues/16)) ([4bd6f8e](https://github.com/springfield-ham-radio/ham-radio-utils/commit/4bd6f8e51cbfde42327c8f763bb6b3da3d46f9e9))
+
 ## [4.15.1](https://github.com/springfield-ham-radio/ham-radio-utils/compare/v4.15.0...v4.15.1) (2026-10-04)
 
 ### Bug Fixes
