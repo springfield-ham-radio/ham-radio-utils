@@ -1,3 +1,10 @@
+## [4.15.4](https://github.com/springfield-ham-radio/ham-radio-utils/compare/v4.15.3...v4.15.4) (2026-10-13)
+
+### Bug Fixes
+
+* **deps:** bump handlebars from 4.7.8 to 4.7.10 ([#23](https://github.com/springfield-ham-radio/ham-radio-utils/issues/23)) ([0a9a45b](https://github.com/springfield-ham-radio/ham-radio-utils/commit/0a9a45b2a434c1bb1b9bbfd76568a9d54efe69ac))
+* **deps:** bump source-map-js from 1.2.1 to 1.2.2 ([#24](https://github.com/springfield-ham-radio/ham-radio-utils/issues/24)) ([e135159](https://github.com/springfield-ham-radio/ham-radio-utils/commit/e1351594483d00bc1e660f9904dc1fba67a62c86))
+
 ## [4.15.3](https://github.com/springfield-ham-radio/ham-radio-utils/compare/v4.15.2...v4.15.3) (2026-10-12)
 
 ### Bug Fixes
