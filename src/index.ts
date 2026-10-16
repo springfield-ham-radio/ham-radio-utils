@@ -8,6 +8,7 @@ export * from './test-utils/radio-channel-factory.js';
 export * from './test-utils/radio-programmed-channel-factory.js';
 
 export * from './utils/band-plan.js';
+export * from './utils/geo-point.js';
 export * from './utils/frequency-display.js';
 export * from './utils/memory-channel-utils.js';
 export * from './utils/memory-data-utils.js';
