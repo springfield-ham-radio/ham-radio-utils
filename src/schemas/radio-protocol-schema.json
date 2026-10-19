@@ -213,9 +213,34 @@
       "items": {
         "$ref": "#/definitions/protocolStep"
       }
+    },
+    "onError": {
+      "$ref": "#/definitions/onError",
+      "description": "Optional cleanup exchanges run after a read or write failure (or cancel)"
     }
   },
   "definitions": {
+    "onError": {
+      "type": "object",
+      "description": "Per-operation cleanup steps. Items are send/expect exchanges only; no chunked read/write or CAT loops.",
+      "additionalProperties": false,
+      "properties": {
+        "readMemory": {
+          "type": "array",
+          "description": "Cleanup exchanges after a failed or cancelled readMemory",
+          "items": {
+            "$ref": "#/definitions/exchangeStep"
+          }
+        },
+        "writeMemory": {
+          "type": "array",
+          "description": "Cleanup exchanges after a failed or cancelled writeMemory",
+          "items": {
+            "$ref": "#/definitions/exchangeStep"
+          }
+        }
+      }
+    },
     "protocolStep": {
       "description": "A single protocol step: an exchange, a chunked read, a chunked write, or a live CAT memory loop",
       "oneOf": [
