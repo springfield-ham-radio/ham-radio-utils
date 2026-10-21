@@ -1,3 +1,13 @@
+## [4.16.0](https://github.com/springfield-ham-radio/ham-radio-utils/compare/v4.15.4...v4.16.0) (2026-10-21)
+
+### Features
+
+* **schema:** validate optional onError cleanup steps ([#31](https://github.com/springfield-ham-radio/ham-radio-utils/issues/31)) ([06e4958](https://github.com/springfield-ham-radio/ham-radio-utils/commit/06e495832e6990e04a97cd5faedd5b4fdacde63d))
+
+### Bug Fixes
+
+* **deps:** bump @springfield/ham-radio-api ([#29](https://github.com/springfield-ham-radio/ham-radio-utils/issues/29)) ([09cf12f](https://github.com/springfield-ham-radio/ham-radio-utils/commit/09cf12f6beec0c33a9e1e655be4bb40c5251f0d8))
+
 ## [4.15.4](https://github.com/springfield-ham-radio/ham-radio-utils/compare/v4.15.3...v4.15.4) (2026-10-13)
 
 ### Bug Fixes
