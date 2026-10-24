@@ -449,3 +449,92 @@ describe('u32 and grouped stride', () => {
     expect(contents[4 * 6 + 8]).toBe(7);
   });
 });
+
+describe('ascii field padding', () => {
+  const memoryConfig: RadioMemoryConfig = {
+    chunkSize: 64,
+    addressSize: 2,
+    addressEndianness: 'big',
+    segments: {
+      image: { startAddress: 0, endAddress: 63 },
+    },
+  };
+
+  const map: RadioMemoryMap = {
+    structs: [
+      {
+        id: 'messages',
+        seek: 0,
+        fields: [
+          { id: 'powerOn', type: 'u8', value: { kind: 'ascii', length: 8, pad: 0x00 } },
+          { id: 'memo', type: 'u8', value: { kind: 'ascii', length: 8, pad: 0x20 } },
+          { id: 'mixed', type: 'u8', value: { kind: 'ascii', length: 8, pad: 0xff } },
+          { id: 'blank', type: 'u8', value: { kind: 'ascii', length: 4, pad: 0x00 } },
+        ],
+      },
+    ],
+  };
+
+  function bytes(text: string, ...padding: number[]): number[] {
+    return [...text].map((character) => character.charCodeAt(0)).concat(padding);
+  }
+
+  const powerOn = bytes('TH-D74  ');
+  const memo = bytes('MEMO', 0x00, 0x00, 0x00, 0x00);
+  const mixed = bytes('AB', 0x20, 0x00, 0xff, 0x20, 0x00, 0xff);
+  const blank = [0xff, 0xff, 0xff, 0xff];
+
+  function image(): Uint8Array {
+    const contents = new Uint8Array(64).fill(0xa5);
+    contents.set(powerOn, 0);
+    contents.set(memo, 8);
+    contents.set(mixed, 16);
+    contents.set(blank, 24);
+    return contents;
+  }
+
+  it('keeps mixed space, NUL, and 0xFF padding when decoded text is unchanged', () => {
+    const contents = image();
+    const before = contents.slice();
+    const decoded = decodeMemoryMap(map, contents, memoryConfig);
+
+    expect(decoded.messages).toEqual({
+      powerOn: 'TH-D74',
+      memo: 'MEMO',
+      mixed: 'AB',
+      blank: '',
+    });
+
+    encodeMemoryMap(map, decoded, contents, memoryConfig);
+    expect(Array.from(contents)).toEqual(Array.from(before));
+  });
+
+  it('fills an edited ASCII field with its declared pad and leaves other fields untouched', () => {
+    const contents = image();
+    const decoded = decodeMemoryMap(map, contents, memoryConfig);
+    const messages = decoded.messages as { powerOn: string; memo: string; mixed: string; blank: string };
+    messages.memo = 'DSTAR';
+
+    encodeMemoryMap(map, decoded, contents, memoryConfig);
+
+    expect(Array.from(contents.subarray(8, 16))).toEqual(bytes('DSTAR', 0x20, 0x20, 0x20));
+    expect(Array.from(contents.subarray(0, 8))).toEqual(powerOn);
+    expect(Array.from(contents.subarray(16, 24))).toEqual(mixed);
+    expect(Array.from(contents.subarray(24, 28))).toEqual(blank);
+    expect(contents[28]).toBe(0xa5);
+
+    const powerOnImage = image();
+    const powerOnSettings = decodeMemoryMap(map, powerOnImage, memoryConfig);
+    (powerOnSettings.messages as { powerOn: string }).powerOn = 'HELLO';
+    encodeMemoryMap(map, powerOnSettings, powerOnImage, memoryConfig);
+
+    expect(Array.from(powerOnImage.subarray(0, 8))).toEqual(bytes('HELLO', 0x00, 0x00, 0x00));
+    expect(Array.from(powerOnImage.subarray(8, 28))).toEqual([...memo, ...mixed, ...blank]);
+
+    const blankImage = image();
+    const blankSettings = decodeMemoryMap(map, blankImage, memoryConfig);
+    (blankSettings.messages as { blank: string }).blank = 'X';
+    encodeMemoryMap(map, blankSettings, blankImage, memoryConfig);
+    expect(Array.from(blankImage.subarray(24, 28))).toEqual(['X'.charCodeAt(0), 0x00, 0x00, 0x00]);
+  });
+});

@@ -124,6 +124,53 @@ export function structInstanceAddress(struct: RadioMemoryMapStruct, instanceInde
   return seek + groupIndex * (stride * groupSize + groupPad) + indexInGroup * stride;
 }
 
+/**
+ * ASCII fields stop at NUL or 0xFF, then drop trailing spaces. The bytes after
+ * the visible text are not part of the setting value.
+ */
+function decodeAscii(bytes: readonly number[]): string {
+  let text = '';
+
+  for (const byte of bytes) {
+    if (byte === 0xff || byte === 0x00) {
+      break;
+    }
+
+    text += String.fromCodePoint(byte);
+  }
+
+  return text.trimEnd();
+}
+
+/**
+ * Clone images mix space, NUL, and 0xFF padding in one ASCII field. Re-encoding
+ * an unchanged value with the single declared pad rewrites those bytes (a
+ * TH-D74 power-on message ending in spaces came back NUL-padded; a D-STAR memo
+ * ending in NUL came back space-padded). When the text still matches what
+ * decode would return, keep the stored bytes. Edited text uses `kind.pad`.
+ */
+function encodeAscii(
+  kind: Extract<RadioMemoryMapValueKind, { kind: 'ascii' }>,
+  value: RadioSettingValue,
+  byteLength: number,
+  originalBytes: readonly number[] | undefined,
+): number[] {
+  const text = typeof value === 'string' ? value : '';
+
+  if (originalBytes && originalBytes.length === byteLength && decodeAscii(originalBytes) === text) {
+    return [...originalBytes];
+  }
+
+  const pad = kind.pad ?? 0xff;
+  const bytes: number[] = [];
+
+  for (let index = 0; index < byteLength; index += 1) {
+    bytes[index] = index < text.length ? (text.codePointAt(index) ?? pad) : pad;
+  }
+
+  return bytes;
+}
+
 function decodeRawValue(kind: RadioMemoryMapValueKind | undefined, raw: number | number[]): RadioSettingValue {
   if (!kind) {
     return typeof raw === 'number' ? raw : raw;
@@ -140,17 +187,7 @@ function decodeRawValue(kind: RadioMemoryMapValueKind | undefined, raw: number |
     }
     case 'ascii': {
       const bytes = typeof raw === 'number' ? [raw] : raw;
-      let text = '';
-
-      for (const byte of bytes) {
-        if (byte === 0xff || byte === 0x00) {
-          break;
-        }
-
-        text += String.fromCodePoint(byte);
-      }
-
-      return text.trimEnd();
+      return decodeAscii(bytes);
     }
     case 'digits': {
       const bytes = typeof raw === 'number' ? [raw] : raw;
@@ -246,7 +283,12 @@ function decodeRawValue(kind: RadioMemoryMapValueKind | undefined, raw: number |
   }
 }
 
-function encodeRawValue(kind: RadioMemoryMapValueKind | undefined, value: RadioSettingValue, byteLength: number): number[] {
+function encodeRawValue(
+  kind: RadioMemoryMapValueKind | undefined,
+  value: RadioSettingValue,
+  byteLength: number,
+  originalBytes?: readonly number[],
+): number[] {
   const bytes = Array.from({ length: byteLength }, () => 0xff);
 
   if (!kind) {
@@ -270,16 +312,8 @@ function encodeRawValue(kind: RadioMemoryMapValueKind | undefined, value: RadioS
       bytes[0] = index >= 0 ? index : 0;
       return bytes;
     }
-    case 'ascii': {
-      const text = typeof value === 'string' ? value : '';
-      const pad = kind.pad ?? 0xff;
-
-      for (let index = 0; index < byteLength; index += 1) {
-        bytes[index] = index < text.length ? (text.codePointAt(index) ?? pad) : pad;
-      }
-
-      return bytes;
-    }
+    case 'ascii':
+      return encodeAscii(kind, value, byteLength, originalBytes);
     case 'digits': {
       const scale = kind.scale ?? 1;
       let numeric = typeof value === 'number' ? Math.round(value / scale) : 0;
@@ -596,15 +630,27 @@ function encodeStruct(
     }
 
     const settingValue = values[field.id];
+    const originalBytes: number[] | undefined = field.value?.kind === 'ascii' ? [] : undefined;
+
+    if (originalBytes) {
+      for (let index = 0; index < length; index += 1) {
+        originalBytes.push(readByte(contents, bufferOffsetFor(radioAddress + index, memoryConfig, contents)));
+      }
+    }
 
     if (field.type === 'u16' || field.type === 'u32') {
-      const encoded = encodeRawValue(field.value ?? { kind: 'integer' }, settingValue ?? 0, length);
+      const encoded = encodeRawValue(field.value ?? { kind: 'integer' }, settingValue ?? 0, length, originalBytes);
 
       for (let index = 0; index < length; index += 1) {
         writeByte(contents, bufferOffsetFor(radioAddress + index, memoryConfig, contents), encoded[index] ?? 0);
       }
     } else {
-      const encoded = encodeRawValue(field.value, settingValue ?? (field.value?.kind === 'ascii' ? '' : 0), length);
+      const encoded = encodeRawValue(
+        field.value,
+        settingValue ?? (field.value?.kind === 'ascii' ? '' : 0),
+        length,
+        originalBytes,
+      );
 
       for (let index = 0; index < length; index += 1) {
         writeByte(contents, bufferOffsetFor(radioAddress + index, memoryConfig, contents), encoded[index]);
