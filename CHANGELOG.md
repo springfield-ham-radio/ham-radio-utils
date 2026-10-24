@@ -1,3 +1,9 @@
+## [4.16.1](https://github.com/springfield-ham-radio/ham-radio-utils/compare/v4.16.0...v4.16.1) (2026-10-24)
+
+### Bug Fixes
+
+* keep original ASCII padding when the text is unchanged ([#33](https://github.com/springfield-ham-radio/ham-radio-utils/issues/33)) ([8f3c6b4](https://github.com/springfield-ham-radio/ham-radio-utils/commit/8f3c6b4a4b572a9915f18adf9087b7034e885f6d))
+
 ## [4.16.0](https://github.com/springfield-ham-radio/ham-radio-utils/compare/v4.15.4...v4.16.0) (2026-10-21)
 
 ### Features
