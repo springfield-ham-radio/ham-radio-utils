@@ -11,6 +11,9 @@
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "bin": {
+    "ham-radio-pack-beta": "./dist/pack/pack-beta-cli.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/springfield-ham-radio/ham-radio-utils.git"
@@ -25,6 +28,7 @@
     "lint": "oxlint",
     "lint:fix": "oxlint --fix --fix-suggestions",
     "release": "semantic-release",
+    "pack:beta": "ham-radio-pack-beta",
     "prepare": "husky && yarn build",
     "test": "yarn test:unit",
     "test:unit": "vitest run test/unit"
