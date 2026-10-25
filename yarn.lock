@@ -1559,6 +1559,8 @@ __metadata:
     typescript: "npm:7.0.2"
     vite: "npm:^8.3.4"
     vitest: "npm:^5.0.5"
+  bin:
+    ham-radio-pack-beta: ./dist/pack/pack-beta-cli.js
   languageName: unknown
   linkType: soft
 
