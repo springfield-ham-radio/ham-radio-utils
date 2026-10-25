@@ -1,3 +1,13 @@
+## [4.17.0](https://github.com/springfield-ham-radio/ham-radio-utils/compare/v4.16.1...v4.17.0) (2026-10-25)
+
+### Features
+
+* **pack:** add yarn pack:beta for local driver zips ([#35](https://github.com/springfield-ham-radio/ham-radio-utils/issues/35)) ([b9e3a84](https://github.com/springfield-ham-radio/ham-radio-utils/commit/b9e3a84ab9f18eaf143f2703b84bc07879dc6fd1))
+
+### Bug Fixes
+
+* **deps:** bump fast-uri from 3.1.8 to 3.1.9 ([#34](https://github.com/springfield-ham-radio/ham-radio-utils/issues/34)) ([9477e28](https://github.com/springfield-ham-radio/ham-radio-utils/commit/9477e28b27a671db52869db8f3dde3c867b7c896))
+
 ## [4.16.1](https://github.com/springfield-ham-radio/ham-radio-utils/compare/v4.16.0...v4.16.1) (2026-10-24)
 
 ### Bug Fixes
