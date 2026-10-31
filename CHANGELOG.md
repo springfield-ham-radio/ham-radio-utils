@@ -1,3 +1,13 @@
+## [4.18.0](https://github.com/springfield-ham-radio/ham-radio-utils/compare/v4.17.0...v4.18.0) (2026-10-31)
+
+### Features
+
+* **schema:** allow optional ui.section on memory map fields ([#38](https://github.com/springfield-ham-radio/ham-radio-utils/issues/38)) ([6516a03](https://github.com/springfield-ham-radio/ham-radio-utils/commit/6516a032d0abdb87254d8d1d87f50051699d6aec))
+
+### Bug Fixes
+
+* **deps:** bump @springfield/ham-radio-api ([#36](https://github.com/springfield-ham-radio/ham-radio-utils/issues/36)) ([c019628](https://github.com/springfield-ham-radio/ham-radio-utils/commit/c0196283bdcd6cbae9aae863c34d50ecd8602688))
+
 ## [4.17.0](https://github.com/springfield-ham-radio/ham-radio-utils/compare/v4.16.1...v4.17.0) (2026-10-25)
 
 ### Features
