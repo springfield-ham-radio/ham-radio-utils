@@ -126,4 +126,62 @@ describe('memory-map schema groups', () => {
     expect(result.errors).toBeInstanceOf(Array);
     expect(result.errors!.some((error) => error.includes('section'))).toBe(true);
   });
+
+  it('accepts an optional ui.sectionOrder of zero or greater', () => {
+    const validator = new SchemaValidator();
+
+    const result = validator.validateMemoryMap({
+      structs: [
+        {
+          id: 'settings',
+          seek: 0,
+          fields: [
+            {
+              id: 'beep',
+              type: 'u8',
+              ui: {
+                group: 'basic',
+                section: 'Sound',
+                sectionOrder: 0,
+                label: 'Beep',
+                widget: 'switch',
+              },
+            },
+          ],
+        },
+      ],
+    });
+
+    expect(result.valid).toBe(true);
+    expect(result.errors).toBeUndefined();
+  });
+
+  it('rejects a negative ui.sectionOrder', () => {
+    const validator = new SchemaValidator();
+
+    const result = validator.validateMemoryMap({
+      structs: [
+        {
+          id: 'settings',
+          seek: 0,
+          fields: [
+            {
+              id: 'beep',
+              type: 'u8',
+              ui: {
+                group: 'basic',
+                sectionOrder: -1,
+                label: 'Beep',
+                widget: 'switch',
+              },
+            },
+          ],
+        },
+      ],
+    });
+
+    expect(result.valid).toBe(false);
+    expect(result.errors).toBeInstanceOf(Array);
+    expect(result.errors!.some((error) => error.includes('sectionOrder'))).toBe(true);
+  });
 });

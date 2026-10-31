@@ -100,6 +100,7 @@
         "group": { "type": "string" },
         "subgroup": { "type": "string", "minLength": 1 },
         "section": { "type": "string", "minLength": 1 },
+        "sectionOrder": { "type": "integer", "minimum": 0 },
         "label": { "type": "string" },
         "widget": {
           "type": "string",
