@@ -69,4 +69,61 @@ describe('memory-map schema groups', () => {
     expect(result.errors).toBeInstanceOf(Array);
     expect(result.errors!.some((error) => error.includes('label'))).toBe(true);
   });
+
+  it('accepts an optional ui.section radio menu group name', () => {
+    const validator = new SchemaValidator();
+
+    const result = validator.validateMemoryMap({
+      structs: [
+        {
+          id: 'settings',
+          seek: 0,
+          fields: [
+            {
+              id: 'beep',
+              type: 'u8',
+              ui: {
+                group: 'basic',
+                section: 'Sound',
+                label: 'Beep',
+                widget: 'switch',
+              },
+            },
+          ],
+        },
+      ],
+    });
+
+    expect(result.valid).toBe(true);
+    expect(result.errors).toBeUndefined();
+  });
+
+  it('rejects an empty ui.section', () => {
+    const validator = new SchemaValidator();
+
+    const result = validator.validateMemoryMap({
+      structs: [
+        {
+          id: 'settings',
+          seek: 0,
+          fields: [
+            {
+              id: 'beep',
+              type: 'u8',
+              ui: {
+                group: 'basic',
+                section: '',
+                label: 'Beep',
+                widget: 'switch',
+              },
+            },
+          ],
+        },
+      ],
+    });
+
+    expect(result.valid).toBe(false);
+    expect(result.errors).toBeInstanceOf(Array);
+    expect(result.errors!.some((error) => error.includes('section'))).toBe(true);
+  });
 });
