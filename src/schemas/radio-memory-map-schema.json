@@ -30,6 +30,20 @@
     }
   },
   "definitions": {
+    "stringChoice": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["label", "value"],
+      "properties": {
+        "label": { "type": "string", "minLength": 1 },
+        "value": { "type": "string" }
+      }
+    },
+    "stringChoices": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/definitions/stringChoice" }
+    },
     "seek": {
       "oneOf": [
         { "type": "integer", "minimum": 0 },
@@ -160,7 +174,8 @@
           "properties": {
             "kind": { "const": "ascii" },
             "length": { "type": "integer", "minimum": 1 },
-            "pad": { "type": "integer", "minimum": 0, "maximum": 255 }
+            "pad": { "type": "integer", "minimum": 0, "maximum": 255 },
+            "choices": { "$ref": "#/definitions/stringChoices" }
           },
           "additionalProperties": false
         },
@@ -180,7 +195,8 @@
           "properties": {
             "kind": { "const": "dtmf" },
             "length": { "type": "integer", "minimum": 1 },
-            "charset": { "type": "string" }
+            "charset": { "type": "string" },
+            "choices": { "$ref": "#/definitions/stringChoices" }
           },
           "additionalProperties": false
         },
