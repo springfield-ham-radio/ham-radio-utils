@@ -1,3 +1,9 @@
+## [4.19.0](https://github.com/springfield-ham-radio/ham-radio-utils/compare/v4.18.0...v4.19.0) (2026-11-01)
+
+### Features
+
+* accept string choices on ascii and dtmf fields ([#39](https://github.com/springfield-ham-radio/ham-radio-utils/issues/39)) ([3bde952](https://github.com/springfield-ham-radio/ham-radio-utils/commit/3bde952b2137d1ae299833cfba5d4b4071c02655))
+
 ## [4.18.0](https://github.com/springfield-ham-radio/ham-radio-utils/compare/v4.17.0...v4.18.0) (2026-10-31)
 
 ### Features
