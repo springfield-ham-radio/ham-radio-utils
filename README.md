@@ -23,6 +23,7 @@ Stdout is the zip path, size in bytes, a `sha256:` digest, and `git rev-parse --
 MIT / Bryan Hunt. See [LICENSE](LICENSE).
 
 ```bash
+npm install --global corepack@0.36.0
 corepack enable
 yarn install
 yarn build
