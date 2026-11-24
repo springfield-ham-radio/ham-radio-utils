@@ -1,3 +1,11 @@
+## [4.19.1](https://github.com/springfield-ham-radio/ham-radio-utils/compare/v4.19.0...v4.19.1) (2026-11-24)
+
+### Bug Fixes
+
+* **deps:** bump @springfield/ham-radio-api ([#43](https://github.com/springfield-ham-radio/ham-radio-utils/issues/43)) ([caf467b](https://github.com/springfield-ham-radio/ham-radio-utils/commit/caf467b610cc31a7485ccffc183f195d01b35420))
+* **deps:** bump lodash-es from 4.17.21 to 4.18.1 ([#42](https://github.com/springfield-ham-radio/ham-radio-utils/issues/42)) ([d785453](https://github.com/springfield-ham-radio/ham-radio-utils/commit/d785453d785ccd63e8cc30056673210c33b45f26))
+* **release:** pin conventional-changelog-conventionalcommits to 10.4.1 for semantic-release 26 ([#49](https://github.com/springfield-ham-radio/ham-radio-utils/issues/49)) ([b145ddc](https://github.com/springfield-ham-radio/ham-radio-utils/commit/b145ddc75f2b6ae0722a736d2202ae03f5478c92))
+
 ## [4.19.0](https://github.com/springfield-ham-radio/ham-radio-utils/compare/v4.18.0...v4.19.0) (2026-11-01)
 
 ### Features
