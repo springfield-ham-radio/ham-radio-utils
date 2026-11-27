@@ -29,13 +29,12 @@
     "lint:fix": "oxlint --fix --fix-suggestions",
     "release": "semantic-release",
     "pack:beta": "ham-radio-pack-beta",
-    "postinstall": "test -f scripts/build-ham-radio-api-dep.sh && sh scripts/build-ham-radio-api-dep.sh || true",
     "prepare": "husky && yarn build",
     "test": "yarn test:unit",
     "test:unit": "vitest run test/unit"
   },
   "dependencies": {
-    "@springfield/ham-radio-api": "github:springfield-ham-radio/ham-radio-api#cursor/channel-bindings-specials-schema",
+    "@springfield/ham-radio-api": "^18.6.0",
     "ajv": "^8.20.0",
     "ajv-formats": "^3.0.1",
     "fishery": "^2.4.0",
