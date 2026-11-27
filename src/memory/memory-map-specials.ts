@@ -91,13 +91,15 @@ export function memoryMapSpecialsConsistencyErrors(memoryMap: unknown): string[]
     );
   }
 
+  const specialsSpanMessage = `start (${bindings.specials.start}) + labels.length (${bindings.specials.labels.length})`;
+
   if (bindings.names) {
     const namesCount = structRecordCount(memoryMap, bindings.names);
     if (namesCount === undefined) {
       errors.push(`/channelBindings/names: struct "${bindings.names}" not found`);
-    } else if (recordsCount !== undefined && namesCount !== recordsCount) {
+    } else if (expected !== undefined && namesCount !== expected) {
       errors.push(
-        `/channelBindings/names: struct count (${namesCount}) must match records struct count (${recordsCount}) when specials are declared`,
+        `/channelBindings/names: struct count (${namesCount}) must equal ${specialsSpanMessage}`,
       );
     }
   }
@@ -106,9 +108,9 @@ export function memoryMapSpecialsConsistencyErrors(memoryMap: unknown): string[]
     const extrasCount = structRecordCount(memoryMap, bindings.extras);
     if (extrasCount === undefined) {
       errors.push(`/channelBindings/extras: struct "${bindings.extras}" not found`);
-    } else if (recordsCount !== undefined && extrasCount !== recordsCount) {
+    } else if (expected !== undefined && extrasCount !== expected) {
       errors.push(
-        `/channelBindings/extras: struct count (${extrasCount}) must match records struct count (${recordsCount}) when specials are declared`,
+        `/channelBindings/extras: struct count (${extrasCount}) must equal ${specialsSpanMessage}`,
       );
     }
   }

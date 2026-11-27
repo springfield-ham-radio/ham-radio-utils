@@ -166,4 +166,34 @@ describe('memory-map specials semantic validation', () => {
   it('returns no consistency errors when specials is absent', () => {
     expect(memoryMapSpecialsConsistencyErrors(baseMap())).toEqual([]);
   });
+
+  it('reports names count mismatch against start + labels.length when records struct is missing', () => {
+    const errors = memoryMapSpecialsConsistencyErrors({
+      structs: [
+        {
+          id: 'names',
+          seek: 0,
+          count: 1000,
+          fields: [{ id: 'name', type: 'char' }],
+        },
+      ],
+      channelBindings: {
+        records: 'missing-channels',
+        names: 'names',
+        nameField: 'name',
+        receiveFrequency: 'rxfreq',
+        transmitFrequency: 'txfreq',
+        receiveTone: 'rxtone',
+        transmitTone: 'txtone',
+        specials: {
+          start: 1000,
+          labels: ['L0', 'Pri'],
+        },
+      },
+    });
+
+    expect(errors.some((error) => error.includes('/channelBindings/records'))).toBe(true);
+    expect(errors.some((error) => error.includes('/channelBindings/names'))).toBe(true);
+    expect(errors.some((error) => error.includes('labels.length'))).toBe(true);
+  });
 });
