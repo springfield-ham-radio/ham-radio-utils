@@ -1,3 +1,9 @@
+## [4.20.0](https://github.com/springfield-ham-radio/ham-radio-utils/compare/v4.19.1...v4.20.0) (2026-11-27)
+
+### Features
+
+* support memory-map special channels ([bef6387](https://github.com/springfield-ham-radio/ham-radio-utils/commit/bef6387d9281922dc3b0e48a243f49eb76677c70))
+
 ## [4.19.1](https://github.com/springfield-ham-radio/ham-radio-utils/compare/v4.19.0...v4.19.1) (2026-11-24)
 
 ### Bug Fixes
