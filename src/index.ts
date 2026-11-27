@@ -3,6 +3,7 @@ export * from './memory/memory-map-codec.js';
 export * from './memory/memory-map-channels.js';
 export * from './memory/memory-map-ui.js';
 export * from './memory/memory-map-radio-codec.js';
+export * from './memory/memory-map-specials.js';
 
 export * from './test-utils/radio-channel-factory.js';
 export * from './test-utils/radio-programmed-channel-factory.js';
