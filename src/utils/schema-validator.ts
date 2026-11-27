@@ -1,5 +1,6 @@
 import { Ajv } from 'ajv';
 import addFormats from 'ajv-formats';
+import { memoryMapSpecialsConsistencyErrors } from '../memory/memory-map-specials.js';
 import radioProtocolSchema from '../schemas/radio-protocol-schema.json' with { type: 'json' };
 import radioMemoryMapSchema from '../schemas/radio-memory-map-schema.json' with { type: 'json' };
 
@@ -44,7 +45,22 @@ export class SchemaValidator {
   }
 
   validateMemoryMap(memoryMap: unknown): ValidationResult {
-    return this.validateAgainst(radioMemoryMapSchema, memoryMap);
+    const schemaResult = this.validateAgainst(radioMemoryMapSchema, memoryMap);
+
+    if (!schemaResult.valid) {
+      return schemaResult;
+    }
+
+    const specialsErrors = memoryMapSpecialsConsistencyErrors(memoryMap);
+
+    if (specialsErrors.length === 0) {
+      return schemaResult;
+    }
+
+    return {
+      valid: false,
+      errors: specialsErrors,
+    };
   }
 
   private validateAgainst(schema: object, data: unknown): ValidationResult {

@@ -61,9 +61,22 @@
         "transmitFrequency": { "type": "string", "minLength": 1 },
         "receiveTone": { "type": "string", "minLength": 1 },
         "transmitTone": { "type": "string", "minLength": 1 },
-        "extras": { "type": "string", "minLength": 1 }
+        "extras": { "type": "string", "minLength": 1 },
+        "specials": { "$ref": "#/definitions/channelBindingsSpecials" }
       },
       "additionalProperties": false
+    },
+    "channelBindingsSpecials": {
+      "type": "object",
+      "required": ["start", "labels"],
+      "additionalProperties": false,
+      "properties": {
+        "start": { "type": "integer", "minimum": 0 },
+        "labels": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
     },
     "emptyWhen": {
       "type": "object",
